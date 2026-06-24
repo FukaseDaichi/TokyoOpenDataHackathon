@@ -29,7 +29,7 @@
 | - | 調査サマリ（結論） | - | ✅ 完了 | [00-summary.md](docs/research/00-summary.md) |
 | - | 別視点クロスチェック（codex） | - | ✅ 完了 | [07-cross-check-codex.md](docs/research/07-cross-check-codex.md) |
 | - | 勝ち筋の言語化（統合） | - | ✅ 完了 | [winning-strategy.md](docs/strategy/winning-strategy.md) |
-| - | アイディア候補（出力） | - | ⏭️ 次はここ | [idea-candidates.md](docs/ideas/idea-candidates.md) |
+| - | アイディア候補（出力） | - | ✅ 完了 | [idea-candidates.md](docs/ideas/idea-candidates.md) |
 
 ## フォルダ構成
 ```
@@ -45,8 +45,8 @@
 
 ## 進め方（フェーズ）
 1. **調査**（research/ を埋める）✅ 完了（01〜06＋00-summary）
-2. **統合**（strategy/winning-strategy.md に勝ち筋をまとめる）✅ 完了（案A「ミライ区長」確定）
-3. **発散**（ideas/idea-candidates.md でアイディアを出す）← いまここ
-4. **選定 → 実装**
+2. **統合**（strategy/winning-strategy.md に勝ち筋をまとめる）✅ 完了
+3. **発散**（ideas/idea-candidates.md でアイディアを出す）✅ 完了（案A「うちの区ちゃん」に具体化）
+4. **選定 → 実装**（MVP実装計画）← いまここ
 
-> 確定コンセプトは [docs/strategy/winning-strategy.md](docs/strategy/winning-strategy.md)（区擬人化×予算トレードオフのデータ駆動シム）。次は発散フェーズで具体化。
+> 確定コンセプトは「うちの区ちゃん」＝区擬人化×予算トレードオフのデータ駆動シム（[strategy](docs/strategy/winning-strategy.md)／[idea](docs/ideas/idea-candidates.md)）。次は MVP の実装計画。
