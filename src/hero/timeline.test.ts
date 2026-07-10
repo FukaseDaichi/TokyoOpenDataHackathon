@@ -35,6 +35,17 @@ describe('cameraPose', () => {
     expect(Math.max(...xs)).toBeGreaterThan(1.5);
     expect(Math.min(...xs)).toBeLessThan(-1.5);
   });
+
+  it('ends high above the map looking down on landscape screens', () => {
+    const c = cameraPose(1, 16 / 9);
+    expect(c.pos[1]).toBeGreaterThan(5);
+    expect(c.look[1]).toBeLessThan(c.pos[1]);
+  });
+
+  it('stays near eye level for the portrait podium', () => {
+    const c = cameraPose(1, 0.5);
+    expect(c.pos[1]).toBeLessThan(3);
+  });
 });
 
 describe('scenePhases', () => {
@@ -49,9 +60,9 @@ describe('scenePhases', () => {
     expect(scenePhases(1).cta).toBe(1);
   });
 
-  it('locks the constellation between 0.8 and 0.95', () => {
-    expect(scenePhases(0.8).constellation).toBe(0);
-    expect(scenePhases(0.95).constellation).toBe(1);
+  it('locks the gathering between 0.8 and 0.95', () => {
+    expect(scenePhases(0.8).gather).toBe(0);
+    expect(scenePhases(0.95).gather).toBe(1);
   });
 
   it('fires the opening burst only near the start', () => {
@@ -76,12 +87,26 @@ describe('cardPose', () => {
     }
   });
 
-  it('gathers every card at its constellation slot at t=1', () => {
+  it('lands every card on its Tokyo-map slot at t=1 on landscape screens', () => {
     for (const card of HERO_CARDS) {
-      const p = cardPose(card, 1);
-      expect(Math.abs(p.pos[0] - card.constellation.x)).toBeLessThan(0.6);
-      expect(Math.abs(p.pos[1] - card.constellation.y)).toBeLessThan(0.6);
-      expect(Math.abs(p.pos[2] - card.constellation.z)).toBeLessThan(0.6);
+      const p = cardPose(card, 1, 16 / 9);
+      expect(Math.abs(p.pos[0] - card.map.x)).toBeLessThan(0.05);
+      expect(Math.abs(p.pos[1] - card.map.y)).toBeLessThan(0.05);
+      expect(Math.abs(p.pos[2] - card.map.z)).toBeLessThan(0.05);
+      expect(Math.abs(p.scale - card.map.scale)).toBeLessThan(0.05);
+      expect(Math.abs(p.rotZ)).toBeLessThan(0.02);
+      expect(p.labelOpacity).toBeGreaterThan(0.5);
+    }
+  });
+
+  it('lands every card on its podium tier at t=1 on portrait screens, labels hidden', () => {
+    for (const card of HERO_CARDS) {
+      const p = cardPose(card, 1, 0.5);
+      expect(Math.abs(p.pos[0] - card.podium.x)).toBeLessThan(0.05);
+      expect(Math.abs(p.pos[1] - card.podium.y)).toBeLessThan(0.05);
+      expect(Math.abs(p.pos[2] - card.podium.z)).toBeLessThan(0.05);
+      expect(Math.abs(p.scale - card.podium.scale)).toBeLessThan(0.05);
+      expect(p.labelOpacity).toBeLessThan(0.05);
     }
   });
 
@@ -91,6 +116,62 @@ describe('cardPose', () => {
     const far = cardPose(card, Math.max(0.16, card.closeupAt! - 0.2));
     expect(atPeak.sheen).toBeGreaterThan(far.sheen);
     expect(atPeak.labelOpacity).toBeGreaterThan(0.5);
+  });
+});
+
+// HeroCanvasのPerspectiveCamera(fov=50)と同じ投影でNDC座標を求める
+function projectToNdc(
+  p: [number, number, number],
+  cam: { pos: [number, number, number]; look: [number, number, number] },
+  aspect: number,
+): { x: number; y: number } {
+  const sub = (a: number[], b: number[]) => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
+  const norm = (v: number[]) => {
+    const l = Math.hypot(v[0], v[1], v[2]);
+    return [v[0] / l, v[1] / l, v[2] / l];
+  };
+  const cross = (a: number[], b: number[]) => [
+    a[1] * b[2] - a[2] * b[1],
+    a[2] * b[0] - a[0] * b[2],
+    a[0] * b[1] - a[1] * b[0],
+  ];
+  const zAxis = norm(sub(cam.pos, cam.look));
+  const xAxis = norm(cross([0, 1, 0], zAxis));
+  const yAxis = cross(zAxis, xAxis);
+  const d = sub(p, cam.pos);
+  const cx = d[0] * xAxis[0] + d[1] * xAxis[1] + d[2] * xAxis[2];
+  const cy = d[0] * yAxis[0] + d[1] * yAxis[1] + d[2] * yAxis[2];
+  const cz = d[0] * zAxis[0] + d[1] * zAxis[1] + d[2] * zAxis[2];
+  const f = 1 / Math.tan((50 * Math.PI) / 180 / 2);
+  return { x: ((f / aspect) * cx) / -cz, y: (f * cy) / -cz };
+}
+
+describe('final scene framing (every card fully inside the viewport)', () => {
+  const check = (aspect: number) => {
+    const cam = cameraPose(1, aspect);
+    for (const card of HERO_CARDS) {
+      const p = cardPose(card, 1, aspect);
+      // カードの四隅（幅2s×高さ3s、rotY=0）を投影して画面内を確認
+      for (const [dx, dy] of [[-1, -1.5], [1, -1.5], [-1, 1.5], [1, 1.5]] as const) {
+        const ndc = projectToNdc(
+          [p.pos[0] + dx * p.scale, p.pos[1] + dy * p.scale, p.pos[2]],
+          cam,
+          aspect,
+        );
+        expect(Math.abs(ndc.x), `${card.name} x aspect=${aspect}`).toBeLessThan(1);
+        expect(Math.abs(ndc.y), `${card.name} y aspect=${aspect}`).toBeLessThan(1);
+      }
+    }
+  };
+
+  it('fits the Tokyo map on landscape screens (16:9 and 4:3)', () => {
+    check(16 / 9);
+    check(4 / 3);
+  });
+
+  it('fits the podium on portrait phones (tall and short)', () => {
+    check(375 / 812);
+    check(375 / 667);
   });
 });
 

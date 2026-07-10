@@ -1,7 +1,10 @@
 // スクロール進捗 t∈[0,1] から演出全体を決定する純関数タイムライン。
 // すべて t の関数なので、逆スクロールすれば演出も正確に逆再生される。
 // R3F層はここの戻り値を毎フレーム反映するだけの薄い描画層に保つ。
-import type { HeroCard } from './manifest';
+//
+// aspect = viewport width / height。Scene4の集結は横長=東京3Dマップ(俯瞰)、
+// 縦長=集合写真風の雛壇(正面)に分岐する。
+import { MAP_CENTER_Z, type HeroCard } from './manifest';
 
 export interface CameraPose {
   pos: [number, number, number];
@@ -17,8 +20,8 @@ export interface ScenePhases {
   vignette: number;
   /** t=0付近のスクロールヒント */
   scrollHint: number;
-  /** Scene4: 星座整列の進行 */
-  constellation: number;
+  /** Scene4: 集結（マップ/雛壇）整列の進行 */
+  gather: number;
   /** Scene4: 最終タイトル */
   endTitle: number;
   /** Scene4: 診断CTA */
@@ -43,8 +46,10 @@ export function smoothstep(a: number, b: number, x: number): number {
   return t * t * (3 - 2 * t);
 }
 
+const isPortrait = (aspect: number) => aspect < 1;
+
 /** カメラ経路上の位置（look計算のため分離） */
-function pathPoint(tRaw: number): [number, number, number] {
+function pathPoint(tRaw: number, aspect: number): [number, number, number] {
   const t = clamp01(tRaw);
   if (t <= 0.15) {
     // Scene1: 暗がりから絵本の中へ直進
@@ -60,22 +65,28 @@ function pathPoint(tRaw: number): [number, number, number] {
       lerp(24, -58, u),
     ];
   }
-  // Scene4: 引いて星座を見渡す
+  // Scene4: 引いて集結を見渡す。
+  // 横長: 高く上がって東京3Dマップを俯瞰 / 縦長: 目線の高さから雛壇を正面に
   const v = smoothstep(0.8, 1, t);
   const yStart = 0.4 + 0.8 * Math.sin(Math.PI * 1.3);
-  return [0, lerp(yStart, 0.9, v), lerp(-58, -33, v)];
+  return isPortrait(aspect)
+    ? [0, lerp(yStart, 1.8, v), lerp(-58, -30, v)]
+    : [0, lerp(yStart, 10.5, v), lerp(-58, -27, v)];
 }
 
-export function cameraPose(tRaw: number): CameraPose {
+export function cameraPose(tRaw: number, aspect = 16 / 9): CameraPose {
   const t = clamp01(tRaw);
-  const pos = pathPoint(t);
-  const ahead = pathPoint(clamp01(t + 0.045));
+  const pos = pathPoint(t, aspect);
+  const ahead = pathPoint(clamp01(t + 0.045), aspect);
   const look: [number, number, number] = [ahead[0], ahead[1], ahead[2] - 6];
-  // 終盤は星座の中心へ視線を送る
+  // 終盤は集結の中心へ視線を送る（俯瞰では地面付近を見下ろす）
   const v = smoothstep(0.82, 0.96, t);
-  look[0] = lerp(look[0], 0, v);
-  look[1] = lerp(look[1], 0.9, v);
-  look[2] = lerp(look[2], -52, v);
+  const target: [number, number, number] = isPortrait(aspect)
+    ? [0, 1.0, MAP_CENTER_Z + 1]
+    : [0, -1.0, MAP_CENTER_Z];
+  look[0] = lerp(look[0], target[0], v);
+  look[1] = lerp(look[1], target[1], v);
+  look[2] = lerp(look[2], target[2], v);
   return { pos, look };
 }
 
@@ -86,7 +97,7 @@ export function scenePhases(tRaw: number): ScenePhases {
     burst: smoothstep(0.02, 0.08, t) * (1 - smoothstep(0.12, 0.2, t)),
     vignette: 1 - smoothstep(0, 0.12, t),
     scrollHint: 1 - smoothstep(0.03, 0.09, t),
-    constellation: smoothstep(0.8, 0.95, t),
+    gather: smoothstep(0.8, 0.95, t),
     endTitle: smoothstep(0.84, 0.93, t),
     cta: smoothstep(0.88, 0.97, t),
   };
@@ -98,7 +109,7 @@ export function scenePhases(tRaw: number): ScenePhases {
  */
 export function cardPose(card: HeroCard, tRaw: number, aspect = 16 / 9): CardPose {
   const t = clamp01(tRaw);
-  const cam = cameraPose(t);
+  const cam = cameraPose(t, aspect);
   const { corridor } = card;
 
   let x = corridor.x;
@@ -143,19 +154,22 @@ export function cardPose(card: HeroCard, tRaw: number, aspect = 16 / 9): CardPos
     }
   }
 
-  // Scene4: 星座へ整列（カードごとに位相をずらして流れ込む）
-  const c = smoothstep(0.8 + card.constellationDelay, 0.94 + card.constellationDelay, t);
+  // Scene4: 集結へ整列（カードごとに位相をずらして流れ込む）。
+  // 横長は東京3Dマップの立ち位置、縦長は雛壇へ。
+  const c = smoothstep(0.8 + card.gatherDelay, 0.94 + card.gatherDelay, t);
   if (c > 0) {
-    // 縦長画面では星座の横広がりを圧縮して全区を画面内に収める
-    const xk = Math.min(1, aspect * 0.76);
-    x = lerp(x, card.constellation.x * xk, c);
-    y = lerp(y, card.constellation.y, c);
-    z = lerp(z, card.constellation.z, c);
+    const slot = isPortrait(aspect) ? card.podium : card.map;
+    x = lerp(x, slot.x, c);
+    y = lerp(y, slot.y, c);
+    z = lerp(z, slot.z, c);
     rotY = lerp(rotY, 0, c);
     rotZ = lerp(rotZ, 0, c);
-    scale = lerp(scale, 0.72, c);
+    scale = lerp(scale, slot.scale, c);
     sheen = lerp(sheen, 0.3, c);
-    labelOpacity = Math.max(labelOpacity, c * 0.9);
+    // 雛壇(縦長)は23枚分のラベルで画面が埋まるため区名を出さない
+    labelOpacity = isPortrait(aspect)
+      ? labelOpacity * (1 - c)
+      : Math.max(labelOpacity, c * 0.9);
   }
 
   return { pos: [x, y, z], rotY, rotZ, scale, sheen, labelOpacity };
@@ -163,7 +177,7 @@ export function cardPose(card: HeroCard, tRaw: number, aspect = 16 / 9): CardPos
 
 /**
  * 静止中の呼吸のような浮遊（useFrameで加算する）。
- * factor=0（reduced motion）で完全静止、星座整列後は呼び出し側で減衰させる。
+ * factor=0（reduced motion）で完全静止、集結整列後は呼び出し側で減衰させる。
  */
 export function floatOffset(card: HeroCard, time: number, factor: number): [number, number] {
   if (factor === 0) return [0, 0];

@@ -4,6 +4,18 @@
 import { mulberry32 } from './rng';
 import { WARDS, type WardInfo } from './wards';
 
+/** Scene4の地面プレーンの高さ（カードはこの上に立つ） */
+export const GROUND_Y = -1.7;
+/** Scene4の集結エリアの中心z */
+export const MAP_CENTER_Z = -50;
+
+export interface GatherSlot {
+  x: number;
+  y: number;
+  z: number;
+  scale: number;
+}
+
 export interface HeroCard extends WardInfo {
   /** 回廊シーンでの基本配置 */
   corridor: { x: number; y: number; z: number; rotY: number; rotZ: number };
@@ -15,13 +27,15 @@ export interface HeroCard extends WardInfo {
   floatPhase: number;
   floatSpeed: number;
   floatAmp: number;
-  /** Scene4: 東京の地理を星座化した集結位置 */
-  constellation: { x: number; y: number; z: number };
+  /** Scene4(横長): 東京3Dマップ。地理位置に立ち、下端が地面に接地する */
+  map: GatherSlot;
+  /** Scene4(縦長): 集合写真風の雛壇。後列ほど高く・奥 */
+  podium: GatherSlot;
   /** Scene3: クローズアップのスクロール時刻（実画像がある区のみ） */
   closeupAt: number | null;
   closeupSide: -1 | 1;
-  /** 星座整列の開始をカードごとに僅かにずらす */
-  constellationDelay: number;
+  /** 集結整列の開始をカードごとに僅かにずらす */
+  gatherDelay: number;
 }
 
 // 回廊のカメラz（timeline.tsのcorridor区間と同じ線形式）
@@ -35,7 +49,7 @@ const camXAtZ = (z: number) => {
   return 6.2 * Math.sin(u * Math.PI * 2) * Math.sin(u * Math.PI);
 };
 
-/** クローズアップ対象（実画像13区から映えの異なる6区）と時刻 */
+/** クローズアップ対象（映えの異なる6区）と時刻 */
 const CLOSEUPS: Record<string, { at: number; side: -1 | 1 }> = {
   '13101': { at: 0.38, side: 1 },  // 千代田
   '13104': { at: 0.45, side: -1 }, // 新宿
@@ -44,6 +58,40 @@ const CLOSEUPS: Record<string, { at: number; side: -1 | 1 }> = {
   '13112': { at: 0.66, side: 1 },  // 世田谷
   '13113': { at: 0.73, side: -1 }, // 渋谷
 };
+
+// 東京3Dマップ: geo.x→東西, geo.y→奥行き（北ほど奥=zが負）
+const MAP_SCALE = 0.72;
+const MAP_KX = 5.2;
+const MAP_KZ = 4.4;
+
+// 雛壇: 5列×5段（最終段3枚は中央寄せ）、後列ほど高く・奥
+const PODIUM_SCALE = 0.56;
+const PODIUM_COLS = 5;
+const PODIUM_COL_SPACING = 1.25;
+const PODIUM_ROW_DEPTH = 1.6;
+const PODIUM_ROW_RISE = 1.05;
+const PODIUM_FRONT_Z = -46;
+
+function mapSlot(ward: WardInfo): GatherSlot {
+  return {
+    x: ward.geo.x * MAP_KX,
+    y: GROUND_Y + 1.5 * MAP_SCALE,
+    z: MAP_CENTER_Z - ward.geo.y * MAP_KZ,
+    scale: MAP_SCALE,
+  };
+}
+
+function podiumSlot(index: number): GatherSlot {
+  const row = Math.floor(index / PODIUM_COLS);
+  const col = index % PODIUM_COLS;
+  const rowCount = Math.min(PODIUM_COLS, WARDS.length - row * PODIUM_COLS);
+  return {
+    x: (col - (rowCount - 1) / 2) * PODIUM_COL_SPACING,
+    y: GROUND_Y + row * PODIUM_ROW_RISE + 1.5 * PODIUM_SCALE,
+    z: PODIUM_FRONT_Z - row * PODIUM_ROW_DEPTH,
+    scale: PODIUM_SCALE,
+  };
+}
 
 function buildManifest(): HeroCard[] {
   const rng = mulberry32(20260711);
@@ -66,30 +114,27 @@ function buildManifest(): HeroCard[] {
 
     const lateral = 3.4 + depthBand * 1.9 + rng() * 1.2;
     const y = (rng() - 0.4) * (1.5 + depthBand * 0.8);
+    const rotY = (rng() - 0.5) * 0.5;
+    const rotZ = (rng() - 0.5) * 0.14;
+    const scale = 1.35 + depthBand * 0.11 + rng() * 0.35;
+    // 旧星座配置がここでrngを1回消費していた。乱数列がずれると
+    // 調整済みの回廊配置が全て変わるため、同じ位置で1回消費して保つ。
+    rng();
 
     return {
       ...ward,
-      corridor: {
-        x: camXAtZ(z) + side * lateral,
-        y,
-        z,
-        rotY: (rng() - 0.5) * 0.5,
-        rotZ: (rng() - 0.5) * 0.14,
-      },
-      scale: 1.35 + depthBand * 0.11 + rng() * 0.35,
+      corridor: { x: camXAtZ(z) + side * lateral, y, z, rotY, rotZ },
+      scale,
       depthBand,
       side,
       floatPhase: (i * 2.399963368) % (Math.PI * 2),
       floatSpeed: 0.35 + rng() * 0.45,
       floatAmp: 0.07 + rng() * 0.09,
-      constellation: {
-        x: ward.geo.x * 4.5,
-        y: ward.geo.y * 2.9 + 0.9,
-        z: -52 + (rng() - 0.5) * 1.6,
-      },
+      map: mapSlot(ward),
+      podium: podiumSlot(i),
       closeupAt: closeup ? closeup.at : null,
       closeupSide: closeup ? closeup.side : baseSide,
-      constellationDelay: (i % 5) * 0.008,
+      gatherDelay: (i % 5) * 0.008,
     };
   });
 }

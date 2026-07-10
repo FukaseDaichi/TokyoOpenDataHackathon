@@ -1,11 +1,7 @@
 import { describe, it, expect } from 'vitest';
-import { HERO_CARDS } from './manifest';
-
-// 現存する13枚のSSR画像（assets/characters/ssr/ 調査結果 2026-07-11）
-const EXISTING_SLUGS = [
-  'chiyoda', 'chuo', 'minato', 'shinjuku', 'bunkyo', 'taito', 'sumida',
-  'koto', 'shinagawa', 'meguro', 'ota', 'setagaya', 'shibuya',
-];
+import { existsSync } from 'node:fs';
+import path from 'node:path';
+import { GROUND_Y, HERO_CARDS } from './manifest';
 
 describe('HERO_CARDS manifest', () => {
   it('has exactly 23 wards with unique ids', () => {
@@ -20,10 +16,14 @@ describe('HERO_CARDS manifest', () => {
     expect(first).toBe(second);
   });
 
-  it('only existing images get a slug; the missing 10 wards get null', () => {
-    const withSlug = HERO_CARDS.filter((c) => c.slug !== null);
-    expect(withSlug.map((c) => c.slug).sort()).toEqual([...EXISTING_SLUGS].sort());
-    expect(HERO_CARDS.filter((c) => c.slug === null)).toHaveLength(10);
+  it('gives all 23 wards a unique slug whose built webp actually exists', () => {
+    const slugs = HERO_CARDS.map((c) => c.slug);
+    expect(slugs.every((s) => s !== null)).toBe(true);
+    expect(new Set(slugs).size).toBe(23);
+    for (const slug of slugs) {
+      const file = path.join(process.cwd(), 'public', 'characters', 'ssr', `${slug}-w512.webp`);
+      expect(existsSync(file), `missing ${file}`).toBe(true);
+    }
   });
 
   it('uses at least 5 distinct depth bands and both left/right sides', () => {
@@ -65,6 +65,80 @@ describe('HERO_CARDS manifest', () => {
     HERO_CARDS.forEach((c) => {
       expect(c.scale).toBeGreaterThan(0);
       expect(Number.isFinite(c.scale)).toBe(true);
+    });
+  });
+
+  describe('map layout (Scene4, landscape Tokyo diorama)', () => {
+    it('stands every card on the ground plane (bottom edge touches GROUND_Y)', () => {
+      HERO_CARDS.forEach((c) => {
+        expect(c.map.y - 1.5 * c.map.scale).toBeCloseTo(GROUND_Y, 5);
+      });
+    });
+
+    it('preserves geographic order: east wards get larger x, north wards sit further away', () => {
+      for (const a of HERO_CARDS) {
+        for (const b of HERO_CARDS) {
+          if (a.geo.x < b.geo.x) expect(a.map.x).toBeLessThan(b.map.x);
+          // 北(geo.y大)ほど奥 = zがより負
+          if (a.geo.y < b.geo.y) expect(a.map.z).toBeGreaterThan(b.map.z);
+        }
+      }
+    });
+
+    it('keeps neighbouring wards from standing inside each other', () => {
+      const w = (c: (typeof HERO_CARDS)[number]) => 2 * c.map.scale; // カード幅
+      for (let i = 0; i < HERO_CARDS.length; i++) {
+        for (let j = i + 1; j < HERO_CARDS.length; j++) {
+          const a = HERO_CARDS[i].map;
+          const b = HERO_CARDS[j].map;
+          const dist = Math.hypot(a.x - b.x, a.z - b.z);
+          expect(dist).toBeGreaterThan(Math.max(w(HERO_CARDS[i]), w(HERO_CARDS[j])) * 0.55);
+        }
+      }
+    });
+  });
+
+  describe('podium layout (Scene4, portrait group photo)', () => {
+    it('never overlaps: same-row neighbours are at least a card width apart', () => {
+      const byRowZ = new Map<number, Array<{ x: number; scale: number }>>();
+      HERO_CARDS.forEach((c) => {
+        const list = byRowZ.get(c.podium.z) ?? [];
+        list.push({ x: c.podium.x, scale: c.podium.scale });
+        byRowZ.set(c.podium.z, list);
+      });
+      for (const row of byRowZ.values()) {
+        const xs = row.map((r) => r.x).sort((a, b) => a - b);
+        const width = 2 * row[0].scale;
+        for (let i = 1; i < xs.length; i++) {
+          expect(xs[i] - xs[i - 1]).toBeGreaterThanOrEqual(width);
+        }
+      }
+    });
+
+    it('builds rising tiers: distinct rows step up in y and back in z', () => {
+      const rows = [...new Set(HERO_CARDS.map((c) => c.podium.z))].sort((a, b) => b - a);
+      expect(rows.length).toBeGreaterThanOrEqual(4);
+      let prevY = -Infinity;
+      for (const z of rows) {
+        const ys = HERO_CARDS.filter((c) => c.podium.z === z).map((c) => c.podium.y);
+        // 同じ段は同じ高さ
+        expect(Math.max(...ys) - Math.min(...ys)).toBeLessThan(1e-9);
+        expect(ys[0]).toBeGreaterThan(prevY);
+        prevY = ys[0];
+      }
+    });
+
+    it('stays narrow enough for a portrait viewport', () => {
+      HERO_CARDS.forEach((c) => {
+        expect(Math.abs(c.podium.x)).toBeLessThanOrEqual(3.2);
+      });
+    });
+  });
+
+  it('staggers gather timing slightly but keeps it within the scene', () => {
+    HERO_CARDS.forEach((c) => {
+      expect(c.gatherDelay).toBeGreaterThanOrEqual(0);
+      expect(c.gatherDelay).toBeLessThan(0.05);
     });
   });
 });

@@ -44,12 +44,12 @@ export default function HeroOverlay({ hud, onCtaClick }: Props) {
           continue;
         }
         el.style.opacity = String(label.opacity);
-        // 星座シーンでは23枚分のラベルが並ぶため縮小して密度を下げる
-        const shrink = 1 - hud.phases.constellation * 0.42;
+        // 集結シーンでは23枚分のラベルが並ぶため縮小して密度を下げる
+        const shrink = 1 - hud.phases.gather * 0.42;
         el.style.transform = `translate(-50%, 0) translate(${label.x}px, ${label.y}px) scale(${shrink})`;
         const catchEl = catchRefs.current[card.id];
-        // 星座シーンでは区名だけにして23枚分のキャッチで画面を埋めない
-        if (catchEl) catchEl.style.opacity = String(label.opacity * (1 - hud.phases.constellation));
+        // 集結シーンでは区名だけにして23枚分のキャッチで画面を埋めない
+        if (catchEl) catchEl.style.opacity = String(label.opacity * (1 - hud.phases.gather));
       }
       raf = requestAnimationFrame(loop);
     };
@@ -191,7 +191,7 @@ export default function HeroOverlay({ hud, onCtaClick }: Props) {
             textShadow: '0 1px 8px rgba(0,0,0,0.9)',
           }}
         >
-          23区が、データの星座になった。
+          23区が、データの地図になった。
         </p>
         <button
           onClick={onCtaClick}

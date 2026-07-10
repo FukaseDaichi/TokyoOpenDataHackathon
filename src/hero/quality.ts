@@ -9,7 +9,7 @@ export interface QualitySettings {
   goldDust: number;
   paperBits: number;
   textureWidth: 512 | 896;
-  /** これより奥の深度バンドは回廊中は描画しない（星座では全員登場） */
+  /** これより奥の深度バンドは回廊中は描画しない（集結では全員登場） */
   maxCorridorBand: number;
   mouseTilt: boolean;
 }

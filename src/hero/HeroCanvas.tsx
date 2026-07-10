@@ -6,7 +6,7 @@
 import { Canvas, useFrame, useThree } from '@react-three/fiber';
 import * as THREE from 'three';
 import { useEffect, useMemo, useRef, type MutableRefObject } from 'react';
-import { HERO_CARDS } from './manifest';
+import { GROUND_Y, HERO_CARDS, MAP_CENTER_Z } from './manifest';
 import { cameraPose, scenePhases, cardPose, floatOffset, smoothstep } from './timeline';
 import { createTextureStore } from './textures';
 import { createCardMaterial } from './CardMaterial';
@@ -17,7 +17,7 @@ import type { HudState } from './hud';
 const BG_COLOR = '#1d140c';
 const GOLD = '#c9a24a';
 
-// 東京23区の隣接関係を星座の線にする（HERO_CARDS = 区コード順のindex）
+// 東京23区の隣接関係を地面に描く金のラインにする（HERO_CARDS = 区コード順のindex）
 const EDGES: Array<[number, number]> = [
   [0, 1], [0, 2], [0, 3], [0, 4], [0, 5], [1, 2], [1, 7], [2, 12], [2, 8],
   [3, 12], [3, 13], [3, 15], [4, 15], [4, 5], [5, 17], [5, 6], [6, 7], [6, 21],
@@ -56,6 +56,7 @@ function SceneInner({ progressRef, hud, tier, onSelectWard }: SceneProps) {
   const starsRef = useRef<THREE.Points>(null);
   const linesRef = useRef<THREE.LineSegments>(null);
   const glowRef = useRef<THREE.Mesh>(null);
+  const groundRef = useRef<THREE.Mesh>(null);
 
   const store = useMemo(() => createTextureStore(HERO_CARDS, settings.textureWidth), [settings.textureWidth]);
   const materials = useMemo(
@@ -125,13 +126,14 @@ function SceneInner({ progressRef, hud, tier, onSelectWard }: SceneProps) {
     return arr;
   }, []);
 
-  // 星座の線
+  // 隣接ライン（東京3Dマップの地面に描く道路網の見立て）
   const linePositions = useMemo(() => {
     const arr = new Float32Array(EDGES.length * 6);
+    const yLine = GROUND_Y + 0.02;
     EDGES.forEach(([a, b], i) => {
-      const pa = HERO_CARDS[a].constellation;
-      const pb = HERO_CARDS[b].constellation;
-      arr.set([pa.x, pa.y, pa.z, pb.x, pb.y, pb.z], i * 6);
+      const pa = HERO_CARDS[a].map;
+      const pb = HERO_CARDS[b].map;
+      arr.set([pa.x, yLine, pa.z, pb.x, yLine, pb.z], i * 6);
     });
     return arr;
   }, []);
@@ -152,8 +154,9 @@ function SceneInner({ progressRef, hud, tier, onSelectWard }: SceneProps) {
   useFrame((state) => {
     const t = progressRef.current;
     const time = state.clock.elapsedTime;
+    const aspect = size.width / size.height;
     const phases = scenePhases(t);
-    const cam = cameraPose(t);
+    const cam = cameraPose(t, aspect);
     const pointer = state.pointer;
 
     camera.position.set(cam.pos[0], cam.pos[1], cam.pos[2]);
@@ -163,15 +166,15 @@ function SceneInner({ progressRef, hud, tier, onSelectWard }: SceneProps) {
     }
     camera.lookAt(cam.look[0], cam.look[1], cam.look[2]);
 
-    // 星座整列後は浮遊を弱める
-    const floatFactor = 1 - phases.constellation * 0.7;
+    // 集結後は浮遊をほぼ止める（地面に立つカードが滑って見えないように）
+    const floatFactor = 1 - phases.gather * 0.9;
 
     for (let i = 0; i < HERO_CARDS.length; i++) {
       const card = HERO_CARDS[i];
       const group = groupRefs.current[i];
       if (!group) continue;
 
-      const pose = cardPose(card, t, size.width / size.height);
+      const pose = cardPose(card, t, aspect);
       const [fx, fy] = floatOffset(card, time, floatFactor);
       group.position.set(pose.pos[0] + fx, pose.pos[1] + fy, pose.pos[2]);
 
@@ -187,12 +190,12 @@ function SceneInner({ progressRef, hud, tier, onSelectWard }: SceneProps) {
       group.rotation.set(tiltX, pose.rotY + tiltY, pose.rotZ);
       group.scale.setScalar(pose.scale);
 
-      // 可視制御: 通過済み・遠すぎ・低ティアの最遠バンドは描かない（星座では全員登場）
-      const inConstellation = phases.constellation > 0.05;
+      // 可視制御: 通過済み・遠すぎ・低ティアの最遠バンドは描かない（集結では全員登場）
+      const inGather = phases.gather > 0.05;
       const behind = dz < -5;
       const tooFar = dz > 92;
       const bandCut = card.depthBand > settings.maxCorridorBand;
-      group.visible = inConstellation || (!behind && !tooFar && !bandCut);
+      group.visible = inGather || (!behind && !tooFar && !bandCut);
 
       const mat = materials[i];
       mat.uniforms.uSheen.value = pose.sheen;
@@ -202,13 +205,17 @@ function SceneInner({ progressRef, hud, tier, onSelectWard }: SceneProps) {
       if (pose.labelOpacity > 0.01 && group.visible) {
         tmpVec.set(group.position.x, group.position.y - pose.scale * 1.6, group.position.z).project(camera);
         const behindCam = tmpVec.z > 1;
+        const rawX = (tmpVec.x * 0.5 + 0.5) * size.width;
+        const rawY = (-tmpVec.y * 0.5 + 0.5) * size.height;
         // ラベルは必ず画面内に収める（カードが近いと足元が画面外に出るため）
-        const lx = Math.min(size.width * 0.92, Math.max(size.width * 0.08, (tmpVec.x * 0.5 + 0.5) * size.width));
-        const ly = Math.min(size.height * 0.84, Math.max(size.height * 0.06, (-tmpVec.y * 0.5 + 0.5) * size.height));
+        const lx = Math.min(size.width * 0.92, Math.max(size.width * 0.08, rawX));
+        const ly = Math.min(size.height * 0.84, Math.max(size.height * 0.06, rawY));
+        // 集結シーンでクランプされたラベルは本来画面外＝端に溜まってCTAと重なるため消す
+        const clamped = lx !== rawX || ly !== rawY;
         hud.labels[card.id] = {
           x: lx,
           y: ly,
-          opacity: behindCam ? 0 : pose.labelOpacity,
+          opacity: behindCam || (clamped && phases.gather > 0.3) ? 0 : pose.labelOpacity,
         };
       } else if (hud.labels[card.id]) {
         hud.labels[card.id].opacity = 0;
@@ -235,17 +242,20 @@ function SceneInner({ progressRef, hud, tier, onSelectWard }: SceneProps) {
 
     if (starsRef.current) {
       (starsRef.current.material as THREE.PointsMaterial).opacity =
-        0.35 + phases.constellation * 0.45;
+        0.35 + phases.gather * 0.45;
     }
     if (linesRef.current) {
-      // 星座の線もカードと同じ横圧縮に合わせる
-      linesRef.current.scale.x = Math.min(1, size.width / size.height * 0.76);
-      linesRef.current.visible = phases.constellation > 0.01;
-      (linesRef.current.material as THREE.LineBasicMaterial).opacity = phases.constellation * 0.5;
+      // 地面ラインは3Dマップ（横長）のみ。雛壇（縦長）では出さない
+      linesRef.current.visible = phases.gather > 0.01 && aspect >= 1;
+      (linesRef.current.material as THREE.LineBasicMaterial).opacity = phases.gather * 0.5;
+    }
+    if (groundRef.current) {
+      groundRef.current.visible = phases.gather > 0.01 && aspect >= 1;
+      (groundRef.current.material as THREE.MeshBasicMaterial).opacity = phases.gather * 0.34;
     }
     if (glowRef.current) {
       (glowRef.current.material as THREE.MeshBasicMaterial).opacity =
-        0.12 + phases.constellation * 0.22;
+        0.12 + phases.gather * 0.22;
     }
 
     hud.t = t;
@@ -355,12 +365,25 @@ function SceneInner({ progressRef, hud, tier, onSelectWard }: SceneProps) {
         />
       </points>
 
-      {/* 星座の線（東京の形に集結） */}
+      {/* 東京3Dマップの地面（淡い金のグロー床） */}
+      <mesh ref={groundRef} visible={false} rotation-x={-Math.PI / 2} position={[0, GROUND_Y, MAP_CENTER_Z]}>
+        <planeGeometry args={[70, 44]} />
+        <meshBasicMaterial
+          map={glowSprite}
+          color="#8a6a35"
+          transparent
+          opacity={0}
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
+        />
+      </mesh>
+
+      {/* 隣接ライン（地面に描く金色の道路網） */}
       <lineSegments ref={linesRef} visible={false}>
         <bufferGeometry>
           <bufferAttribute attach="attributes-position" args={[linePositions, 3]} />
         </bufferGeometry>
-        <lineBasicMaterial color={GOLD} transparent opacity={0} />
+        <lineBasicMaterial color={GOLD} transparent opacity={0} depthWrite={false} />
       </lineSegments>
 
       {/* 最終シーンの背光 */}
