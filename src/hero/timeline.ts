@@ -63,7 +63,7 @@ function pathPoint(tRaw: number): [number, number, number] {
   // Scene4: 引いて星座を見渡す
   const v = smoothstep(0.8, 1, t);
   const yStart = 0.4 + 0.8 * Math.sin(Math.PI * 1.3);
-  return [0, lerp(yStart, 1.2, v), lerp(-58, -40, v)];
+  return [0, lerp(yStart, 0.9, v), lerp(-58, -33, v)];
 }
 
 export function cameraPose(tRaw: number): CameraPose {
@@ -74,7 +74,7 @@ export function cameraPose(tRaw: number): CameraPose {
   // 終盤は星座の中心へ視線を送る
   const v = smoothstep(0.82, 0.96, t);
   look[0] = lerp(look[0], 0, v);
-  look[1] = lerp(look[1], 1.0, v);
+  look[1] = lerp(look[1], 0.9, v);
   look[2] = lerp(look[2], -52, v);
   return { pos, look };
 }
@@ -92,7 +92,11 @@ export function scenePhases(tRaw: number): ScenePhases {
   };
 }
 
-export function cardPose(card: HeroCard, tRaw: number): CardPose {
+/**
+ * aspect = viewport width / height。縦長画面ではクローズアップを
+ * 中央寄り・やや遠めに補正して見切れを防ぐ（デフォルトは16:9）。
+ */
+export function cardPose(card: HeroCard, tRaw: number, aspect = 16 / 9): CardPose {
   const t = clamp01(tRaw);
   const cam = cameraPose(t);
   const { corridor } = card;
@@ -121,14 +125,17 @@ export function cardPose(card: HeroCard, tRaw: number): CardPose {
       const fx = fwd[0] / fl, fy = fwd[1] / fl, fz = fwd[2] / fl;
       // 右ベクトル（up=+Yの外積）
       const rx = -fz, rz = fx;
-      const ax = cam.pos[0] + fx * 4.6 + rx * 1.7 * card.closeupSide;
-      const ay = cam.pos[1] + fy * 4.6 - 0.1;
-      const az = cam.pos[2] + fz * 4.6 + rz * 1.7 * card.closeupSide;
+      const narrow = Math.min(1, aspect / 1.5);
+      const dist = 8.6 * (2 - narrow);
+      const sideOff = 2.8 * narrow * card.closeupSide;
+      const ax = cam.pos[0] + fx * dist + rx * sideOff;
+      const ay = cam.pos[1] + fy * dist - 0.35;
+      const az = cam.pos[2] + fz * dist + rz * sideOff;
       const w = g * 0.88;
       x = lerp(x, ax, w);
       y = lerp(y, ay, w);
       z = lerp(z, az, w);
-      scale *= 1 + 0.18 * g;
+      scale *= 1 + 0.1 * g;
       rotY = lerp(rotY, Math.atan2(cam.pos[0] - x, cam.pos[2] - z), g * 0.85);
       rotZ = lerp(rotZ, 0.06 * card.closeupSide, g);
       sheen = Math.min(1, sheen + g);
@@ -139,12 +146,14 @@ export function cardPose(card: HeroCard, tRaw: number): CardPose {
   // Scene4: 星座へ整列（カードごとに位相をずらして流れ込む）
   const c = smoothstep(0.8 + card.constellationDelay, 0.94 + card.constellationDelay, t);
   if (c > 0) {
-    x = lerp(x, card.constellation.x, c);
+    // 縦長画面では星座の横広がりを圧縮して全区を画面内に収める
+    const xk = Math.min(1, aspect * 0.76);
+    x = lerp(x, card.constellation.x * xk, c);
     y = lerp(y, card.constellation.y, c);
     z = lerp(z, card.constellation.z, c);
     rotY = lerp(rotY, 0, c);
     rotZ = lerp(rotZ, 0, c);
-    scale = lerp(scale, 1.35, c);
+    scale = lerp(scale, 0.72, c);
     sheen = lerp(sheen, 0.3, c);
     labelOpacity = Math.max(labelOpacity, c * 0.9);
   }

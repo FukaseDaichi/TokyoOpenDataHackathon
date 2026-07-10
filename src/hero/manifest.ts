@@ -27,6 +27,14 @@ export interface HeroCard extends WardInfo {
 // 回廊のカメラz（timeline.tsのcorridor区間と同じ線形式）
 const camZAt = (t: number) => 24 + ((t - 0.15) / 0.65) * (-58 - 24);
 
+// カメラのS字経路のx（timeline.tsのpathPointと同じ式）。
+// カードはこの経路からの横オフセットとして置くことで、
+// カメラがカードを突き抜けない最低クリアランスを保証する。
+const camXAtZ = (z: number) => {
+  const u = Math.min(1, Math.max(0, (24 - z) / 82));
+  return 6.2 * Math.sin(u * Math.PI * 2) * Math.sin(u * Math.PI);
+};
+
 /** クローズアップ対象（実画像13区から映えの異なる6区）と時刻 */
 const CLOSEUPS: Record<string, { at: number; side: -1 | 1 }> = {
   '13101': { at: 0.38, side: 1 },  // 千代田
@@ -56,13 +64,13 @@ function buildManifest(): HeroCard[] {
     // 回廊z: 駅ベース。クローズアップ区はその時刻のカメラ少し先に置く
     const z = closeup ? camZAt(closeup.at) - 5.5 : 14 - stations[i] * 3.4;
 
-    const lateral = 2.6 + depthBand * 1.9 + rng() * 1.2;
+    const lateral = 3.4 + depthBand * 1.9 + rng() * 1.2;
     const y = (rng() - 0.4) * (1.5 + depthBand * 0.8);
 
     return {
       ...ward,
       corridor: {
-        x: side * lateral,
+        x: camXAtZ(z) + side * lateral,
         y,
         z,
         rotY: (rng() - 0.5) * 0.5,
@@ -75,8 +83,8 @@ function buildManifest(): HeroCard[] {
       floatSpeed: 0.35 + rng() * 0.45,
       floatAmp: 0.07 + rng() * 0.09,
       constellation: {
-        x: ward.geo.x * 3.1,
-        y: ward.geo.y * 2.3 + 0.9,
+        x: ward.geo.x * 4.5,
+        y: ward.geo.y * 2.9 + 0.9,
         z: -52 + (rng() - 0.5) * 1.6,
       },
       closeupAt: closeup ? closeup.at : null,

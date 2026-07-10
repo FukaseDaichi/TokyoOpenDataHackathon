@@ -25,6 +25,10 @@ export function prefersReducedMotion(): boolean {
 
 export function detectQuality(): QualityTier {
   if (typeof window === 'undefined') return 'fallback';
+  // デモ・検証用の強制上書き: ?view=2d|low|high
+  const forced = new URLSearchParams(window.location.search).get('view');
+  if (forced === '2d') return 'fallback';
+  if (forced === 'low' || forced === 'high') return forced;
   if (prefersReducedMotion()) return 'fallback';
   try {
     const canvas = document.createElement('canvas');

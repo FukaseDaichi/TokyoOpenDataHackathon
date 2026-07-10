@@ -44,7 +44,9 @@ export default function HeroOverlay({ hud, onCtaClick }: Props) {
           continue;
         }
         el.style.opacity = String(label.opacity);
-        el.style.transform = `translate(-50%, 0) translate(${label.x}px, ${label.y}px)`;
+        // 星座シーンでは23枚分のラベルが並ぶため縮小して密度を下げる
+        const shrink = 1 - hud.phases.constellation * 0.42;
+        el.style.transform = `translate(-50%, 0) translate(${label.x}px, ${label.y}px) scale(${shrink})`;
         const catchEl = catchRefs.current[card.id];
         // 星座シーンでは区名だけにして23枚分のキャッチで画面を埋めない
         if (catchEl) catchEl.style.opacity = String(label.opacity * (1 - hud.phases.constellation));
@@ -174,6 +176,8 @@ export default function HeroOverlay({ hud, onCtaClick }: Props) {
           textAlign: 'center',
           opacity: 0,
           width: 'min(92vw, 640px)',
+          padding: '28px 16px 8px',
+          background: 'radial-gradient(ellipse at 50% 70%, rgba(16, 10, 3, 0.6) 0%, transparent 72%)',
         }}
       >
         <p

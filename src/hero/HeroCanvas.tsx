@@ -171,7 +171,7 @@ function SceneInner({ progressRef, hud, tier, onSelectWard }: SceneProps) {
       const group = groupRefs.current[i];
       if (!group) continue;
 
-      const pose = cardPose(card, t);
+      const pose = cardPose(card, t, size.width / size.height);
       const [fx, fy] = floatOffset(card, time, floatFactor);
       group.position.set(pose.pos[0] + fx, pose.pos[1] + fy, pose.pos[2]);
 
@@ -202,9 +202,12 @@ function SceneInner({ progressRef, hud, tier, onSelectWard }: SceneProps) {
       if (pose.labelOpacity > 0.01 && group.visible) {
         tmpVec.set(group.position.x, group.position.y - pose.scale * 1.6, group.position.z).project(camera);
         const behindCam = tmpVec.z > 1;
+        // ラベルは必ず画面内に収める（カードが近いと足元が画面外に出るため）
+        const lx = Math.min(size.width * 0.92, Math.max(size.width * 0.08, (tmpVec.x * 0.5 + 0.5) * size.width));
+        const ly = Math.min(size.height * 0.84, Math.max(size.height * 0.06, (-tmpVec.y * 0.5 + 0.5) * size.height));
         hud.labels[card.id] = {
-          x: (tmpVec.x * 0.5 + 0.5) * size.width,
-          y: (-tmpVec.y * 0.5 + 0.5) * size.height,
+          x: lx,
+          y: ly,
           opacity: behindCam ? 0 : pose.labelOpacity,
         };
       } else if (hud.labels[card.id]) {
@@ -216,7 +219,7 @@ function SceneInner({ progressRef, hud, tier, onSelectWard }: SceneProps) {
     if (dustRef.current) {
       dustRef.current.position.y = Math.sin(time * 0.07) * 0.5;
       dustRef.current.rotation.z = Math.sin(time * 0.03) * 0.02;
-      (dustRef.current.material as THREE.PointsMaterial).opacity = 0.5 * (1 - phases.vignette * 0.6);
+      (dustRef.current.material as THREE.PointsMaterial).opacity = 0.65 * (1 - phases.vignette * 0.6);
     }
 
     // 開幕バースト: tから決定的に手前へ流れる（逆スクロールで巻き戻る）
@@ -235,8 +238,10 @@ function SceneInner({ progressRef, hud, tier, onSelectWard }: SceneProps) {
         0.35 + phases.constellation * 0.45;
     }
     if (linesRef.current) {
+      // 星座の線もカードと同じ横圧縮に合わせる
+      linesRef.current.scale.x = Math.min(1, size.width / size.height * 0.76);
       linesRef.current.visible = phases.constellation > 0.01;
-      (linesRef.current.material as THREE.LineBasicMaterial).opacity = phases.constellation * 0.35;
+      (linesRef.current.material as THREE.LineBasicMaterial).opacity = phases.constellation * 0.5;
     }
     if (glowRef.current) {
       (glowRef.current.material as THREE.MeshBasicMaterial).opacity =
@@ -289,11 +294,11 @@ function SceneInner({ progressRef, hud, tier, onSelectWard }: SceneProps) {
           <bufferAttribute attach="attributes-position" args={[dustPositions, 3]} />
         </bufferGeometry>
         <pointsMaterial
-          size={0.16}
+          size={0.2}
           map={glowSprite}
           color="#ffd98a"
           transparent
-          opacity={0.5}
+          opacity={0.65}
           depthWrite={false}
           blending={THREE.AdditiveBlending}
           sizeAttenuation
