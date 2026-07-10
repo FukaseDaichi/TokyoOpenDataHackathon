@@ -97,7 +97,8 @@ export default function HeroOverlay({ hud, onCtaClick }: Props) {
           うちの区ちゃん
         </h1>
         <p style={{ color: '#cdb27a', marginTop: 18, fontSize: 'clamp(12px, 1.8vw, 17px)', letterSpacing: '0.16em' }}>
-          オープンデータで出会う、東京23区個性診断図鑑
+          <span style={{ whiteSpace: 'nowrap' }}>オープンデータで出会う、</span>
+          <span style={{ whiteSpace: 'nowrap' }}>東京23区個性診断図鑑</span>
         </p>
       </div>
 
