@@ -36,33 +36,36 @@ single female character only (all 23 wards are personified as girls/women).
 
 ## 個性配分表（被り防止マトリクス）
 
-髪色・カメラ・時間帯・ポーズをシリーズ全体で分散させる。生成前にここで衝突チェック。
+髪色・アングル・時間帯・ポーズをシリーズ全体で分散させる。生成前にここで衝突チェック。
 
-| 区 | 髪色 | 時間帯 | カメラ/構図 |
-|---|---|---|---|
-| 千代田 | シルバーホワイト×紺 | 昼夜スプリット | 正面シンメトリー |
-| 中央 | アクアブルー | 朝 | 跳躍ミッドエア |
-| 港 | シャンパンゴールド | 夜 | ローアングル見上げ ✅済 |
-| 新宿 | 深紫×ネオンピンク | 深夜 | ネオン逆光シルエット |
-| 文京 | 深緑 | 午後 | 本の塔に腰掛け俯瞰 |
-| 台東 | 緋色（ポニーテール） | 夕暮れ | 祭り踊りの躍動 |
-| 墨田 | 藍色 | 黄昏 | 腕組み仁王立ち・見上げ |
-| 江東 | エメラルドグラデ | 快晴の昼 | 水辺で振り向き・風 |
-| 品川 | ネイビー×白メッシュ | 朝ラッシュ | 歩き向かってくる・モーションブラー |
-| 目黒 | アッシュピンク | ゴールデンアワー | 桜並木で欄干にもたれる |
-| 大田 | オレンジブラウン | 夕焼け | 滑走路でサムズアップ・広角 |
-| 世田谷 | ミルクティーベージュ | 午後の公園 | 芝生に座る・横からの風 |
-| 渋谷 | ピンク×シアンのグラデ | 夜（ネオン） | 魚眼気味・交差点を疾走 |
-| 中野 | アッシュグレー | 夜（室内） | あぐらで浮遊ガジェット |
-| 杉並 | オリーブ | 夜のアーケード | ギターを爪弾く・ランプ光 |
-| 豊島 | ビビッドイエロー | 昼 | ビル峡谷をルーフ跳び |
-| 北 | レンガ色 | ノスタルジック夕方 | 都電の窓から手を振る |
-| 荒川 | クリームブロンド | やわらかい朝 | 停留所ベンチでお弁当 |
-| 板橋 | 緑がかった黒 | 夕方 | 商店街を闊歩・買い物袋 |
-| 練馬 | 黄緑 | 明るい昼 | 畑でじょうろ・フィルム舞う |
-| 足立 | サンセットオレンジ | 花火の夜 | 腕組みニカッ・打ち上げ花火 |
-| 葛飾 | ウォームブラウン | 夕暮れ河川敷 | 歩き去りざま振り返り |
-| 江戸川 | ビビッドグリーン | 青空 | 虫取り網で駆けてくる・超広角 |
+アングルの内訳: 超ロー煽り4 / ロー・地面すれすれ6 / 真俯瞰3 / ハイアングル3 /
+ダッチアングル2 / アイレベル系5（静のキャラに割当てて緩急をつける）。
+
+| 区 | 髪色 | 時間帯 | アングル | 構図 |
+|---|---|---|---|---|
+| 千代田 | シルバーホワイト×紺 | 昼夜スプリット | アイレベル正面 | シンメトリー昼夜分割 |
+| 中央 | アクアブルー | 朝 | 空中俯瞰（ハイ） | 橋の上空、跳躍を見下ろす |
+| 港 | シャンパンゴールド | 夜 | ローアングル ✅済 | 見上げの女王様 |
+| 新宿 | 深紫×ネオンピンク | 深夜 | 街灯高さの俯瞰 | 路地を見下ろし・振り仰ぐ視線 |
+| 文京 | 深緑 | 午後 | 俯瞰（ハイ） | 本の塔の頂を見下ろす |
+| 台東 | 緋色 | 夕暮れ | 超ローアングル煽り | 山車の上の踊りを観客目線で |
+| 墨田 | 藍色 | 黄昏 | ダッチアングル（ロー気味） | 斜め構図でスカイツリーと対峙 |
+| 江東 | エメラルドグラデ | 快晴の昼 | アイレベル | 水辺で振り向き・風 |
+| 品川 | ネイビー×白メッシュ | 朝ラッシュ | ダッチアングル | 斜め傾き＋モーションブラー |
+| 目黒 | アッシュピンク | ゴールデンアワー | やや下からエディトリアル | 欄干にもたれる |
+| 大田 | オレンジブラウン | 夕焼け | 地面すれすれ超広角 | 頭上をジェットが横切る |
+| 世田谷 | ミルクティーベージュ | 午後の公園 | 真俯瞰（真上ドローン） | ピクニックシートを真上から |
+| 渋谷 | ピンク×シアンのグラデ | 夜（ネオン） | 魚眼ロー | 交差点を疾走 |
+| 中野 | アッシュグレー | 夜（室内） | 真俯瞰気味 | あぐらで浮遊ガジェット |
+| 杉並 | オリーブ | 夜のアーケード | アイレベル | ギターを爪弾く・ランプ光 |
+| 豊島 | ビビッドイエロー | 昼 | 真下から垂直見上げ | ビル峡谷の頭上を跳ぶ |
+| 北 | レンガ色 | ノスタルジック夕方 | 横並走アイレベル | 都電の窓から手を振る |
+| 荒川 | クリームブロンド | やわらかい朝 | 子ども目線の低アイレベル | 停留所ベンチでお弁当 |
+| 板橋 | 緑がかった黒 | 夕方 | 地面近くロー追い撮り | 商店街を闊歩・買い物袋 |
+| 練馬 | 黄緑 | 明るい昼 | ローアングル空抜け | 畑からじょうろを掲げる |
+| 足立 | サンセットオレンジ | 花火の夜 | 超ローアングル | ヒロイック仁王立ち＋花火 |
+| 葛飾 | ウォームブラウン | 夕暮れ河川敷 | やや俯瞰クレーン背面 | 歩き去りざま振り返り |
+| 江戸川 | ビビッドグリーン | 青空 | 地面すれすれ正面 | 駆けてくる超広角 |
 
 ## 区別プロファイル（性格・根拠・SSRプロンプト）
 
@@ -92,8 +95,10 @@ a fresh and ambitious rookie riding a wave of momentum.
 Appearance: aqua-blue short bob with a bright sheen, sparkling upturned eyes,
 smart office-casual jacket over a modern dress with sneaker-style heels,
 a tablet and a vintage compass (old merchant town heritage).
-Composition: dynamic mid-air jump over the historic Nihonbashi bridge,
-one arm reaching to the sky, papers and light particles swirling around her.
+Composition: dramatic aerial high-angle shot looking down from above as she
+leaps over the historic Nihonbashi bridge, arms spread wide toward the camera,
+the bridge and morning streets spiraling far below, papers and light
+particles swirling upward.
 Background: morning sun rising between glass high-rise towers and the retro
 stone bridge, fresh blue-and-white color scheme.
 ```
@@ -121,9 +126,10 @@ lives alone. Looks tired but has impossibly kind eyes.
 Appearance: deep purple layered hair with neon-pink streaks, sleepy amber eyes
 with gentle warmth, long black coat over loose shirt, loosened tie, holding a
 steaming canned coffee, earphones around neck.
-Composition: backlit full-body silhouette walking through a rain-slicked neon
-alley at 2 a.m., turning back over her shoulder with a soft smile, coat hem
-flowing, neon reflections rippling at her feet.
+Composition: high-angle shot from streetlight height looking down into a
+rain-slicked neon alley at 2 a.m.; she looks up over her shoulder at the
+camera with a soft smile, coat hem flowing, neon reflections spreading
+across the wet ground below her like a shattered mirror.
 Background: Kabukicho-style neon signs in pink, purple and cyan, glowing shop
 lanterns, bokeh crowds fading into darkness.
 ```
@@ -136,9 +142,10 @@ and universities, gentle but quietly brilliant.
 Appearance: deep-green long straight hair with a low braid, calm hazel eyes
 behind elegant thin glasses, refined dark-green academic cape over a crimson
 ribbon blouse (classic school colors), fountain pen tucked behind her ear.
-Composition: seated gracefully atop a spiraling tower of giant antique books,
-legs crossed, one open book floating before her as glowing letters drift
-upward like petals; slightly high-angle shot.
+Composition: dramatic high-angle shot looking down at her from above the
+spiraling tower of giant antique books she sits gracefully upon, legs
+crossed, one open book floating before her as glowing letters drift upward
+past the camera; the library floor dizzyingly far below.
 Background: warm afternoon light through a grand library window, ginkgo
 leaves and paper pages floating, dark green and burgundy palette.
 ```
@@ -151,8 +158,10 @@ downtown Tokyo, always at the center of the matsuri.
 Appearance: fiery scarlet hair in a high ponytail with a kanzashi, bold
 confident grin, festival happi coat in deep red with gold Edo patterns worn
 over modern streetwear, uchiwa fan and a giant red lantern.
-Composition: dynamic mid-dance pose on a festival float, one leg raised,
-fan swung wide, sweat and light sparks flying, low-angle worm's-eye view.
+Composition: extreme worm's-eye view from within the crowd directly below
+the festival float — she dances high above the camera, one leg raised, fan
+swung wide against the twilight sky, sparks and confetti raining down
+toward the lens.
 Background: Kaminarimon's giant red lantern at dusk, rows of glowing
 chochin lanterns, fireworks starting in the twilight sky, festive red-gold.
 ```
@@ -165,9 +174,10 @@ the pride of downtown manufacturing on her back.
 Appearance: indigo-blue hair in a tight high ponytail with an undercut, sharp
 focused eyes, navy work jacket (sashiko-stitched) with rolled sleeves, leather
 apron, work gloves tucked in belt, a fine hammer on her shoulder.
-Composition: full-body arms-crossed stance on a workshop rooftop at twilight,
-looking up defiantly; golden sparks from craftsmanship swirl around her like
-fireflies, slight low angle.
+Composition: boldly tilted dutch-angle shot, slightly from below — full-body
+arms-crossed stance on a workshop rooftop at twilight, the horizon dramatically
+slanted, looking up defiantly; golden sparks from craftsmanship swirl around
+her like fireflies.
 Background: Tokyo Skytree towering directly behind her lit in iki-blue,
 tiled downtown roofs and small factory chimneys, indigo-and-copper palette.
 ```
@@ -195,9 +205,10 @@ perfectly balanced between old post-town heritage and futuristic station city.
 Appearance: navy short bob with a single white streak (shinkansen motif),
 cool composed gray eyes, sharply fitted modern pantsuit with a subtle ukiyo-e
 wave-pattern lining, smartwatch, sleek briefcase.
-Composition: striding straight toward the camera on a station platform,
-coat flaring with speed lines and motion blur, one hand adjusting her necktie;
-a bullet train streaks past behind her as pure light.
+Composition: sharply tilted dutch-angle shot — striding straight toward the
+camera on a station platform, coat flaring with speed lines and motion blur,
+one hand adjusting her necktie; a bullet train streaks past behind her as
+pure light along the slanted horizon.
 Background: morning rush hour, glass station architecture blended with
 an old Tokaido post-town gate, silver-and-navy palette with a red accent line.
 ```
@@ -225,9 +236,10 @@ and neighbors smiling, town-factory pride and sento warmth.
 Appearance: orange-brown short spiky hair with a wrench-shaped hairpin,
 big friendly grin, mechanic jumpsuit tied at the waist over a white tee,
 tool belt, a sento towel around her neck.
-Composition: wide-angle full-body shot on an airport runway at sunset giving
-a huge thumbs-up, jet wind blasting her clothes, bolts and small gears
-glinting in the air around her.
+Composition: ultra-wide ground-level shot, camera almost touching the runway
+asphalt looking up at her — she gives a huge thumbs-up as a passenger jet
+roars directly overhead filling the sky, jet wind blasting her clothes,
+bolts and small gears glinting in the air around her.
 Background: a passenger jet lifting off right overhead, orange sunset sky,
 control tower and small factory silhouettes, warm orange-and-steel palette.
 ```
@@ -240,9 +252,10 @@ unhurried, caring, always with room for one more.
 Appearance: milk-tea beige long wavy hair loosely braided over one shoulder,
 soft smiling eyes, long relaxed cardigan over a spring dress, wicker picnic
 basket, a hand-knit scarf trailing in the breeze.
-Composition: sitting gracefully on a grassy park hill with legs folded aside,
-one hand holding down her hat against the wind, a colorful kite string in the
-other hand leading up out of frame; side-lit eye-level shot.
+Composition: top-down bird's-eye drone shot looking straight down — she lies
+back gently on a picnic blanket on the grass, hair fanned out in soft waves
+around her head, one hand holding her hat, a colorful kite floating between
+her and the camera casting a playful shadow across the lawn.
 Background: wide afternoon park with families picnicking as soft bokeh,
 suburban rooftops and green trees, cream-and-sage gentle palette.
 ```
@@ -255,9 +268,10 @@ crossing, free, loud and impossible to ignore.
 Appearance: pink-to-cyan gradient hair in an asymmetric cut, glitter makeup,
 mixed street fashion — cropped neon jacket, layered accessories, platform
 sneakers, holographic phone in hand.
-Composition: fisheye-style dynamic shot sprinting across the scramble crossing
-mid-stride, jacket flying open, pointing forward at the viewer with a fearless
-grin; motion trails of neon light follow her.
+Composition: low fisheye-style dynamic shot from knee height — sprinting
+across the scramble crossing mid-stride toward the camera, jacket flying open,
+pointing forward at the viewer with a fearless grin; the buildings curve
+around the frame edges and motion trails of neon light follow her.
 Background: Shibuya scramble at night — giant glowing video billboards,
 crowds as streaks of light, vivid magenta-cyan-yellow palette.
 ```
@@ -300,9 +314,10 @@ concrete jungle into her personal playground, never runs out of energy.
 Appearance: vivid yellow twin-tails with black inner color, huge sparkling
 eyes, sporty oversized streetwear in yellow and black, sneakers with LED
 soles, a small owl companion perched on her shoulder (Ikebukuro motif).
-Composition: leaping between rooftops in a narrow canyon of buildings,
-grabbing her cap, legs kicked up mid-jump, grinning down at the camera;
-dramatic vertical composition looking up between the towers.
+Composition: extreme vertical shot from street level directly below — she
+leaps across the gap between rooftops high overhead, framed against the
+sliver of sky between the towers, grinning down at the camera, cap held
+tight, legs kicked up mid-jump, her owl diving alongside.
 Background: densely packed Ikebukuro buildings and signs closing in on all
 sides, laundry lines and rooftop gardens as her 'parks', pop yellow palette.
 ```
@@ -332,7 +347,8 @@ smile, simple hand-sewn apron dress in cream and sky blue, holding a
 beautifully packed homemade bento wrapped in cloth.
 Composition: sitting neatly on a tram-stop bench in soft morning light,
 offering the bento toward the camera with both hands and a warm smile,
-roses (Toden line motif) blooming beside the tracks; gentle eye-level shot.
+roses (Toden line motif) blooming beside the tracks; gentle low camera at
+a seated child's eye height, softly intimate.
 Background: a cute retro streetcar approaching along flower-lined tracks,
 quiet morning downtown, soft cream-and-rose palette.
 ```
@@ -345,9 +361,10 @@ humble on the surface, quietly mature and steady inside.
 Appearance: greenish-black hair in a sporty high ponytail, easygoing reliable
 smile, classic green-line jersey worn open over a tee, sports towel, carrying
 overflowing shopping bags from the local arcade in both arms.
-Composition: mid-stride power-walk through a shopping street at evening,
-kids running alongside her as blurred silhouettes, one bag balanced on her
-shoulder; energetic three-quarter tracking shot.
+Composition: low tracking shot from near the ground — mid-stride power-walk
+through a shopping street at evening, kids running alongside her as blurred
+silhouettes, one bag balanced on her shoulder, the pavement rushing past in
+the blurred foreground.
 Background: a lively evening shotengai with a sento chimney and rising bath
 steam behind, paper flyers fluttering, green-and-warm-brown palette.
 ```
@@ -360,9 +377,10 @@ anime nerd, takes care of everyone with a huge open smile.
 Appearance: yellow-green tousled twin braids under a pushed-back straw hat,
 bright friendly eyes, work overalls with one strap down over an anime-print
 tee, watering can in one hand, a cabbage under the other arm.
-Composition: standing in a sunlit cabbage field mid-laugh, watering can
-raised as droplets catch the light like sparkles, strips of anime film
-spiraling around her in the wind; bright wide eye-level shot.
+Composition: low-angle shot from between the cabbage leaves looking up at
+her against the wide open sky — mid-laugh, watering can raised high as
+droplets catch the light like sparkles, strips of anime film spiraling
+around her in the wind.
 Background: neat vegetable fields meeting suburban homes, an anime studio
 building in the distance, drifting clouds, fresh yellow-green palette.
 ```
@@ -391,9 +409,10 @@ family bonds in Tokyo, a Tora-san-inspired charmer who always comes home.
 Appearance: warm brown slightly wavy hair under a classic fedora-style hat,
 crinkled smiling eyes, retro checked jacket over a haramaki belly band,
 old leather travel trunk in one hand.
-Composition: walking away down a riverbank path at sunset but turning back
-with a big fond grin and a raised hand of farewell, coat and grass swaying;
-cinematic three-quarter back shot.
+Composition: cinematic crane shot from slightly above and behind — she walks
+away down a riverbank path at sunset, turning back and up toward the camera
+with a big fond grin and a raised hand of farewell, coat and long grass
+swaying, her shadow stretching long across the path.
 Background: the Shibamata riverside at dusk, an old temple street with
 lanterns lighting up, a family waving from afar, retro brown-and-gold palette.
 ```
