@@ -60,21 +60,22 @@ export default function Hero2DFallback({ onSelectWard, onCtaClick }: Props) {
       />
 
       <div style={{ position: 'relative', maxWidth: 1080, margin: '0 auto', textAlign: 'center' }}>
-        <p style={{ color: '#cdb27a', letterSpacing: '0.3em', fontSize: 13, marginBottom: 12 }}>
-          — 魔法の絵本をひらく —
+        <p style={{ color: '#e8d5a8', letterSpacing: '0.28em', fontSize: 16, marginBottom: 12 }}>
+          わたし、何区タイプ？
         </p>
         <h1
           style={{
             color: '#f4e8d0',
-            fontSize: 'clamp(28px, 6vw, 52px)',
+            fontSize: 'clamp(30px, 9vw, 64px)',
             letterSpacing: '0.12em',
+            whiteSpace: 'nowrap',
             textShadow: '0 2px 10px rgba(0,0,0,0.5)',
           }}
         >
-          うちの区ちゃん診断図鑑
+          うちの区ちゃん
         </h1>
         <p style={{ color: '#b99c6b', margin: '14px 0 40px', letterSpacing: '0.16em', fontSize: 14 }}>
-          東京23区 × オープンデータ × 性格診断
+          オープンデータで出会う、東京23区個性診断図鑑
         </p>
 
         <div

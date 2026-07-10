@@ -81,22 +81,23 @@ export default function HeroOverlay({ hud, onCtaClick }: Props) {
           width: 'min(92vw, 720px)',
         }}
       >
-        <p style={{ color: '#cdb27a', letterSpacing: '0.35em', fontSize: 'clamp(11px, 1.6vw, 15px)', marginBottom: 14 }}>
-          — 魔法の絵本をひらく —
+        <p style={{ color: '#e8d5a8', letterSpacing: '0.3em', fontSize: 'clamp(14px, 2.2vw, 20px)', marginBottom: 16 }}>
+          わたし、何区タイプ？
         </p>
         <h1
           style={{
             color: '#f4e8d0',
-            fontSize: 'clamp(30px, 6vw, 58px)',
+            fontSize: 'clamp(34px, 10vw, 76px)',
             fontWeight: 600,
             letterSpacing: '0.12em',
+            whiteSpace: 'nowrap',
             textShadow: '0 0 28px rgba(255, 215, 140, 0.35), 0 2px 8px rgba(0,0,0,0.6)',
           }}
         >
-          うちの区ちゃん診断図鑑
+          うちの区ちゃん
         </h1>
-        <p style={{ color: '#b99c6b', marginTop: 16, fontSize: 'clamp(12px, 1.8vw, 16px)', letterSpacing: '0.18em' }}>
-          東京23区 × オープンデータ × 性格診断
+        <p style={{ color: '#cdb27a', marginTop: 18, fontSize: 'clamp(12px, 1.8vw, 17px)', letterSpacing: '0.16em' }}>
+          オープンデータで出会う、東京23区個性診断図鑑
         </p>
       </div>
 
