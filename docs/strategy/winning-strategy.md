@@ -1,7 +1,7 @@
 # 勝ち筋の言語化（統合）
 
-> research/ の調査結果（01〜07）を統合し、勝負するコンセプトを1本に確定する。
-> 前段の事実根拠: [00-summary.md](../research/00-summary.md) ／ 別視点レビュー: [07-cross-check-codex.md](../research/07-cross-check-codex.md)
+> research/ の調査結果を統合し、勝負するコンセプトを1本に確定する。
+> 前段の事実根拠: [00-summary.md](../research/00-summary.md)（codex別視点レビューの採用原則も同ファイルに吸収済み）
 
 - 更新日: 2026-06-25
 - 参加前提: ソロ（35歳・フルスタック／**強み＝データ処理・分析**）／30〜60h／追加課金なし

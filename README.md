@@ -3,50 +3,46 @@
 公式: https://odhackathon.metro.tokyo.lg.jp
 
 ## 目的
-最優秀・上位入賞を本気で狙う。そのための調査 → 戦略 → アイディア出しを段階的に進める。
+最優秀・上位入賞を本気で狙う。調査 → 戦略 → アイディア → 実装を段階的に進める。
 
 ## 前提（プロフィール・制約）
-- 参加形式: ソロ（35歳・フルスタックエンジニア）
-- 投下時間: 30〜60h
-- コスト: 追加課金は極力なし（無料枠で完成させる）
+- 参加形式: ソロ（35歳・フルスタックエンジニア／強み＝データ処理・分析）
+- 投下時間: 30〜60h ／ コスト: 追加課金なし（無料枠で完成）
 - 狙い: 最優秀・上位入賞
 
 ## 勝ち筋の基本式
 > 勝てるアイディア ＝ (評価軸で高得点) × (強み・制約で完成できる) × (データの裏付け) × (競合と被らない)
 
-各調査は必ずこの4つの「空欄」のどれかを埋めるために行う。
+## ドキュメント構成（AIでアイディアを練るときの読ませ方）
 
-## 進捗ダッシュボード
+| 読む順 | ファイル | 中身 | 埋める空欄 |
+|---|---|---|---|
+| 1 | [research/00-summary.md](docs/research/00-summary.md) | **結論サマリ**（まずこれをAIに読ませる） | 全体 |
+| 2 | [research/01-contest.md](docs/research/01-contest.md) | 大会ルール・審査5軸・審査員・日程・特典 | 評価軸 |
+| 3 | [research/02-winners-and-competition.md](docs/research/02-winners-and-competition.md) | 過去受賞作の型・レッドオーシャン・勝率感 | 評価軸＋差別化 |
+| 4 | [research/03-open-data.md](docs/research/03-open-data.md) | 使えるオープンデータ棚卸し（都＋外部、2026-07-10時点） | データ |
+| 5 | [research/04-tech-stack.md](docs/research/04-tech-stack.md) | 無料で完成させる技術スタック | 実現可能性 |
+| 6 | [strategy/winning-strategy.md](docs/strategy/winning-strategy.md) | 勝ち筋の言語化（統合） | — |
+| 7 | [ideas/idea-candidates.md](docs/ideas/idea-candidates.md) | アイディア候補（確定: 案A「うちの区ちゃん」） | — |
 
-| # | 調査項目 | 優先度 | 状態 | ファイル |
-|---|---------|--------|------|---------|
-| 1 | 大会ルールと評価軸 | 最優先 | ✅ 完了 | [01-rules-and-criteria.md](docs/research/01-rules-and-criteria.md) |
-| 2 | 過去の受賞作分析 | 最優先 | ✅ 完了 | [02-past-winners.md](docs/research/02-past-winners.md) |
-| 3 | 使えるオープンデータの棚卸し | 最優先 | ✅ 完了 | [03-open-data-catalog.md](docs/research/03-open-data-catalog.md) |
-| 4 | 審査員と東京都の政策的関心 | 高 | ✅ 完了 | [04-judges-and-policy.md](docs/research/04-judges-and-policy.md) |
-| 5 | 競合・参加者の傾向 | 中 | ✅ 完了 | [05-competition.md](docs/research/05-competition.md) |
-| 6 | 無料で完成させる技術スタック＆コスト | 高 | ✅ 完了 | [06-tech-and-cost.md](docs/research/06-tech-and-cost.md) |
-| - | 調査サマリ（結論） | - | ✅ 完了 | [00-summary.md](docs/research/00-summary.md) |
-| - | 別視点クロスチェック（codex） | - | ✅ 完了 | [07-cross-check-codex.md](docs/research/07-cross-check-codex.md) |
-| - | 勝ち筋の言語化（統合） | - | ✅ 完了 | [winning-strategy.md](docs/strategy/winning-strategy.md) |
-| - | アイディア候補（出力） | - | ✅ 完了 | [idea-candidates.md](docs/ideas/idea-candidates.md) |
-
-## フォルダ構成
 ```
-.
-├── docs/
-│   ├── research/   # 事実: 調査結果（このフェーズの主役）
-│   ├── strategy/   # 統合: 勝ち筋の言語化
-│   └── ideas/      # 出力: アイディア候補
-└── assets/
-    ├── screenshots/    # 過去作・データ画面のスクショ
-    └── data-samples/   # DLしたデータのサンプル
+docs/
+├── research/   # 事実: 調査結果（00=結論、01〜04=根拠）
+├── strategy/   # 統合: 勝ち筋の言語化
+└── ideas/      # 出力: アイディア候補
+assets/
+├── screenshots/    # 過去作・データ画面のスクショ
+└── data-samples/   # DLしたデータのサンプル
 ```
 
-## 進め方（フェーズ）
-1. **調査**（research/ を埋める）✅ 完了（01〜06＋00-summary）
-2. **統合**（strategy/winning-strategy.md に勝ち筋をまとめる）✅ 完了
-3. **発散**（ideas/idea-candidates.md でアイディアを出す）✅ 完了（案A「うちの区ちゃん」に具体化）
-4. **選定 → 実装**（MVP実装計画）← いまここ
+## 現在地（フェーズ）
+1. 調査 ✅（2026-07-10 再調査反映済み）
+2. 統合 ✅（勝ち筋 = 「うちの区ちゃん」＝区擬人化×予算トレードオフのデータ駆動シム）
+3. 発散・選定 ✅（案Aに具体化）
+4. **実装（MVP実装計画）← いまここ**。ただし2026テーマ（7/10公開予定・未公開）確認後に題材を微調整。
 
-> 確定コンセプトは「うちの区ちゃん」＝区擬人化×予算トレードオフのデータ駆動シム（[strategy](docs/strategy/winning-strategy.md)／[idea](docs/ideas/idea-candidates.md)）。次は MVP の実装計画。
+## 直近TODO
+- [ ] 公式 [/issues/](https://odhackathon.metro.tokyo.lg.jp/issues/)＋X(@tokyo_odh) でテーマ公開を確認
+- [ ] 7/16 19:00 公式「特典フル活用ガイド」視聴（Cloudflare/OpenCodeの詳細）
+- [ ] エントリー（締切 **7/27 17:00**）
+- [ ] データ kill test ／推計モデル骨組み／キャラ差分パイプライン／動画テンプレ（前倒し準備）
