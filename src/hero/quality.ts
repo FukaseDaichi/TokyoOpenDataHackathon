@@ -1,0 +1,41 @@
+// 端末に応じた品質ティア。
+// - high: フル演出（デスクトップ）
+// - low: 粒子・DPR・テクスチャ解像度を抑え、最遠景バンドのカードを非表示
+// - fallback: prefers-reduced-motion または WebGL不可 → 2D絵本表示
+export type QualityTier = 'high' | 'low' | 'fallback';
+
+export interface QualitySettings {
+  dprMax: number;
+  goldDust: number;
+  paperBits: number;
+  textureWidth: 512 | 896;
+  /** これより奥の深度バンドは回廊中は描画しない（星座では全員登場） */
+  maxCorridorBand: number;
+  mouseTilt: boolean;
+}
+
+export const QUALITY_SETTINGS: Record<Exclude<QualityTier, 'fallback'>, QualitySettings> = {
+  high: { dprMax: 1.5, goldDust: 600, paperBits: 42, textureWidth: 896, maxCorridorBand: 5, mouseTilt: true },
+  low: { dprMax: 1.2, goldDust: 180, paperBits: 16, textureWidth: 512, maxCorridorBand: 4, mouseTilt: false },
+};
+
+export function prefersReducedMotion(): boolean {
+  return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+}
+
+export function detectQuality(): QualityTier {
+  if (typeof window === 'undefined') return 'fallback';
+  if (prefersReducedMotion()) return 'fallback';
+  try {
+    const canvas = document.createElement('canvas');
+    const gl = canvas.getContext('webgl2') ?? canvas.getContext('webgl');
+    if (!gl) return 'fallback';
+  } catch {
+    return 'fallback';
+  }
+  const coarse = window.matchMedia('(pointer: coarse)').matches;
+  const small = window.innerWidth < 768;
+  const mem = (navigator as { deviceMemory?: number }).deviceMemory;
+  if (coarse || small || (mem !== undefined && mem <= 4)) return 'low';
+  return 'high';
+}
