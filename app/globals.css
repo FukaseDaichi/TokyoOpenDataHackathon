@@ -1,0 +1,20 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', serif;
+  background: #17110c;
+  color: #f4e8d0;
+  overflow-x: hidden;
+}
+
+button {
+  font-family: inherit;
+}
