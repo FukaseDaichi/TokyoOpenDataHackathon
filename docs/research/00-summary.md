@@ -55,5 +55,5 @@
 
 ## 現在地
 
-- 勝ち筋確定 → [strategy/winning-strategy.md](../strategy/winning-strategy.md)：**「うちの区ちゃん」**（区擬人化×予算トレードオフのデータ駆動シム、データ活用賞本命）
-- アイディア詳細 → [ideas/idea-candidates.md](../ideas/idea-candidates.md)。テーマ公開後に「ヒーロー数字」の最終確定と題材の微調整を行う。
+- 勝ち筋確定 → [strategy/kuchan-shindan-zukan-design.md](../strategy/kuchan-shindan-zukan-design.md)：**「うちの区ちゃん診断図鑑」**（23区をオープンデータで性格分類→擬人化3D図鑑＋性格診断。オーディエンス本命／データ活用の最低ライン厳守）
+- テーマ公開後に軸・訴求の微調整を行う（旧「ミライ区長／10年予算シミュ」案は診断図鑑版にピボット済み）。
