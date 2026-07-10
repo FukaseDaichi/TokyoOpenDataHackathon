@@ -4,9 +4,9 @@
 
 **Goal:** 23区をオープンデータの性格軸ベクトルで表し、10問診断で最も近い区ちゃんにマッチさせ、2D図鑑で全区の特性を閲覧・シェアできる静的Webアプリの動く最小版を作る。
 
-**Architecture:** 純ロジック（正規化・診断採点・最近傍マッチング・クラスタリング）を副作用のないTypeScriptモジュールに分離しTDDで固める。UIはReactの薄い層で、静的JSON（23区の軸ベクトル）を読むだけ。DBもサーバAPIも持たず、Cloudflare Pagesに静的デプロイする。
+**Architecture:** 純ロジック（正規化・診断採点・最近傍マッチング・クラスタリング）を副作用のないTypeScriptモジュールに分離しTDDで固める。UIはReactの薄い層で、静的JSON（23区の軸ベクトル）を読むだけ。DBもサーバAPIも持たず、Cloudflare Pagesに静的デプロイする。Next.jsは `output: 'export'` の静的エクスポートのみ使用し、SSR・API Routes・サーバー側の動的機能は使わない。画面遷移は `App` クライアントコンポーネント内の状態切替（`app/page.tsx` は `App` を描画するだけ）。
 
-**Tech Stack:** Vite + React 18 + TypeScript + Vitest（+ @testing-library/react, jsdom）。デプロイは Cloudflare Pages（`*.pages.dev`）。
+**Tech Stack:** Next.js（App Router・静的エクスポート）+ React + TypeScript + Vitest（+ @testing-library/react, jsdom）。デプロイは Cloudflare Pages（`*.pages.dev`）。
 
 ## Global Constraints
 
@@ -24,7 +24,8 @@
 
 ## File Structure
 
-- `package.json`, `vite.config.ts`, `tsconfig.json`, `vitest.config.ts` — プロジェクト設定
+- `package.json`, `next.config.ts`, `tsconfig.json`, `vitest.config.ts` — プロジェクト設定
+- `app/layout.tsx`, `app/page.tsx` — Next.jsエントリ（`page.tsx` は `src/App.tsx` を描画するだけ）
 - `src/domain/axes.ts` — 軸キー定義・型（`AxisKey`, `AXIS_KEYS`, `AxisVector`, `Ward`）
 - `src/lib/normalize.ts` — 指標配列の正規化（純関数）
 - `src/lib/quiz.ts` — 診断質問の型・定義・採点（純関数）
@@ -39,29 +40,41 @@
 - `src/ui/Diagnosis.tsx` — 10問診断フロー
 - `src/ui/Result.tsx` — 結果＋相性TOP3
 - `src/ui/ShareCard.tsx` — シェア画像生成
-- `src/App.tsx`, `src/main.tsx` — 画面ルーティング（トップ→図鑑/診断）
+- `src/App.tsx` — 画面ルーティング（トップ→図鑑/診断、状態切替のクライアントコンポーネント）
 
 ---
 
 ### Task 1: プロジェクト雛形とドメイン型
 
 **Files:**
-- Create: `package.json`, `vite.config.ts`, `tsconfig.json`, `vitest.config.ts`, `index.html`, `src/main.tsx`, `src/App.tsx`
+- Create: `package.json`, `next.config.ts`, `tsconfig.json`, `vitest.config.ts`, `app/layout.tsx`, `app/page.tsx`, `src/App.tsx`
 - Create: `src/domain/axes.ts`
 - Test: `src/domain/axes.test.ts`
 
 **Interfaces:**
 - Produces: `AxisKey`, `AXIS_KEYS: AxisKey[]`, `AxisVector = Record<AxisKey, number>`, `Ward { code: string; name: string; axes: AxisVector; group?: string }`, `emptyVector(): AxisVector`
 
-- [ ] **Step 1: Scaffold Vite React TS project**
+- [ ] **Step 1: Scaffold Next.js TS project (static export)**
 
 Run:
 ```bash
-npm create vite@latest . -- --template react-ts
-npm install
-npm install -D vitest @testing-library/react @testing-library/jest-dom jsdom
+npx create-next-app@latest . --ts --app --src-dir --no-tailwind --no-eslint --import-alias "@/*"
+npm install -D vitest @vitejs/plugin-react @testing-library/react @testing-library/jest-dom jsdom
 ```
-Expected: `src/`, `package.json` 生成。
+Expected: `app/`（または `src/app/`）、`package.json` 生成。
+
+Create/Update `next.config.ts`（静的エクスポート必須）:
+```ts
+import type { NextConfig } from 'next';
+
+const nextConfig: NextConfig = {
+  output: 'export',
+};
+
+export default nextConfig;
+```
+
+`app/page.tsx` は `src/App.tsx`（`'use client'` のクライアントコンポーネント、Task 9で実装）を描画するだけにする。
 
 - [ ] **Step 2: Configure Vitest (jsdom)**
 
@@ -138,7 +151,7 @@ Expected: PASS。
 - [ ] **Step 7: Commit**
 
 ```bash
-git add package.json vite.config.ts tsconfig.json vitest.config.ts index.html src/
+git add package.json next.config.ts tsconfig.json vitest.config.ts app/ src/
 git commit -m "feat: scaffold project and axis domain types"
 ```
 
@@ -959,6 +972,8 @@ export function ShareCard({ ward }: { ward: Ward }) {
 
 Replace `src/App.tsx`:
 ```tsx
+'use client';
+
 import { useState } from 'react';
 import { Zukan } from './ui/Zukan';
 import { WardDetail } from './ui/WardDetail';
@@ -1007,7 +1022,7 @@ export default function App() {
 - [ ] **Step 5: Run test to verify it passes and app builds**
 
 Run: `npm test && npm run build`
-Expected: 全テストPASS、`dist/` 生成。
+Expected: 全テストPASS、静的エクスポートで `out/` 生成。
 
 - [ ] **Step 6: Commit**
 
@@ -1021,21 +1036,15 @@ git commit -m "feat: wire app routing and share card"
 ### Task 10: Cloudflare Pagesデプロイ設定
 
 **Files:**
-- Create: `public/_redirects`（SPAフォールバック）
 - Create: `README.md`（ビルド・デプロイ手順）
 
 **Interfaces:**
-- Consumes: `npm run build` の `dist/`
+- Consumes: `npm run build` の `out/`
 - Produces: 静的成果物のデプロイ手順
 
-- [ ] **Step 1: Add SPA redirect**
+※ 画面遷移は `App` 内の状態切替で完結し実URLは `/` のみのため、SPAフォールバック（`_redirects`）は不要。将来 `app/` 配下に実ルートを増やす場合は Next.js の静的エクスポートが各ルートのHTMLを生成する。
 
-Create `public/_redirects`:
-```
-/*  /index.html  200
-```
-
-- [ ] **Step 2: Document build & deploy**
+- [ ] **Step 1: Document build & deploy**
 
 Create `README.md`:
 ```markdown
@@ -1047,11 +1056,11 @@ Create `README.md`:
 - `npm install`
 - `npm run test` — ロジックのユニットテスト
 - `npm run dev` — ローカル開発
-- `npm run build` — `dist/` に静的成果物
+- `npm run build` — `out/` に静的成果物（Next.js 静的エクスポート）
 
 ## デプロイ（Cloudflare Pages）
 - Build command: `npm run build`
-- Build output: `dist`
+- Build output: `out`
 - 独自ドメインは使わず `*.pages.dev` を利用。
 
 ## データ
@@ -1059,16 +1068,16 @@ Create `README.md`:
 - 実オープンデータのkill test後、`scripts/build-ward-data.ts` で本データに差し替える（別プラン）。
 ```
 
-- [ ] **Step 3: Verify build succeeds**
+- [ ] **Step 2: Verify build succeeds**
 
 Run: `npm run build`
-Expected: `dist/index.html` と `public/_redirects` が `dist/` に含まれる。
+Expected: 静的エクスポートにより `out/index.html` が生成される。
 
-- [ ] **Step 4: Commit**
+- [ ] **Step 3: Commit**
 
 ```bash
-git add public/_redirects README.md
-git commit -m "chore: add Cloudflare Pages deploy config and README"
+git add README.md
+git commit -m "chore: add Cloudflare Pages deploy docs and README"
 ```
 
 ---
