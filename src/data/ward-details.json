@@ -2,7 +2,7 @@
  "sources": {
   "land_price": "国土交通省 令和7年地価公示（住宅地 区別平均・円/㎡）",
   "population": "住民基本台帳による世帯と人口（令和8年1月1日現在）・人",
-  "income": "総務省「市町村税課税状況等の調」（令和6年度）納税義務者1人当たり課税対象所得・千円",
+  "income": "総務省「市町村税課税状況等の調」（令和6年度）第11表 課税対象所得 ÷ 所得割の納税義務者数・千円",
   "foreign_rate": "東京都の統計「国籍・地域別 外国人人口」（令和8年1月1日現在）÷ 住民基本台帳による世帯と人口 総人口（令和8年1月1日現在）・％"
  },
  "wards": [
@@ -11,7 +11,7 @@
    "land_price_avg": 3282857,
    "land_price_points": 7,
    "population": 69139,
-   "income_per_taxpayer": 6082,
+   "income_per_taxpayer": 11755,
    "foreign_rate": 6.28
   },
   {
@@ -19,7 +19,7 @@
    "land_price_avg": 1701250,
    "land_price_points": 8,
    "population": 191015,
-   "income_per_taxpayer": 3388,
+   "income_per_taxpayer": 8331,
    "foreign_rate": 7.12
   },
   {
@@ -27,7 +27,7 @@
    "land_price_avg": 2577333,
    "land_price_points": 30,
    "population": 269877,
-   "income_per_taxpayer": 9013,
+   "income_per_taxpayer": 17808,
    "foreign_rate": 8.86
   },
   {
@@ -35,7 +35,7 @@
    "land_price_avg": 1021481,
    "land_price_points": 27,
    "population": 355125,
-   "income_per_taxpayer": 3263,
+   "income_per_taxpayer": 6513,
    "foreign_rate": 14.46
   },
   {
@@ -43,7 +43,7 @@
    "land_price_avg": 1283957,
    "land_price_points": 23,
    "population": 236981,
-   "income_per_taxpayer": 3360,
+   "income_per_taxpayer": 7625,
    "foreign_rate": 7.21
   },
   {
@@ -51,7 +51,7 @@
    "land_price_avg": 1152333,
    "land_price_points": 6,
    "population": 217512,
-   "income_per_taxpayer": 2580,
+   "income_per_taxpayer": 5124,
    "foreign_rate": 9.81
   },
   {
@@ -59,7 +59,7 @@
    "land_price_avg": 540273,
    "land_price_points": 11,
    "population": 288833,
-   "income_per_taxpayer": 2071,
+   "income_per_taxpayer": 4554,
    "foreign_rate": 6.16
   },
   {
@@ -67,7 +67,7 @@
    "land_price_avg": 593577,
    "land_price_points": 26,
    "population": 543193,
-   "income_per_taxpayer": 1764,
+   "income_per_taxpayer": 5287,
    "foreign_rate": 7.62
   },
   {
@@ -75,7 +75,7 @@
    "land_price_avg": 1086133,
    "land_price_points": 30,
    "population": 415644,
-   "income_per_taxpayer": 2832,
+   "income_per_taxpayer": 5982,
    "foreign_rate": 4.33
   },
   {
@@ -83,7 +83,7 @@
    "land_price_avg": 1232031,
    "land_price_points": 32,
    "population": 282607,
-   "income_per_taxpayer": 3333,
+   "income_per_taxpayer": 7787,
    "foreign_rate": 4.34
   },
   {
@@ -91,7 +91,7 @@
    "land_price_avg": 598564,
    "land_price_points": 55,
    "population": 745048,
-   "income_per_taxpayer": 2256,
+   "income_per_taxpayer": 4938,
    "foreign_rate": 4.63
   },
   {
@@ -99,7 +99,7 @@
    "land_price_avg": 724064,
    "land_price_points": 109,
    "population": 928666,
-   "income_per_taxpayer": 3022,
+   "income_per_taxpayer": 6597,
    "foreign_rate": 3.31
   },
   {
@@ -107,7 +107,7 @@
    "land_price_avg": 1653462,
    "land_price_points": 26,
    "population": 230880,
-   "income_per_taxpayer": 6144,
+   "income_per_taxpayer": 11652,
    "foreign_rate": 5.75
   },
   {
@@ -115,7 +115,7 @@
    "land_price_avg": 716259,
    "land_price_points": 27,
    "population": 343794,
-   "income_per_taxpayer": 2518,
+   "income_per_taxpayer": 4947,
    "foreign_rate": 7.9
   },
   {
@@ -123,7 +123,7 @@
    "land_price_avg": 648935,
    "land_price_points": 62,
    "population": 582636,
-   "income_per_taxpayer": 2636,
+   "income_per_taxpayer": 5562,
    "foreign_rate": 4.34
   },
   {
@@ -131,7 +131,7 @@
    "land_price_avg": 811818,
    "land_price_points": 22,
    "population": 296129,
-   "income_per_taxpayer": 2623,
+   "income_per_taxpayer": 5228,
    "foreign_rate": 13.03
   },
   {
@@ -139,7 +139,7 @@
    "land_price_avg": 664355,
    "land_price_points": 31,
    "population": 367432,
-   "income_per_taxpayer": 1877,
+   "income_per_taxpayer": 4409,
    "foreign_rate": 9.61
   },
   {
@@ -147,7 +147,7 @@
    "land_price_avg": 633062,
    "land_price_points": 16,
    "population": 224784,
-   "income_per_taxpayer": 1875,
+   "income_per_taxpayer": 4441,
    "foreign_rate": 11.38
   },
   {
@@ -155,7 +155,7 @@
    "land_price_avg": 509298,
    "land_price_points": 47,
    "population": 583528,
-   "income_per_taxpayer": 2008,
+   "income_per_taxpayer": 4224,
    "foreign_rate": 7.05
   },
   {
@@ -163,7 +163,7 @@
    "land_price_avg": 451400,
    "land_price_points": 90,
    "population": 750559,
-   "income_per_taxpayer": 2341,
+   "income_per_taxpayer": 4763,
    "foreign_rate": 3.95
   },
   {
@@ -171,7 +171,7 @@
    "land_price_avg": 379521,
    "land_price_points": 71,
    "population": 703369,
-   "income_per_taxpayer": 2048,
+   "income_per_taxpayer": 3959,
    "foreign_rate": 6.87
   },
   {
@@ -179,7 +179,7 @@
    "land_price_avg": 368295,
    "land_price_points": 44,
    "population": 472558,
-   "income_per_taxpayer": 1944,
+   "income_per_taxpayer": 3995,
    "foreign_rate": 6.89
   },
   {
@@ -187,7 +187,7 @@
    "land_price_avg": 413174,
    "land_price_points": 69,
    "population": 697414,
-   "income_per_taxpayer": 2324,
+   "income_per_taxpayer": 4245,
    "foreign_rate": 7.57
   }
  ]
