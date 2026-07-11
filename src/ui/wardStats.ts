@@ -31,5 +31,8 @@ export function buildWardStats(
     ...(detail.incomePerTaxpayer !== undefined
       ? [{ label: '平均所得（納税者1人当たり）', v: detail.incomePerTaxpayer, vs: allDetails.map((d) => d.incomePerTaxpayer!), text: `${Math.round(detail.incomePerTaxpayer / 100) / 10}百万円`, note: '課税対象所得ベース' }]
       : []),
+    ...(detail.crimePer1000 !== undefined
+      ? [{ label: '街の安全データ（人口千人当たり認知件数）', v: detail.crimePer1000, vs: allDetails.map((d) => d.crimePer1000!), text: `${detail.crimePer1000.toFixed(1)}件`, note: '昼間人口が多い区ほど値が出やすい統計です' }]
+      : []),
   ];
 }

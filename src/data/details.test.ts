@@ -26,4 +26,10 @@ describe('loadWardDetails', () => {
     const values = [...map.values()].map((d) => d.incomePerTaxpayer!);
     expect(Math.max(...values)).toBe(minato.incomePerTaxpayer);
   });
+  it('全区に crime_per_1000 があり妥当なレンジ', () => {
+    for (const d of map.values()) {
+      expect(d.crimePer1000).toBeGreaterThan(1);
+      expect(d.crimePer1000).toBeLessThan(60); // 昼間人口の多い千代田区でも数十
+    }
+  });
 });

@@ -124,6 +124,44 @@ def income():
     return result
 
 
+def crime(population):
+    """人口千人当たり刑法犯認知件数。
+
+    警視庁「区市町村の町丁別、罪種別及び手口別認知件数（年累計）」令和6年分
+    （data/raw/keishicho_R6_ninchikensu.csv, CC BY 4.0, Shift_JIS）から、
+    区名そのものが「市区町丁」列の値と完全一致する行（区内町丁の小計行）の
+    「総合計」列を採用する。
+
+    このCSVは町丁ごとの明細行に加え、区・市ごとの合計行（市区町丁列が
+    区名のみの行）を別途含んでいる。区名前方一致で明細行を合算すると
+    区名のみの合計行まで二重に加算してしまうため、区名との完全一致行の
+    値をそのまま使う（合算しない）。
+    """
+    src = RAW / 'keishicho_R6_ninchikensu.csv'
+    if not src.exists():
+        return {}
+    names = {}
+    with open(Path(__file__).parent / 'processed' / 'wards.json', encoding='utf-8') as f:
+        for w in json.load(f)['wards']:
+            names[w['id']] = w['name']
+    with open(src, encoding='cp932') as f:
+        rows = list(csv.reader(f))
+    header = rows[0]
+    total_i = header.index('総合計')
+    by_name = {}
+    for row in rows[1:]:
+        if len(row) <= total_i:
+            continue
+        by_name[row[0].strip()] = row[total_i].strip()
+    result = {}
+    for code in WARD_IDS:
+        name = names.get(code)
+        val = by_name.get(name)
+        if name and val and val.isdigit() and population.get(code):
+            result[code] = {'crime_per_1000': round(int(val) / population[code] * 1000, 1)}
+    return result
+
+
 def top_stations():
     """区ごとの乗降人員上位3駅。
 
@@ -157,6 +195,11 @@ def main():
     assert not pop_missing, f'population missing wards: {pop_missing}'  # kill test: 23区揃うこと
     sources['population'] = '住民基本台帳による世帯と人口（令和8年1月1日現在）・人'
 
+    cr = crime(pop)
+    cr_missing = [w for w in WARD_IDS if w not in cr]
+    assert not cr_missing, f'crime missing wards: {cr_missing}'  # kill test: 23区揃うこと
+    sources['crime'] = '警視庁「区市町村の町丁別、罪種別及び手口別認知件数」（令和6年分・人口千人当たり）'
+
     inc = income()
     inc_missing = [w for w in WARD_IDS if w not in inc]
     if inc_missing:
@@ -183,7 +226,7 @@ def main():
 
     wards = []
     for w in WARD_IDS:
-        entry = {'id': w, **lp[w], 'population': pop[w]}
+        entry = {'id': w, **lp[w], 'population': pop[w], **cr[w]}
         if w in inc:
             entry.update(inc[w])
         if w in fr:
