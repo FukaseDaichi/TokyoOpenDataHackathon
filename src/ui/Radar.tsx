@@ -6,10 +6,12 @@ interface RadarProps {
   color?: string;
   size?: number;
   overlay?: AxisVector;
+  /** 軸名ラベルを描くか。既定true。外側にラベルUIを別途置く場合はfalse */
+  showLabels?: boolean;
 }
 
 /** 5軸レーダー。羊皮紙に金インクで描いた紋章風（絵本図鑑のトーン） */
-export function Radar({ vector, color = '#b8923f', size = 240, overlay }: RadarProps) {
+export function Radar({ vector, color = '#b8923f', size = 240, overlay, showLabels = true }: RadarProps) {
   const c = size / 2;
   const r = size / 2 - 34;
   const n = AXIS_KEYS.length;
@@ -56,22 +58,23 @@ export function Radar({ vector, color = '#b8923f', size = 240, overlay }: RadarP
         return <circle key={k} cx={x} cy={y} r="3" fill={color} stroke="#4a3418" strokeWidth="0.8" />;
       })}
       {/* 軸ラベル */}
-      {AXIS_KEYS.map((k, i) => {
-        const [x, y] = pt(i, 1.32);
-        return (
-          <text
-            key={k}
-            x={x}
-            y={y + 4}
-            fontSize="12"
-            textAnchor="middle"
-            fill="#4a3418"
-            style={{ letterSpacing: '0.1em' }}
-          >
-            {AXIS_LABELS[k].name}
-          </text>
-        );
-      })}
+      {showLabels &&
+        AXIS_KEYS.map((k, i) => {
+          const [x, y] = pt(i, 1.32);
+          return (
+            <text
+              key={k}
+              x={x}
+              y={y + 4}
+              fontSize="12"
+              textAnchor="middle"
+              fill="#4a3418"
+              style={{ letterSpacing: '0.1em' }}
+            >
+              {AXIS_LABELS[k].name}
+            </text>
+          );
+        })}
     </svg>
   );
 }

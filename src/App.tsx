@@ -2,12 +2,11 @@
 
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
 import Hero from './hero/Hero';
 import { prefersReducedMotion } from './hero/quality';
 import { loadWards } from './data/wards';
 import { Zukan } from './ui/Zukan';
-import { WardDetail } from './ui/WardDetail';
+import { WardModal } from './ui/WardModal';
 import { Diagnosis } from './ui/Diagnosis';
 import { bestMatch } from './lib/matching';
 import { saveDiagnosis } from './lib/diagnosisSession';
@@ -87,26 +86,11 @@ export default function App() {
 
       {/* 個別詳細モーダル */}
       {ward && (
-        <div
-          role="dialog"
-          aria-modal="true"
-          aria-label={`${ward.name}の詳細`}
-          className="ward-modal"
-          onClick={() => setSelectedCode(null)}
-        >
-          <div className="ward-modal-inner" onClick={(e) => e.stopPropagation()}>
-            <WardDetail ward={ward} />
-            <Link
-              className="diagnosis-option result-share-link"
-              href={`/ward/${CODE_TO_SLUG[ward.code]}/`}
-            >
-              {ward.name}ちゃんをくわしく見る →
-            </Link>
-            <button className="ward-modal-close" onClick={() => setSelectedCode(null)} autoFocus>
-              とじる
-            </button>
-          </div>
-        </div>
+        <WardModal
+          ward={ward}
+          detailHref={`/ward/${CODE_TO_SLUG[ward.code]}/`}
+          onClose={() => setSelectedCode(null)}
+        />
       )}
     </main>
   );
