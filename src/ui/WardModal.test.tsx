@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { WardModal } from './WardModal';
 import { loadWards } from '../data/wards';
@@ -60,5 +60,62 @@ describe('WardModal', () => {
 
     fireEvent.click(screen.getByRole('heading', { name: '港区ちゃん' }));
     expect(onClose).not.toHaveBeenCalled();
+  });
+
+  it('closes with the Escape key', () => {
+    const onClose = vi.fn();
+    render(<WardModal ward={minato} detailHref="/ward/minato/" onClose={onClose} />);
+
+    fireEvent.keyDown(window, { key: 'Escape' });
+    expect(onClose).toHaveBeenCalledTimes(1);
+  });
+
+  describe('with animations enabled (matchMedia available)', () => {
+    beforeEach(() => {
+      vi.stubGlobal('matchMedia', (query: string) => ({
+        matches: false,
+        media: query,
+        addEventListener: () => {},
+        removeEventListener: () => {},
+      }));
+    });
+    afterEach(() => {
+      vi.unstubAllGlobals();
+    });
+
+    it('shows the book cover with the ward name before opening', () => {
+      const { container } = render(<WardModal ward={minato} detailHref="/ward/minato/" onClose={() => {}} />);
+
+      const cover = container.querySelector('.ward-modal-cover');
+      expect(cover).not.toBeNull();
+      expect(cover!.textContent).toContain('うちの区ちゃん図鑑');
+      expect(cover!.textContent).toContain('港区ちゃん');
+    });
+
+    const fireAnimationEnd = (el: Element, animationName: string) => {
+      const evt = new Event('animationend', { bubbles: true });
+      Object.assign(evt, { animationName });
+      fireEvent(el, evt);
+    };
+
+    it('removes the cover once the opening animation finishes', () => {
+      const { container } = render(<WardModal ward={minato} detailHref="/ward/minato/" onClose={() => {}} />);
+
+      fireAnimationEnd(container.querySelector('.ward-modal-cover')!, 'wardModalCoverOpen');
+      expect(container.querySelector('.ward-modal-cover')).toBeNull();
+    });
+
+    it('plays the closing animation before calling onClose', () => {
+      const onClose = vi.fn();
+      const { container } = render(<WardModal ward={minato} detailHref="/ward/minato/" onClose={onClose} />);
+
+      fireEvent.click(screen.getByLabelText('とじる'));
+      // 閉じアニメーション中はまだ閉じない
+      expect(onClose).not.toHaveBeenCalled();
+      expect(container.querySelector('.ward-modal-closing')).not.toBeNull();
+
+      fireAnimationEnd(container.querySelector('.ward-modal-book')!, 'wardModalBookOut');
+      expect(onClose).toHaveBeenCalledTimes(1);
+    });
   });
 });

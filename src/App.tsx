@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import Hero from './hero/Hero';
 import { prefersReducedMotion } from './hero/quality';
@@ -27,16 +27,6 @@ export default function App() {
       behavior: prefersReducedMotion() ? 'auto' : 'smooth',
     });
   };
-
-  // モーダルはEscで閉じる
-  useEffect(() => {
-    if (!ward) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'Escape') setSelectedCode(null);
-    };
-    window.addEventListener('keydown', onKey);
-    return () => window.removeEventListener('keydown', onKey);
-  }, [ward]);
 
   return (
     <main>

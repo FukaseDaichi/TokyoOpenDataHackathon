@@ -515,6 +515,18 @@
   align-items: center;
   justify-content: center;
   padding: 20px;
+  animation: wardModalBackdropIn 0.35s ease both;
+}
+@keyframes wardModalBackdropIn {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+.ward-modal-closing {
+  animation: wardModalBackdropOut 0.4s ease 0.55s both;
+}
+@keyframes wardModalBackdropOut {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
 }
 
 /* 金の光の粒子 */
@@ -534,10 +546,32 @@
   100% { transform: translateY(-105vh); opacity: 0; }
 }
 
-/* カード本体（羊皮紙の見開き） */
-.ward-modal-card {
+/* 絵本本体（表紙＋カードを束ねる。表紙開閉の3D舞台） */
+.ward-modal-book {
   position: relative;
   width: min(1180px, 94vw);
+  max-height: 92vh;
+  display: flex;
+  perspective: 2400px;
+  transform-style: preserve-3d;
+  animation: wardModalBookIn 0.3s ease-out both;
+}
+@keyframes wardModalBookIn {
+  0% { opacity: 0; transform: scale(0.92) translateY(16px); }
+  100% { opacity: 1; transform: scale(1) translateY(0); }
+}
+.ward-modal-closing .ward-modal-book {
+  animation: wardModalBookOut 0.35s ease-in 0.55s both;
+}
+@keyframes wardModalBookOut {
+  0% { opacity: 1; transform: scale(1) translateY(0); }
+  100% { opacity: 0; transform: scale(0.9) translateY(14px); }
+}
+
+/* カード本体（羊皮紙の見開き）。表紙が開くと明るく照らされる */
+.ward-modal-card {
+  position: relative;
+  width: 100%;
   max-height: 92vh;
   display: flex;
   flex-direction: column;
@@ -545,12 +579,127 @@
   border: 3px solid #b8923f;
   border-radius: 20px;
   box-shadow: 0 30px 70px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(184, 146, 63, 0.25);
-  animation: wardModalPop 0.55s cubic-bezier(0.22, 1.4, 0.36, 1) both;
+  animation: wardModalReveal 0.6s ease-out 0.5s both;
 }
-@keyframes wardModalPop {
-  0% { opacity: 0; transform: scale(0.9); }
-  60% { opacity: 1; transform: scale(1.015); }
-  100% { opacity: 1; transform: scale(1); }
+@keyframes wardModalReveal {
+  0% { filter: brightness(0.68) saturate(0.85); }
+  100% { filter: brightness(1) saturate(1); }
+}
+
+/* 絵本の表紙（革装＋金箔。public/book-cover.webp を置くと差し替わる） */
+.ward-modal-cover {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  transform-origin: left center;
+  transform-style: preserve-3d;
+  pointer-events: none;
+  animation: wardModalCoverOpen 0.7s cubic-bezier(0.65, 0, 0.35, 1) 0.35s both;
+}
+@keyframes wardModalCoverOpen {
+  0% { transform: rotateY(0deg); opacity: 1; }
+  80% { opacity: 1; }
+  100% { transform: rotateY(-108deg); opacity: 0; }
+}
+.ward-modal-closing .ward-modal-cover {
+  animation: wardModalCoverClose 0.55s cubic-bezier(0.55, 0, 0.55, 0.2) both;
+}
+@keyframes wardModalCoverClose {
+  0% { transform: rotateY(-108deg); opacity: 0; }
+  25% { opacity: 1; }
+  100% { transform: rotateY(0deg); opacity: 1; }
+}
+.ward-modal-cover-front,
+.ward-modal-cover-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: 20px;
+  border: 3px solid #b8923f;
+  overflow: hidden;
+}
+.ward-modal-cover-front {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  background-image: url('/book-cover.webp'),
+    radial-gradient(ellipse at 50% 30%, #7a5a2e 0%, #4a3418 55%, #33230e 100%);
+  background-size: cover;
+  background-position: center;
+  box-shadow:
+    inset 0 0 0 1px rgba(232, 197, 107, 0.35),
+    inset 0 0 70px rgba(0, 0, 0, 0.55),
+    0 24px 60px rgba(0, 0, 0, 0.5);
+}
+.ward-modal-cover-front::before {
+  content: '';
+  position: absolute;
+  inset: 16px;
+  border: 2px solid rgba(212, 176, 96, 0.6);
+  border-radius: 12px;
+  pointer-events: none;
+}
+.ward-modal-cover-eyebrow {
+  margin: 0 0 8px;
+  color: rgba(232, 197, 107, 0.8);
+  font-size: 13px;
+  letter-spacing: 0.5em;
+}
+.ward-modal-cover-title {
+  margin: 0;
+  color: #e8c56b;
+  font-size: clamp(22px, 3vw, 34px);
+  letter-spacing: 0.3em;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+}
+.ward-modal-cover-rule {
+  width: 130px;
+  height: 2px;
+  margin: 20px 0;
+  background: linear-gradient(90deg, transparent, #d4b060, transparent);
+}
+.ward-modal-cover-ward {
+  margin: 0;
+  color: #f4e0a8;
+  font-size: clamp(34px, 5vw, 56px);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-shadow: 0 3px 14px rgba(0, 0, 0, 0.65);
+}
+.ward-modal-cover-no {
+  margin: 12px 0 0;
+  color: rgba(232, 197, 107, 0.75);
+  font-size: 15px;
+  letter-spacing: 0.4em;
+}
+.ward-modal-cover-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(180deg, #f3e6c8 0%, #e6d2a6 100%);
+  box-shadow: inset 0 0 40px rgba(122, 90, 46, 0.25);
+}
+
+/* 表紙が開いた瞬間の金の光 */
+.ward-modal-flash {
+  position: absolute;
+  inset: -8%;
+  z-index: 5;
+  pointer-events: none;
+  border-radius: 24px;
+  background: radial-gradient(ellipse at 42% 50%, rgba(255, 236, 180, 0.9) 0%, rgba(255, 220, 130, 0.35) 40%, rgba(255, 220, 130, 0) 72%);
+  opacity: 0;
+  animation: wardModalFlash 0.7s ease-out 0.8s both;
+}
+@keyframes wardModalFlash {
+  0% { opacity: 0; transform: scale(0.7); }
+  35% { opacity: 0.95; }
+  100% { opacity: 0; transform: scale(1.15); }
+}
+.ward-modal-closing .ward-modal-flash {
+  animation: none;
+  opacity: 0;
 }
 .ward-modal-card::before {
   content: '';
@@ -670,13 +819,17 @@
   background: radial-gradient(ellipse at 50% 42%, #f6ead0 0%, #e6d3a8 78%);
   box-shadow: inset 0 0 30px rgba(184, 146, 63, 0.12);
   overflow: hidden;
-  animation: wardModalPanel 0.7s cubic-bezier(0.22, 1.2, 0.36, 1) 0.25s both;
+  animation: wardModalPanel 0.7s cubic-bezier(0.22, 1.2, 0.36, 1) 0.85s both;
 }
 @keyframes wardModalPanel {
   0% { opacity: 0; transform: scale(0.96); }
   100% { opacity: 1; transform: scale(1); }
 }
 .ward-modal-radar-stage { position: relative; width: 330px; height: 330px; display: flex; align-items: center; justify-content: center; }
+/* 3Dレーダー時はパネルいっぱいに広げてラベルの逃げ場を作る */
+.ward-modal-radar-stage-3d { width: 100%; height: 100%; min-height: 360px; }
+.radar3d { position: absolute; inset: 0; z-index: 1; cursor: grab; touch-action: none; }
+.radar3d:active { cursor: grabbing; }
 .ward-modal-radar-stage .radar { position: relative; z-index: 1; }
 .ward-modal-radar-ring {
   position: absolute;
@@ -731,11 +884,11 @@
   transition: background 0.18s ease;
 }
 .ward-modal-stat-row:hover { background: linear-gradient(90deg, rgba(184, 146, 63, 0.14) 0%, rgba(184, 146, 63, 0) 82%); border-radius: 10px; }
-.ward-modal-stat-row:nth-child(1) { animation-delay: 0.42s; }
-.ward-modal-stat-row:nth-child(2) { animation-delay: 0.5s; }
-.ward-modal-stat-row:nth-child(3) { animation-delay: 0.58s; }
-.ward-modal-stat-row:nth-child(4) { animation-delay: 0.66s; }
-.ward-modal-stat-row:nth-child(5) { animation-delay: 0.74s; }
+.ward-modal-stat-row:nth-child(1) { animation-delay: 1s; }
+.ward-modal-stat-row:nth-child(2) { animation-delay: 1.08s; }
+.ward-modal-stat-row:nth-child(3) { animation-delay: 1.16s; }
+.ward-modal-stat-row:nth-child(4) { animation-delay: 1.24s; }
+.ward-modal-stat-row:nth-child(5) { animation-delay: 1.32s; }
 @keyframes wardModalRow {
   0% { opacity: 0; transform: translateY(14px); }
   100% { opacity: 1; transform: translateY(0); }
@@ -796,12 +949,25 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
+  .ward-modal,
+  .ward-modal-book,
+  .ward-modal-cover,
+  .ward-modal-flash,
   .ward-modal-card,
   .ward-modal-radar,
   .ward-modal-stat-row,
   .ward-modal-shine { animation: none !important; }
   .ward-modal-particle { display: none; }
+  .ward-modal-flash { opacity: 0; }
 }
+
+/* matchMedia非対応環境などアニメーション無効モード */
+.ward-modal-static,
+.ward-modal-static .ward-modal-book,
+.ward-modal-static .ward-modal-card,
+.ward-modal-static .ward-modal-radar,
+.ward-modal-static .ward-modal-stat-row,
+.ward-modal-static .ward-modal-shine { animation: none !important; }
 
 @media (prefers-reduced-motion: reduce) {
   .diagnosis-option,
