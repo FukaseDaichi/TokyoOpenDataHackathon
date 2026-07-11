@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { loadWardDetails, DETAIL_SOURCES } from './details';
+import snapshot from './ward-details.json';
 
 describe('loadWardDetails', () => {
   const map = loadWardDetails();
@@ -30,6 +31,12 @@ describe('loadWardDetails', () => {
     for (const d of map.values()) {
       expect(d.crimePer1000).toBeGreaterThan(1);
       expect(d.crimePer1000).toBeLessThan(60); // 昼間人口の多い千代田区でも数十
+    }
+  });
+  it('全区に waiting_children がある（0以上の整数）', () => {
+    for (const w of snapshot.wards) {
+      expect(Number.isInteger(w.waiting_children)).toBe(true);
+      expect(w.waiting_children).toBeGreaterThanOrEqual(0);
     }
   });
 });

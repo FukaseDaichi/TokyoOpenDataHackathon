@@ -3,6 +3,7 @@
   "land_price": "国土交通省 令和7年地価公示（住宅地 区別平均・円/㎡）",
   "population": "住民基本台帳による世帯と人口（令和8年1月1日現在）・人",
   "crime": "警視庁「区市町村の町丁別、罪種別及び手口別認知件数」（令和6年分・人口千人当たり）",
+  "waiting_children": "東京都福祉局「保育サービスの状況」（令和7年4月1日現在）・人",
   "income": "総務省「市町村税課税状況等の調」（令和6年度）第11表 課税対象所得 ÷ 所得割の納税義務者数・千円",
   "foreign_rate": "東京都の統計「国籍・地域別 外国人人口」（令和8年1月1日現在）÷ 住民基本台帳による世帯と人口 総人口（令和8年1月1日現在）・％"
  },
@@ -13,6 +14,7 @@
    "land_price_points": 7,
    "population": 69139,
    "crime_per_1000": 36.6,
+   "waiting_children": 0,
    "income_per_taxpayer": 11755,
    "foreign_rate": 6.28
   },
@@ -22,6 +24,7 @@
    "land_price_points": 8,
    "population": 191015,
    "crime_per_1000": 10.4,
+   "waiting_children": 0,
    "income_per_taxpayer": 8331,
    "foreign_rate": 7.12
   },
@@ -31,6 +34,7 @@
    "land_price_points": 30,
    "population": 269877,
    "crime_per_1000": 11.8,
+   "waiting_children": 0,
    "income_per_taxpayer": 17808,
    "foreign_rate": 8.86
   },
@@ -40,6 +44,7 @@
    "land_price_points": 27,
    "population": 355125,
    "crime_per_1000": 17.0,
+   "waiting_children": 0,
    "income_per_taxpayer": 6513,
    "foreign_rate": 14.46
   },
@@ -49,6 +54,7 @@
    "land_price_points": 23,
    "population": 236981,
    "crime_per_1000": 5.0,
+   "waiting_children": 4,
    "income_per_taxpayer": 7625,
    "foreign_rate": 7.21
   },
@@ -58,6 +64,7 @@
    "land_price_points": 6,
    "population": 217512,
    "crime_per_1000": 12.6,
+   "waiting_children": 0,
    "income_per_taxpayer": 5124,
    "foreign_rate": 9.81
   },
@@ -67,6 +74,7 @@
    "land_price_points": 11,
    "population": 288833,
    "crime_per_1000": 7.2,
+   "waiting_children": 5,
    "income_per_taxpayer": 4554,
    "foreign_rate": 6.16
   },
@@ -76,6 +84,7 @@
    "land_price_points": 26,
    "population": 543193,
    "crime_per_1000": 6.1,
+   "waiting_children": 0,
    "income_per_taxpayer": 5287,
    "foreign_rate": 7.62
   },
@@ -85,6 +94,7 @@
    "land_price_points": 30,
    "population": 415644,
    "crime_per_1000": 5.4,
+   "waiting_children": 0,
    "income_per_taxpayer": 5982,
    "foreign_rate": 4.33
   },
@@ -94,6 +104,7 @@
    "land_price_points": 32,
    "population": 282607,
    "crime_per_1000": 5.0,
+   "waiting_children": 0,
    "income_per_taxpayer": 7787,
    "foreign_rate": 4.34
   },
@@ -103,6 +114,7 @@
    "land_price_points": 55,
    "population": 745048,
    "crime_per_1000": 5.9,
+   "waiting_children": 0,
    "income_per_taxpayer": 4938,
    "foreign_rate": 4.63
   },
@@ -112,6 +124,7 @@
    "land_price_points": 109,
    "population": 928666,
    "crime_per_1000": 4.8,
+   "waiting_children": 47,
    "income_per_taxpayer": 6597,
    "foreign_rate": 3.31
   },
@@ -121,6 +134,7 @@
    "land_price_points": 26,
    "population": 230880,
    "crime_per_1000": 16.7,
+   "waiting_children": 0,
    "income_per_taxpayer": 11652,
    "foreign_rate": 5.75
   },
@@ -130,6 +144,7 @@
    "land_price_points": 27,
    "population": 343794,
    "crime_per_1000": 6.1,
+   "waiting_children": 0,
    "income_per_taxpayer": 4947,
    "foreign_rate": 7.9
   },
@@ -139,6 +154,7 @@
    "land_price_points": 62,
    "population": 582636,
    "crime_per_1000": 4.3,
+   "waiting_children": 0,
    "income_per_taxpayer": 5562,
    "foreign_rate": 4.34
   },
@@ -148,6 +164,7 @@
    "land_price_points": 22,
    "population": 296129,
    "crime_per_1000": 12.6,
+   "waiting_children": 0,
    "income_per_taxpayer": 5228,
    "foreign_rate": 13.03
   },
@@ -157,6 +174,7 @@
    "land_price_points": 31,
    "population": 367432,
    "crime_per_1000": 6.2,
+   "waiting_children": 18,
    "income_per_taxpayer": 4409,
    "foreign_rate": 9.61
   },
@@ -166,6 +184,7 @@
    "land_price_points": 16,
    "population": 224784,
    "crime_per_1000": 5.9,
+   "waiting_children": 11,
    "income_per_taxpayer": 4441,
    "foreign_rate": 11.38
   },
@@ -175,6 +194,7 @@
    "land_price_points": 47,
    "population": 583528,
    "crime_per_1000": 5.9,
+   "waiting_children": 7,
    "income_per_taxpayer": 4224,
    "foreign_rate": 7.05
   },
@@ -184,6 +204,7 @@
    "land_price_points": 90,
    "population": 750559,
    "crime_per_1000": 4.9,
+   "waiting_children": 0,
    "income_per_taxpayer": 4763,
    "foreign_rate": 3.95
   },
@@ -193,6 +214,7 @@
    "land_price_points": 71,
    "population": 703369,
    "crime_per_1000": 6.3,
+   "waiting_children": 7,
    "income_per_taxpayer": 3959,
    "foreign_rate": 6.87
   },
@@ -202,6 +224,7 @@
    "land_price_points": 44,
    "population": 472558,
    "crime_per_1000": 6.4,
+   "waiting_children": 0,
    "income_per_taxpayer": 3995,
    "foreign_rate": 6.89
   },
@@ -211,6 +234,7 @@
    "land_price_points": 69,
    "population": 697414,
    "crime_per_1000": 6.1,
+   "waiting_children": 0,
    "income_per_taxpayer": 4245,
    "foreign_rate": 7.57
   }

@@ -162,6 +162,38 @@ def crime(population):
     return result
 
 
+def waiting_children():
+    """待機児童数（人）。
+
+    東京都福祉局「保育サービスの状況」（2025年8月公表分, 令和7年4月1日現在）
+    表4「区市町村別の状況」（data/raw/tocho_hoiku_r7_hyou4.xlsx）シート「表４」から、
+    区名列（B列）と、直近年（2025年4月1日現在）の「待機児童数」列（F列）を読む。
+
+    出典URL: https://www.metro.tokyo.lg.jp/documents/d/tosei/20250829_17_04
+    （東京都報道発表 2025/08/29「保育サービスの状況（令和7年4月1日現在）について」
+      https://www.metro.tokyo.lg.jp/information/press/2025/08/2025082917 の表4）
+    区名から区コードへは Task 7 と同じく data/processed/wards.json の names を逆引きする。
+    """
+    src = RAW / 'tocho_hoiku_r7_hyou4.xlsx'
+    if not src.exists():
+        return {}
+    names = {}
+    with open(Path(__file__).parent / 'processed' / 'wards.json', encoding='utf-8') as f:
+        for w in json.load(f)['wards']:
+            names[w['name']] = w['id']
+    wb = openpyxl.load_workbook(src, read_only=True, data_only=True)
+    ws = wb['表４']
+    result = {}
+    for row in ws.iter_rows(values_only=True):
+        name = row[1].strip() if isinstance(row[1], str) else None
+        if name not in names:
+            continue
+        val = row[5]
+        if isinstance(val, (int, float)):
+            result[names[name]] = {'waiting_children': int(val)}
+    return result
+
+
 def top_stations():
     """区ごとの乗降人員上位3駅。
 
@@ -200,6 +232,11 @@ def main():
     assert not cr_missing, f'crime missing wards: {cr_missing}'  # kill test: 23区揃うこと
     sources['crime'] = '警視庁「区市町村の町丁別、罪種別及び手口別認知件数」（令和6年分・人口千人当たり）'
 
+    wc = waiting_children()
+    wc_missing = [w for w in WARD_IDS if w not in wc]
+    assert not wc_missing, f'waiting_children missing wards: {wc_missing}'  # kill test: 23区揃うこと
+    sources['waiting_children'] = '東京都福祉局「保育サービスの状況」（令和7年4月1日現在）・人'
+
     inc = income()
     inc_missing = [w for w in WARD_IDS if w not in inc]
     if inc_missing:
@@ -226,7 +263,7 @@ def main():
 
     wards = []
     for w in WARD_IDS:
-        entry = {'id': w, **lp[w], 'population': pop[w], **cr[w]}
+        entry = {'id': w, **lp[w], 'population': pop[w], **cr[w], **wc[w]}
         if w in inc:
             entry.update(inc[w])
         if w in fr:

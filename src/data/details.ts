@@ -10,6 +10,7 @@ export interface WardDetails {
   foreignRate?: number;
   topStations?: TopStation[];
   crimePer1000?: number;
+  waitingChildren?: number;
 }
 
 export const DETAIL_SOURCES: Record<string, string> = snapshot.sources;
@@ -23,6 +24,7 @@ interface RawDetail {
   foreign_rate?: number;
   top_stations?: TopStation[];
   crime_per_1000?: number;
+  waiting_children?: number;
 }
 
 let cache: Map<string, WardDetails> | null = null;
@@ -41,6 +43,7 @@ export function loadWardDetails(): Map<string, WardDetails> {
         foreignRate: w.foreign_rate,
         topStations: w.top_stations,
         crimePer1000: w.crime_per_1000,
+        waitingChildren: w.waiting_children,
       },
     ]),
   );
