@@ -28,5 +28,8 @@ export function buildWardStats(
     ...(detail.foreignRate !== undefined
       ? [{ label: '外国人人口比率', v: detail.foreignRate, vs: allDetails.map((d) => d.foreignRate!), text: `${detail.foreignRate.toFixed(1)}%`, note: '多いほど国際色ゆたかな街' }]
       : []),
+    ...(detail.incomePerTaxpayer !== undefined
+      ? [{ label: '平均所得（納税者1人当たり）', v: detail.incomePerTaxpayer, vs: allDetails.map((d) => d.incomePerTaxpayer!), text: `${Math.round(detail.incomePerTaxpayer / 100) / 10}百万円`, note: '課税対象所得ベース' }]
+      : []),
   ];
 }

@@ -5,6 +5,8 @@ export interface WardDetails {
   code: string;
   landPriceAvg: number;
   landPricePoints: number;
+  population: number;
+  incomePerTaxpayer?: number;
   foreignRate?: number;
   topStations?: TopStation[];
 }
@@ -15,6 +17,8 @@ interface RawDetail {
   id: string;
   land_price_avg: number;
   land_price_points: number;
+  population: number;
+  income_per_taxpayer?: number;
   foreign_rate?: number;
   top_stations?: TopStation[];
 }
@@ -30,6 +34,8 @@ export function loadWardDetails(): Map<string, WardDetails> {
         code: w.id,
         landPriceAvg: w.land_price_avg,
         landPricePoints: w.land_price_points,
+        population: w.population,
+        incomePerTaxpayer: w.income_per_taxpayer,
         foreignRate: w.foreign_rate,
         topStations: w.top_stations,
       },

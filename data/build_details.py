@@ -3,9 +3,22 @@
 import csv, json
 from pathlib import Path
 
+import openpyxl
+
 RAW = Path(__file__).parent / 'raw'
 OUT = Path(__file__).parent / 'processed' / 'ward-details.json'
 WARD_IDS = [f'131{i:02d}' for i in range(1, 24)]
+
+# 第9表の区行の並び順（build_wards.py の WARDS と同じ23区順）は行データ内の
+# 団体名文字列から直接引くため、コード対応表だけを用意する。
+WARD_NAME_TO_CODE = {
+    '千代田区': '13101', '中央区': '13102', '港区': '13103', '新宿区': '13104',
+    '文京区': '13105', '台東区': '13106', '墨田区': '13107', '江東区': '13108',
+    '品川区': '13109', '目黒区': '13110', '大田区': '13111', '世田谷区': '13112',
+    '渋谷区': '13113', '中野区': '13114', '杉並区': '13115', '豊島区': '13116',
+    '北区': '13117', '荒川区': '13118', '板橋区': '13119', '練馬区': '13120',
+    '足立区': '13121', '葛飾区': '13122', '江戸川区': '13123',
+}
 
 
 def land_price():
@@ -90,6 +103,65 @@ def foreign_rate():
     return result
 
 
+def income():
+    """納税義務者1人当たり課税対象所得（千円）。
+
+    総務省「市町村税課税状況等の調」（令和6年度）を東京都総務局が特別区分に
+    再集計した「第9表 課税標準額段階別令和６年度分所得割額等に関する調（小計）」
+    （data/raw/tokyo_r06_dai9hyo.xlsx シート『表09』『表09 (2)』）から、
+    課税標準額の11段階（10万円以下～5,000万円超1億円以下）＋『表09 (2)』先頭の
+    12段階目（1億円超）を区ごとに合算し、
+        課税対象所得（課税標準額の合計・千円）÷ 納税義務者数（所得割）
+    で1人当たり課税対象所得を算出する。
+
+    出典URL: https://www.soumu.metro.tokyo.lg.jp/documents/d/soumu/r06tokubetsukukazeiver4
+    （東京都総務局行政部「区市町村行財政」→ 令和6年度 → 特別区課税状況 各表集計表）
+    """
+    src = RAW / 'tokyo_r06_dai9hyo.xlsx'
+    if not src.exists():
+        return {}
+    wb = openpyxl.load_workbook(src, read_only=True, data_only=True)
+
+    def block_indices(rows, label):
+        header = rows[6]
+        idx = [i for i, v in enumerate(header) if v == '納税義務者数']
+        ks = [i for i, v in enumerate(header) if v and label in str(v)]
+        return idx, ks
+
+    def ward_rows(rows):
+        out = {}
+        for row in rows:
+            if row and isinstance(row[0], int) and isinstance(row[1], str) and row[1].strip() in WARD_NAME_TO_CODE:
+                out[row[1].strip()] = row
+        return out
+
+    ws1 = wb['表09']
+    rows1 = list(ws1.iter_rows(values_only=True))
+    nz1, ks1 = block_indices(rows1, '課税標準額')
+    wards1 = ward_rows(rows1)
+
+    ws2 = wb['表09 (2)']
+    rows2 = list(ws2.iter_rows(values_only=True))
+    nz2_all, ks2_all = block_indices(rows2, '課税標準額')
+    nz2, ks2 = nz2_all[:1], ks2_all[:1]  # 先頭ブロックのみ = 「1億円を超える金額」
+    wards2 = ward_rows(rows2)
+
+    result = {}
+    for name, code in WARD_NAME_TO_CODE.items():
+        r1 = wards1.get(name)
+        if not r1:
+            continue
+        taxpayers = sum(r1[i + 2] for i in nz1)  # (計) = あり+なし
+        taxable_income = sum(r1[i] for i in ks1)
+        r2 = wards2.get(name)
+        if r2:
+            taxpayers += sum(r2[i + 2] for i in nz2)
+            taxable_income += sum(r2[i] for i in ks2)
+        if taxpayers > 0:
+            result[code] = {'income_per_taxpayer': round(taxable_income / taxpayers)}
+    return result
+
+
 def top_stations():
     """区ごとの乗降人員上位3駅。
 
@@ -118,6 +190,19 @@ def main():
 
     sources = {'land_price': '国土交通省 令和7年地価公示（住宅地 区別平均・円/㎡）'}
 
+    pop = _total_population()
+    pop_missing = [w for w in WARD_IDS if w not in pop]
+    assert not pop_missing, f'population missing wards: {pop_missing}'  # kill test: 23区揃うこと
+    sources['population'] = '住民基本台帳による世帯と人口（令和8年1月1日現在）・人'
+
+    inc = income()
+    inc_missing = [w for w in WARD_IDS if w not in inc]
+    if inc_missing:
+        print(f'income DROPPED: missing wards {inc_missing or "(no source file)"}')
+        inc = {}
+    else:
+        sources['income'] = '総務省「市町村税課税状況等の調」（令和6年度）納税義務者1人当たり課税対象所得・千円'
+
     fr = foreign_rate()
     fr_missing = [w for w in WARD_IDS if w not in fr]
     if fr_missing:
@@ -136,7 +221,9 @@ def main():
 
     wards = []
     for w in WARD_IDS:
-        entry = {'id': w, **lp[w]}
+        entry = {'id': w, **lp[w], 'population': pop[w]}
+        if w in inc:
+            entry.update(inc[w])
         if w in fr:
             entry.update(fr[w])
         if w in ts:
