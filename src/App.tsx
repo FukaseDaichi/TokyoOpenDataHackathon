@@ -1,22 +1,24 @@
 'use client';
 
 import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import Hero from './hero/Hero';
 import { prefersReducedMotion } from './hero/quality';
 import { loadWards } from './data/wards';
-import type { AxisVector, Ward } from './domain/axes';
 import { Zukan } from './ui/Zukan';
 import { WardDetail } from './ui/WardDetail';
 import { Diagnosis } from './ui/Diagnosis';
-import { Result } from './ui/Result';
-import { ShareCard, xShareUrl } from './ui/ShareCard';
 import { bestMatch } from './lib/matching';
+import { saveDiagnosis } from './lib/diagnosisSession';
+import { CODE_TO_SLUG } from './data/slugs';
 
 const WARDS = loadWards();
 
-type DiagnosisPhase = { name: 'intro' } | { name: 'quiz' } | { name: 'result'; userVector: AxisVector };
+type DiagnosisPhase = { name: 'intro' } | { name: 'quiz' };
 
 export default function App() {
+  const router = useRouter();
   const [selectedCode, setSelectedCode] = useState<string | null>(null);
   const [phase, setPhase] = useState<DiagnosisPhase>({ name: 'intro' });
   const ward = WARDS.find((w) => w.code === selectedCode) ?? null;
@@ -36,10 +38,6 @@ export default function App() {
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [ward]);
-
-  const matched = phase.name === 'result' ? bestMatch(phase.userVector, WARDS) : null;
-  const shareUrl =
-    typeof window !== 'undefined' ? `${window.location.origin}${window.location.pathname}` : '';
 
   return (
     <main>
@@ -64,28 +62,12 @@ export default function App() {
             </>
           )}
           {phase.name === 'quiz' && (
-            <Diagnosis onComplete={(userVector) => setPhase({ name: 'result', userVector })} />
-          )}
-          {phase.name === 'result' && matched && (
-            <>
-              <Result userVector={phase.userVector} />
-              <div className="result-actions">
-                <a
-                  className="diagnosis-option result-share-link"
-                  href={xShareUrl(matched, shareUrl)}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Xで結果をシェアする
-                </a>
-                <button className="result-retry" onClick={() => setPhase({ name: 'quiz' })}>
-                  もう一度診断する
-                </button>
-              </div>
-              <div className="result-share-card">
-                <ShareCard ward={matched} />
-              </div>
-            </>
+            <Diagnosis
+              onComplete={(userVector) => {
+                saveDiagnosis(userVector);
+                router.push(`/result/${CODE_TO_SLUG[bestMatch(userVector, WARDS).code]}/`);
+              }}
+            />
           )}
         </div>
       </section>
@@ -114,6 +96,12 @@ export default function App() {
         >
           <div className="ward-modal-inner" onClick={(e) => e.stopPropagation()}>
             <WardDetail ward={ward} />
+            <Link
+              className="diagnosis-option result-share-link"
+              href={`/ward/${CODE_TO_SLUG[ward.code]}/`}
+            >
+              {ward.name}ちゃんをくわしく見る →
+            </Link>
             <button className="ward-modal-close" onClick={() => setSelectedCode(null)} autoFocus>
               とじる
             </button>

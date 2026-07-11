@@ -44,7 +44,7 @@ export function WardPage({ slug }: { slug: string }) {
           <div className="ward-detail-portrait">
             {theme.slug && (
               // eslint-disable-next-line @next/next/no-img-element
-              <img src={`/${ssrImage(theme.slug, 896)}`} alt={`${ward.name}ちゃんのイラスト`} width={896} height={1344} />
+              <img src={ssrImage(theme.slug, 896)} alt={`${ward.name}ちゃんのイラスト`} width={896} height={1344} />
             )}
           </div>
           <div className="ward-detail-body">
@@ -83,7 +83,7 @@ export function WardPage({ slug }: { slug: string }) {
                       <Link key={f.code} className="fellow-card" href={`/ward/${CODE_TO_SLUG[f.code]}/`}>
                         {ft.slug && (
                           // eslint-disable-next-line @next/next/no-img-element
-                          <img src={`/${ssrImage(ft.slug)}`} alt="" loading="lazy" />
+                          <img src={ssrImage(ft.slug)} alt="" loading="lazy" />
                         )}
                         {f.name}
                       </Link>
