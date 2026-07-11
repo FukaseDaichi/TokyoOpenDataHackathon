@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
+import './zukan.css';
 
 export const metadata: Metadata = {
   title: 'うちの区ちゃん診断図鑑',
