@@ -5,6 +5,33 @@
 ## 目的
 最優秀・上位入賞を本気で狙う。調査 → 戦略 → アイディア → 実装を段階的に進める。
 
+## アプリ「うちの区ちゃん診断図鑑」
+
+23区をオープンデータの5軸性格ベクトルで分類・擬人化し、10問診断で「あなたに一番似ている区ちゃん」に出会える静的Webアプリ。
+
+### 開発
+
+```bash
+npm install
+npm run test    # ロジック・UIのユニットテスト（Vitest）
+npm run dev     # ローカル開発（http://localhost:3000）
+npm run build   # out/ に静的成果物（Next.js 静的エクスポート）
+```
+
+### デプロイ（Cloudflare Pages）
+
+- Build command: `npm run build`
+- Build output directory: `out`
+- 独自ドメインは使わず `*.pages.dev` を利用（追加課金なし）。
+- 実行時のサーバAPI/DBなし。全データはビルド時に静的バンドル。
+
+### データ
+
+- 実オープンデータのスナップショット: `data/processed/wards.json`（再生成は `/usr/bin/python3 data/build_wards.py`）
+- アプリはそのコピー `src/data/ward-metrics.json` から5軸を合成（`src/data/wards.ts`）:
+  賑わい=昼夜間人口比率(log)／成熟=高齢化率−年少率／みどり=一人当たり公立公園面積／世帯=子育て−単身世帯率／華やぎ=財政力指数
+- 出典: 令和2年国勢調査・住民基本台帳・都建設局公園調書・総務省主要財政指標
+
 ## 前提（プロフィール・制約）
 - 参加形式: ソロ（35歳・フルスタックエンジニア／強み＝データ処理・分析）
 - 投下時間: 30〜60h ／ コスト: 追加課金なし（無料枠で完成）
