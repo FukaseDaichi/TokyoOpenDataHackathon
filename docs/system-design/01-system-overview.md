@@ -25,7 +25,7 @@ flowchart LR
 | 領域 | 採用技術 | 用途 |
 |---|---|---|
 | アプリケーション | Next.js App Router / React / TypeScript | 静的ルート生成とクライアントUI |
-| 3D描画 | Three.js / React Three Fiber / Drei | ヒーローと区モーダルの3Dレーダー |
+| 3D描画 | Three.js / React Three Fiber | スクロール連動3Dヒーロー |
 | テスト | Vitest / Testing Library / jsdom | 純ロジックとReactコンポーネントの単体テスト |
 | データ集計 | Python 3 / openpyxl | CSV・XLSXから区別スナップショットを生成 |
 | 画像生成 | Node.js / Sharp | WebPとOGP画像を生成 |

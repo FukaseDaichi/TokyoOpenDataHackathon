@@ -1,53 +1,19 @@
 'use client';
 
 import Link from 'next/link';
-import dynamic from 'next/dynamic';
 import { useEffect, useMemo, useState, type AnimationEvent } from 'react';
-import { AXIS_KEYS, AXIS_LABELS, type AxisKey, type Ward, type WardMetrics } from '../domain/axes';
+import type { Ward } from '../domain/axes';
 import { loadWards } from '../data/wards';
-import { rankOf } from '../lib/rank';
-import { detectQuality } from '../hero/quality';
+import { loadWardDetails } from '../data/details';
+import { rankOf, ratioToMean } from '../lib/rank';
 import { Radar } from './Radar';
+import { StatBar } from './StatBar';
+import { buildWardStats } from './wardStats';
 import { ssrImage, wardTheme } from './wardTheme';
 import { zukanNo } from './Zukan';
 
-/** 3Dレーダーはthree.js込みなのでモーダル初回表示時に遅延読込（静的エクスポート互換） */
-const Radar3D = dynamic(() => import('./Radar3D'), { ssr: false });
-
 const WARDS = loadWards();
-
-/** 各軸の根拠指標ラベル（下段ステータス表の左列） */
-const METRIC_LABEL: Record<AxisKey, string> = {
-  liveliness: '昼夜間人口比率',
-  maturity: '高齢化率 / 年少人口率',
-  greenery: '一人当たり公立公園面積',
-  family: '単身世帯率 / 子育て世帯率',
-  luxury: '財政力指数',
-};
-
-/** 軸チップの配置（五角形の頂点付近）。2Dフォールバック時のみ使用 */
-const AXIS_POS: Record<AxisKey, { left: string; top: string }> = {
-  liveliness: { left: '50%', top: '6%' },
-  maturity: { left: '90%', top: '36%' },
-  greenery: { left: '76%', top: '88%' },
-  family: { left: '24%', top: '88%' },
-  luxury: { left: '10%', top: '36%' },
-};
-
-function metricValue(key: AxisKey, m: WardMetrics): string {
-  switch (key) {
-    case 'liveliness':
-      return `${m.daytime_population_ratio.toFixed(1)}%`;
-    case 'maturity':
-      return `${m.aging_rate.toFixed(1)}% / ${m.youth_rate.toFixed(1)}%`;
-    case 'greenery':
-      return `${m.park_area_per_capita.toFixed(2)}㎡`;
-    case 'family':
-      return `${m.single_household_rate.toFixed(1)}% / ${m.family_household_rate.toFixed(1)}%`;
-    case 'luxury':
-      return m.fiscal_strength_index.toFixed(2);
-  }
-}
+const DETAILS = loadWardDetails();
 
 /** 魔法の絵本の光の粉（背景の減光オーバーレイ上を舞う） */
 const PARTICLES = [
@@ -73,21 +39,13 @@ function prefersStaticMotion(): boolean {
   return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
-/** 3Dレーダーを出せるか（reduced-motion / WebGL不可なら2Dフォールバック） */
-function canUse3D(): boolean {
-  try {
-    return detectQuality() !== 'fallback';
-  } catch {
-    return false;
-  }
-}
-
 /** 閉じアニメーションのanimationendが拾えなかった場合の保険（ms） */
 const CLOSE_FALLBACK_MS = 1300;
 
 /**
  * 区ちゃん詳細モーダル。羊皮紙×金の絵本トーンのゲームUI。
- * 表紙が開く絵本演出で登場し、立ち絵カード＋魔法陣ホログラム3Dレーダー＋ステータス表を見せる。
+ * 表紙が開く絵本演出で登場し、立ち絵カード＋レーダーチャート＋ステータスバーを見せる。
+ * レーダーとステータスは区詳細ページと同じ部品（Radar / StatBar）を共用する。
  */
 export function WardModal({
   ward,
@@ -99,21 +57,19 @@ export function WardModal({
   onClose: () => void;
 }) {
   const animate = useMemo(() => !prefersStaticMotion(), []);
-  const use3D = useMemo(() => canUse3D(), []);
   const [closing, setClosing] = useState(false);
   const [coverOpen, setCoverOpen] = useState(!animate);
-  const [radarReady, setRadarReady] = useState(false);
 
   const theme = wardTheme(ward.code);
   const index = WARDS.findIndex((w) => w.code === ward.code);
   const no = zukanNo(index);
-  const rankByAxis = (key: AxisKey) => rankOf(WARDS.map((w) => w.axes[key]), ward.axes[key]);
-  const ranks = useMemo(
-    () => Object.fromEntries(AXIS_KEYS.map((k) => [k, rankByAxis(k)])) as Record<AxisKey, number>,
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    [ward.code],
-  );
   const m = ward.metrics;
+  const detail = DETAILS.get(ward.code);
+  const stats = useMemo(() => {
+    if (!m || !detail) return [];
+    return buildWardStats(m, detail, WARDS.map((w) => w.metrics!), [...DETAILS.values()]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [ward.code]);
 
   const requestClose = () => {
     if (!animate) {
@@ -159,6 +115,7 @@ export function WardModal({
       aria-modal="true"
       aria-label={`${ward.name}の詳細`}
       onClick={requestClose}
+      style={{ ['--ward-color' as string]: theme.color }}
     >
       <div className="ward-modal-particles" aria-hidden="true">
         {PARTICLES.map((p, i) => (
@@ -215,61 +172,38 @@ export function WardModal({
               </div>
 
               <div className="ward-modal-radar">
-                <div className={`ward-modal-radar-stage${use3D ? ' ward-modal-radar-stage-3d' : ''}`}>
-                  {!use3D && <span className="ward-modal-radar-ring" aria-hidden="true" />}
-                  {use3D ? (
-                    <>
-                      {/* three.js読込完了までは2Dで場をつなぐ */}
-                      {!radarReady && <Radar vector={ward.axes} color={theme.color} size={300} showLabels={false} />}
-                      <Radar3D
-                        vector={ward.axes}
-                        ranks={ranks}
-                        color={theme.color}
-                        onReady={() => setRadarReady(true)}
-                      />
-                    </>
-                  ) : (
-                    <>
-                      <Radar vector={ward.axes} color="#b8923f" size={300} showLabels={false} />
-                      {AXIS_KEYS.map((k) => (
-                        <span key={k} className="ward-modal-axis-chip" style={AXIS_POS[k]}>
-                          {AXIS_LABELS[k].name}
-                          <b>{ranks[k]}位</b>
-                        </span>
-                      ))}
-                    </>
-                  )}
+                <div className="ward-modal-radar-stage">
+                  <span className="ward-modal-radar-ring" aria-hidden="true" />
+                  <Radar vector={ward.axes} color={theme.color} size={300} />
                 </div>
               </div>
             </div>
 
-            {/* 下段: 23区ランキング */}
+            {/* 下段: データで見るステータス（区詳細ページと同じ内容） */}
             <h3 className="ward-modal-stat-head">
               <span>ステータス</span>
               <span className="ward-modal-stat-rule" aria-hidden="true" />
-              <span className="ward-modal-stat-sub">23区ランキング</span>
+              <span className="ward-modal-stat-sub">データで見る{ward.name}</span>
             </h3>
 
-            {m && (
+            {stats.length > 0 && (
               <div className="ward-modal-stats">
-                {AXIS_KEYS.map((k) => {
-                  const rank = ranks[k];
-                  return (
-                    <div key={k} className="ward-modal-stat-row">
-                      <span className="ward-modal-stat-axis">{AXIS_LABELS[k].name}</span>
-                      <span className="ward-modal-stat-metric">{METRIC_LABEL[k]}</span>
-                      <span className="ward-modal-stat-value">{metricValue(k, m)}</span>
-                      <span className={`ward-rank-badge${rank <= 3 ? ` ward-rank-badge-${rank}` : ''}`}>
-                        <b>{rank}</b>位
-                      </span>
-                    </div>
-                  );
-                })}
+                {stats.map((s) => (
+                  <StatBar
+                    key={s.label}
+                    label={s.label}
+                    valueText={s.text}
+                    rank={rankOf(s.vs, s.v)}
+                    ratio={ratioToMean(s.vs, s.v)}
+                    note={s.note}
+                  />
+                ))}
+                <p className="stat-section-caption">バーの中央線＝23区平均。順位は値の大きい順。</p>
               </div>
             )}
 
             <p className="ward-modal-sources">
-              出典: 令和2年国勢調査・住民基本台帳・都建設局公園調書・総務省主要財政指標（数値は取得時点のスナップショット）。順位は23区中の順位。
+              出典: 令和2年国勢調査・住民基本台帳・都建設局公園調書・総務省主要財政指標・国土交通省地価公示（数値は取得時点のスナップショット）。順位は23区中の順位。
             </p>
 
             <div className="ward-modal-cta-wrap">

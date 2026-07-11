@@ -5,6 +5,18 @@
       "command": "codex",
       "args": ["mcp-server"],
       "env": {}
+    },
+    "playwright": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "@playwright/mcp@latest"],
+      "env": {}
+    },
+    "cloudflare": {
+      "type": "stdio",
+      "command": "npx",
+      "args": ["-y", "mcp-remote", "https://mcp.cloudflare.com/mcp"],
+      "env": {}
     }
   }
 }

@@ -16,7 +16,7 @@
 
 - `app/layout.tsx` と各動的ページモジュールは、静的HTMLとメタデータを生成する層である。
 - `src/App.tsx`、`ResultPage`、`WardPage` は操作を扱うクライアントコンポーネントである。
-- `HeroCanvas` と `Radar3D` は `next/dynamic` の `ssr: false` で遅延ロードし、サーバー描画の対象外とする。
+- `HeroCanvas` は `next/dynamic` の `ssr: false` で遅延ロードし、サーバー描画の対象外とする。
 - 区データはJSON importでバンドルされ、`fetch` は行わない。
 
 ## 3. トップページ
@@ -75,11 +75,12 @@ URLには区slugだけが含まれ、回答や5軸ベクトルは含まれない
 | `Hero` | 品質判定、3D/2D切り替え、ヒーロー統合 |
 | `Diagnosis` | 質問進行と回答の収集 |
 | `Zukan` | 23区カード一覧 |
-| `WardModal` | トップ内の区概要、3D/2Dレーダー、詳細導線 |
+| `WardModal` | トップ内の区概要、レーダー、ステータスバー、詳細導線 |
 | `WardDetail` | 結果ページの区情報と5軸根拠 |
 | `ResultPage` | 診断セッションの有無に応じた結果表示 |
 | `WardPage` | 区の全指標と関連区の表示 |
-| `Radar` / `Radar3D` | 5軸ベクトルの2D/3D可視化 |
+| `Radar` | 5軸ベクトルのSVGレーダー可視化（モーダル・結果・区詳細・シェアカードで共用） |
+| `StatBar` | 指標1行の平均比バー表示（区詳細ページとモーダルで共用） |
 | `ShareCard` | 結果カードのDOM表示とX Web Intent URL生成 |
 
 ## 7. エラー時の挙動

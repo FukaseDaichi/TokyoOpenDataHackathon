@@ -26,21 +26,28 @@ describe('WardModal', () => {
     expect(cta).toHaveAttribute('href', '/ward/minato/');
   });
 
-  it('renders all five axis stat rows with their source metrics', () => {
+  it('renders the same stat bars as the ward detail page', () => {
     render(<WardModal ward={minato} detailHref="/ward/minato/" onClose={() => {}} />);
 
-    for (const label of ['昼夜間人口比率', '高齢化率 / 年少人口率', '一人当たり公立公園面積', '単身世帯率 / 子育て世帯率', '財政力指数']) {
+    for (const label of [
+      '昼夜間人口比率',
+      '高齢化率',
+      '年少人口率',
+      '一人当たり公立公園面積',
+      '単身世帯率',
+      '子育て世帯率',
+      '財政力指数',
+      '地価公示（住宅地平均）',
+    ]) {
       expect(screen.getByText(label)).toBeInTheDocument();
     }
   });
 
-  it('ranks 港区 first on 華やぎ (財政力指数, top of 23 wards)', () => {
+  it('ranks 港区 first on 財政力指数 (top of 23 wards)', () => {
     render(<WardModal ward={minato} detailHref="/ward/minato/" onClose={() => {}} />);
 
-    // 港区 has the highest fiscal strength → luxury rank 1. The axis chip and the
-    // stat badge both surface "1位"; assert at least one appears.
-    const rankOnes = screen.getAllByText((_, node) => node?.textContent === '1位');
-    expect(rankOnes.length).toBeGreaterThanOrEqual(1);
+    // 港区 has the highest fiscal strength → rank 1 in at least one StatBar
+    expect(screen.getAllByText('23区中 1位').length).toBeGreaterThanOrEqual(1);
   });
 
   it('closes via the × button and the backdrop', () => {
