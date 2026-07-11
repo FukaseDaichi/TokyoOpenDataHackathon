@@ -20,5 +20,5 @@ export function wardTheme(code: string): WardTheme {
 
 /** SSR立ち絵のパス（静的エクスポート配下 public/characters/ssr/） */
 export function ssrImage(slug: string, size: 512 | 896 = 512): string {
-  return `characters/ssr/${slug}-w${size}.webp`;
+  return `/characters/ssr/${slug}-w${size}.webp`;
 }

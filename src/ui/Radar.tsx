@@ -5,10 +5,11 @@ interface RadarProps {
   /** 塗りの色（区のテーマカラー）。既定は金インク */
   color?: string;
   size?: number;
+  overlay?: AxisVector;
 }
 
 /** 5軸レーダー。羊皮紙に金インクで描いた紋章風（絵本図鑑のトーン） */
-export function Radar({ vector, color = '#b8923f', size = 240 }: RadarProps) {
+export function Radar({ vector, color = '#b8923f', size = 240, overlay }: RadarProps) {
   const c = size / 2;
   const r = size / 2 - 34;
   const n = AXIS_KEYS.length;
@@ -40,6 +41,16 @@ export function Radar({ vector, color = '#b8923f', size = 240 }: RadarProps) {
       })}
       {/* 性格ポリゴン */}
       <polygon points={poly} fill={color} fillOpacity="0.32" stroke={color} strokeWidth="2" strokeLinejoin="round" />
+      {overlay && (
+        <polygon
+          points={AXIS_KEYS.map((k, i) => pt(i, overlay[k]).join(',')).join(' ')}
+          fill="none"
+          stroke="#4a3418"
+          strokeWidth="2"
+          strokeDasharray="5 4"
+          strokeLinejoin="round"
+        />
+      )}
       {AXIS_KEYS.map((k, i) => {
         const [x, y] = pt(i, vector[k]);
         return <circle key={k} cx={x} cy={y} r="3" fill={color} stroke="#4a3418" strokeWidth="0.8" />;

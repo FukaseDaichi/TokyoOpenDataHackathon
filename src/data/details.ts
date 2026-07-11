@@ -1,0 +1,39 @@
+import snapshot from './ward-details.json';
+
+export interface TopStation { name: string; passengers: number }
+export interface WardDetails {
+  code: string;
+  landPriceAvg: number;
+  landPricePoints: number;
+  foreignRate?: number;
+  topStations?: TopStation[];
+}
+
+export const DETAIL_SOURCES: Record<string, string> = snapshot.sources;
+
+interface RawDetail {
+  id: string;
+  land_price_avg: number;
+  land_price_points: number;
+  foreign_rate?: number;
+  top_stations?: TopStation[];
+}
+
+let cache: Map<string, WardDetails> | null = null;
+
+export function loadWardDetails(): Map<string, WardDetails> {
+  if (cache) return cache;
+  cache = new Map(
+    (snapshot.wards as RawDetail[]).map((w) => [
+      w.id,
+      {
+        code: w.id,
+        landPriceAvg: w.land_price_avg,
+        landPricePoints: w.land_price_points,
+        foreignRate: w.foreign_rate,
+        topStations: w.top_stations,
+      },
+    ]),
+  );
+  return cache;
+}

@@ -66,8 +66,8 @@ export default function Hero2DFallback({ onSelectWard, onCtaClick }: Props) {
         <h1 style={{ margin: 0 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="title-w720.webp"
-            srcSet="title-w720.webp 720w, title-w1440.webp 1440w"
+            src="/title-w720.webp"
+            srcSet="/title-w720.webp 720w, /title-w1440.webp 1440w"
             sizes="(max-width: 720px) 86vw, 560px"
             alt="うちの区ちゃん"
             width={1470}
@@ -110,7 +110,7 @@ export default function Hero2DFallback({ onSelectWard, onCtaClick }: Props) {
               {card.slug ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={`characters/ssr/${card.slug}-w512.webp`}
+                  src={`/characters/ssr/${card.slug}-w512.webp`}
                   alt={`${card.name}のSSRイラスト`}
                   loading="lazy"
                   style={{ width: '100%', aspectRatio: '2 / 3', objectFit: 'cover', display: 'block' }}

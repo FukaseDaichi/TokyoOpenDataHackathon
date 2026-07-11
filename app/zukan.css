@@ -235,6 +235,24 @@
   color: #8a6c3c;
 }
 
+/* ---- 詳細ページ 指標バー ---- */
+
+.stat-bar { padding: 12px 0; border-bottom: 1px dashed rgba(184, 146, 63, 0.4); }
+.stat-bar-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; }
+.stat-bar-label { font-weight: 600; letter-spacing: 0.08em; font-size: 14px; }
+.stat-bar-value { font-variant-numeric: tabular-nums; font-size: 14px; color: #6a4f26; }
+.stat-bar-rank { margin-left: auto; font-size: 12px; color: #7a5c2e; white-space: nowrap; }
+.stat-bar-track { position: relative; height: 8px; border-radius: 999px; background: rgba(184, 146, 63, 0.18); overflow: hidden; }
+.stat-bar-fill { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: linear-gradient(90deg, var(--ward-color, #b8923f), #e8c56b); }
+.stat-bar-mean { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 2px; background: rgba(74, 52, 24, 0.55); }
+.stat-bar-note { margin-top: 6px; font-size: 11px; color: #8a6c3c; }
+.stat-section-caption { font-size: 11px; color: #8a6c3c; margin: 6px 0 0; }
+
+.fellow-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; margin-top: 12px; }
+.fellow-card { display: block; text-decoration: none; text-align: center; padding: 8px; background: linear-gradient(180deg, #f7ecd4, #eeddb8); border: 2px solid #b8923f; border-radius: 8px; color: #4a3418; font-size: 13px; letter-spacing: 0.1em; }
+.fellow-card img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 4px; margin-bottom: 6px; }
+.ward-page-back { display: inline-block; color: #b8923f; text-decoration: none; letter-spacing: 0.14em; font-size: 13px; margin-bottom: 20px; }
+
 /* ---- 診断フロー ---- */
 
 .diagnosis {

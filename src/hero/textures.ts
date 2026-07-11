@@ -140,7 +140,7 @@ export function createTextureStore(cards: HeroCard[], textureWidth: 512 | 896): 
         if (disposed || cursor >= queue.length) return;
         const card = queue[cursor++];
         loader.load(
-          `characters/ssr/${card.slug}-w${textureWidth}.webp`,
+          `/characters/ssr/${card.slug}-w${textureWidth}.webp`,
           (tex) => {
             if (disposed) {
               tex.dispose();

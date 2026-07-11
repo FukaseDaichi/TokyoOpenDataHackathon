@@ -87,8 +87,8 @@ export default function HeroOverlay({ hud, onCtaClick }: Props) {
         <h1 style={{ margin: 0 }}>
           {/* eslint-disable-next-line @next/next/no-img-element */}
           <img
-            src="title-w720.webp"
-            srcSet="title-w720.webp 720w, title-w1440.webp 1440w"
+            src="/title-w720.webp"
+            srcSet="/title-w720.webp 720w, /title-w1440.webp 1440w"
             sizes="(max-width: 720px) 88vw, 640px"
             alt="うちの区ちゃん"
             width={1470}

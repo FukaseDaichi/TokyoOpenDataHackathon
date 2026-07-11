@@ -21,3 +21,4 @@ next-env.d.ts
 
 # 大きいデータは必要に応じて無視（小さいサンプルはコミットOK）
 # assets/data-samples/*.csv
+.superpowers/
