@@ -1,0 +1,592 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html {
+  scroll-behavior: auto;
+}
+
+body {
+  font-family: 'Hiragino Mincho ProN', 'Yu Mincho', 'Noto Serif JP', serif;
+  background: #17110c;
+  color: #f4e8d0;
+  overflow-x: hidden;
+}
+
+button {
+  font-family: inherit;
+}
+/* ============================================================
+   図鑑・診断UI — ヒーローと同じ「魔法の絵本」トーン
+   革表紙: #17110c / 羊皮紙: #f7ecd4→#eeddb8 / 金: #b8923f / 墨: #4a3418
+   区ごとのアクセントは --ward-color（キャラ髪色由来）
+   ============================================================ */
+
+.book-section {
+  background: #17110c;
+  color: #f4e8d0;
+  padding: 96px 20px 120px;
+}
+
+.book-section-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.book-section-eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.42em;
+  color: #b8923f;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.book-section-title {
+  font-size: clamp(26px, 4.4vw, 40px);
+  letter-spacing: 0.18em;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.book-section-lede {
+  max-width: 560px;
+  margin: 0 auto 56px;
+  text-align: center;
+  line-height: 2.1;
+  font-size: 14px;
+  color: #d8c8a4;
+}
+
+/* ---- 図鑑グリッド ---- */
+
+.zukan-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 18px;
+}
+
+.zukan-card {
+  --ward-color: #b8923f;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 10px 14px;
+  background: linear-gradient(180deg, #f7ecd4 0%, #eeddb8 100%);
+  border: 2px solid #b8923f;
+  border-radius: 10px;
+  color: #4a3418;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+}
+
+.zukan-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
+}
+
+.zukan-card:focus-visible {
+  outline: 3px solid var(--ward-color);
+  outline-offset: 3px;
+}
+
+.zukan-card-no {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 1;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(23, 17, 12, 0.72);
+  color: #f4e8d0;
+}
+
+.zukan-card-img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid rgba(184, 146, 63, 0.6);
+  background: radial-gradient(circle at 50% 36%, #fff6e0 0%, #e5d0a4 100%);
+  display: block;
+}
+
+.zukan-card-placeholder {
+  display: block;
+}
+
+.zukan-card-name {
+  font-size: 15px;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+}
+
+.zukan-card-group {
+  font-size: 11px;
+  color: #7a5c2e;
+  letter-spacing: 0.1em;
+}
+
+.zukan-card-group::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ward-color);
+  margin-right: 6px;
+  vertical-align: 1px;
+  border: 1px solid rgba(74, 52, 24, 0.4);
+}
+
+/* ---- 個別詳細（羊皮紙の見開き） ---- */
+
+.ward-detail {
+  --ward-color: #b8923f;
+  display: grid;
+  grid-template-columns: minmax(200px, 300px) 1fr;
+  gap: 28px;
+  background: linear-gradient(180deg, #f7ecd4 0%, #eeddb8 100%);
+  border: 3px solid #b8923f;
+  border-radius: 14px;
+  padding: 28px;
+  color: #4a3418;
+  text-align: left;
+}
+
+.ward-detail-portrait img,
+.ward-detail-portrait .zukan-card-placeholder {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid var(--ward-color);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+  background: radial-gradient(circle at 50% 36%, #fff6e0 0%, #e5d0a4 100%);
+}
+
+.ward-detail-group {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  padding: 3px 12px;
+  border: 1px solid var(--ward-color);
+  border-radius: 999px;
+  color: #7a5c2e;
+  margin-bottom: 10px;
+}
+
+.ward-detail-name {
+  font-size: clamp(24px, 3.6vw, 34px);
+  letter-spacing: 0.16em;
+  margin-bottom: 8px;
+}
+
+.ward-detail-catch {
+  line-height: 1.9;
+  font-size: 14px;
+  color: #6a4f26;
+  margin-bottom: 12px;
+}
+
+.ward-detail-radar {
+  display: flex;
+  justify-content: center;
+  margin: 4px 0 8px;
+}
+
+.ward-detail-evidence-title {
+  font-size: 13px;
+  letter-spacing: 0.24em;
+  color: #7a5c2e;
+  border-bottom: 1px solid rgba(184, 146, 63, 0.5);
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+}
+
+.ward-detail-evidence {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.ward-detail-evidence th,
+.ward-detail-evidence td {
+  padding: 7px 8px;
+  border-bottom: 1px dashed rgba(184, 146, 63, 0.4);
+  vertical-align: top;
+}
+
+.ward-detail-evidence th {
+  text-align: left;
+  white-space: nowrap;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.evidence-metric {
+  color: #6a4f26;
+}
+
+.evidence-value {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.evidence-score {
+  white-space: nowrap;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: #7a5c2e;
+}
+
+.ward-detail-sources {
+  margin-top: 12px;
+  font-size: 11px;
+  line-height: 1.8;
+  color: #8a6c3c;
+}
+
+/* ---- 詳細ページ 指標バー ---- */
+
+.stat-bar { padding: 12px 0; border-bottom: 1px dashed rgba(184, 146, 63, 0.4); }
+.stat-bar-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; }
+.stat-bar-label { font-weight: 600; letter-spacing: 0.08em; font-size: 14px; }
+.stat-bar-value { font-variant-numeric: tabular-nums; font-size: 14px; color: #6a4f26; }
+.stat-bar-rank { margin-left: auto; font-size: 12px; color: #7a5c2e; white-space: nowrap; }
+.stat-bar-track { position: relative; height: 8px; border-radius: 999px; background: rgba(184, 146, 63, 0.18); overflow: hidden; }
+.stat-bar-fill { position: absolute; inset: 0 auto 0 0; border-radius: 999px; background: linear-gradient(90deg, var(--ward-color, #b8923f), #e8c56b); }
+.stat-bar-mean { position: absolute; left: 50%; top: -2px; bottom: -2px; width: 2px; background: rgba(74, 52, 24, 0.55); }
+.stat-bar-note { margin-top: 6px; font-size: 11px; color: #8a6c3c; }
+.stat-section-caption { font-size: 11px; color: #8a6c3c; margin: 6px 0 0; }
+
+.fellow-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; margin-top: 12px; }
+.fellow-card { display: block; text-decoration: none; text-align: center; padding: 8px; background: linear-gradient(180deg, #f7ecd4, #eeddb8); border: 2px solid #b8923f; border-radius: 8px; color: #4a3418; font-size: 13px; letter-spacing: 0.1em; }
+.fellow-card img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 4px; margin-bottom: 6px; }
+.ward-page-back { display: inline-block; color: #b8923f; text-decoration: none; letter-spacing: 0.14em; font-size: 13px; margin-bottom: 20px; }
+
+/* ---- 診断フロー ---- */
+
+.diagnosis {
+  max-width: 560px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.diagnosis-progress {
+  margin-bottom: 30px;
+}
+
+.diagnosis-progress-count {
+  display: block;
+  font-size: 13px;
+  letter-spacing: 0.3em;
+  color: #b8923f;
+  margin-bottom: 10px;
+  font-variant-numeric: tabular-nums;
+}
+
+.diagnosis-progress-track {
+  display: block;
+  height: 4px;
+  border-radius: 999px;
+  background: rgba(184, 146, 63, 0.25);
+  overflow: hidden;
+}
+
+.diagnosis-progress-fill {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #b8923f, #e8c56b);
+  transition: width 0.35s ease;
+}
+
+.diagnosis-question {
+  font-size: clamp(20px, 3.4vw, 28px);
+  letter-spacing: 0.12em;
+  line-height: 1.7;
+  margin-bottom: 34px;
+  min-height: 2.4em;
+}
+
+.diagnosis-options {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.diagnosis-option {
+  background: linear-gradient(180deg, #f7ecd4 0%, #eeddb8 100%);
+  border: 2px solid #b8923f;
+  border-radius: 12px;
+  color: #4a3418;
+  font-size: 16px;
+  letter-spacing: 0.08em;
+  line-height: 1.6;
+  padding: 16px 22px;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+}
+
+.diagnosis-option:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px rgba(0, 0, 0, 0.5);
+}
+
+.diagnosis-option:focus-visible {
+  outline: 3px solid #e8c56b;
+  outline-offset: 3px;
+}
+
+/* ---- 結果 ---- */
+
+.result {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.result-lede {
+  text-align: center;
+  font-size: clamp(18px, 3vw, 24px);
+  letter-spacing: 0.2em;
+  margin-bottom: 26px;
+  color: #f4e8d0;
+}
+
+.result-ranking-title {
+  text-align: center;
+  font-size: 13px;
+  letter-spacing: 0.32em;
+  color: #b8923f;
+  margin: 44px 0 16px;
+}
+
+.result-ranking {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.result-ranking li {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 12px 18px;
+  border: 1px solid rgba(184, 146, 63, 0.5);
+  border-left: 4px solid var(--ward-color, #b8923f);
+  border-radius: 8px;
+  background: rgba(247, 236, 212, 0.06);
+  font-size: 15px;
+}
+
+.result-rank {
+  color: #b8923f;
+  font-size: 13px;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+
+.result-rank-name {
+  font-size: 17px;
+  letter-spacing: 0.12em;
+  font-weight: 600;
+}
+
+.result-rank-group {
+  font-size: 12px;
+  color: #a08a5c;
+}
+
+.result-rank-score {
+  margin-left: auto;
+  font-size: 13px;
+  color: #d8c8a4;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.diagnosis-start {
+  display: flex;
+  justify-content: center;
+}
+
+.diagnosis-start-button {
+  min-width: 260px;
+  font-size: 17px;
+  letter-spacing: 0.2em;
+}
+
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.result-share-link {
+  display: inline-block;
+  text-decoration: none;
+  min-width: 240px;
+  text-align: center;
+}
+
+.result-retry {
+  background: none;
+  border: none;
+  color: #b8923f;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  padding: 8px;
+}
+
+.result-retry:focus-visible {
+  outline: 3px solid #e8c56b;
+  outline-offset: 2px;
+}
+
+.result-share-card {
+  display: flex;
+  justify-content: center;
+  margin-top: 34px;
+}
+
+/* ---- シェアカード ---- */
+
+.share-card {
+  --ward-color: #b8923f;
+  width: min(520px, 100%);
+  background: linear-gradient(180deg, #f7ecd4 0%, #eeddb8 100%);
+  border: 3px solid var(--ward-color);
+  border-radius: 14px;
+  padding: 20px 24px;
+  color: #4a3418;
+  text-align: center;
+}
+
+.share-card-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.34em;
+  color: #7a5c2e;
+  margin-bottom: 12px;
+}
+
+.share-card-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+
+.share-card-main img {
+  width: 130px;
+  height: auto;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid var(--ward-color);
+}
+
+.share-card-name {
+  font-size: 22px;
+  letter-spacing: 0.14em;
+  margin-bottom: 4px;
+}
+
+.share-card-group {
+  font-size: 12px;
+  color: #7a5c2e;
+  margin-bottom: 4px;
+}
+
+.share-card-tag {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #8a6c3c;
+  letter-spacing: 0.08em;
+}
+
+/* ---- 詳細モーダル ---- */
+
+.ward-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(12, 8, 3, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.ward-modal-inner {
+  max-width: 760px;
+  width: 100%;
+  max-height: 88vh;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+
+.ward-modal-close {
+  background: #4a3418;
+  color: #f4e8d0;
+  border: 1px solid #b8923f;
+  border-radius: 999px;
+  padding: 10px 34px;
+  cursor: pointer;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+}
+
+.ward-modal-close:focus-visible {
+  outline: 3px solid #e8c56b;
+  outline-offset: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .diagnosis-option,
+  .diagnosis-option:hover,
+  .diagnosis-progress-fill {
+    transition: none;
+    transform: none;
+  }
+}
+
+@media (max-width: 640px) {
+  .ward-detail {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+  .ward-detail-portrait {
+    max-width: 240px;
+    margin: 0 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zukan-card,
+  .zukan-card:hover {
+    transition: none;
+    transform: none;
+  }
+}

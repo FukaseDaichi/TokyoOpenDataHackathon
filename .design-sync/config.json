@@ -1,0 +1,22 @@
+{
+  "projectId": "88ed2aba-05a7-45a8-bef8-dac106f9858e",
+  "shape": "package",
+  "pkg": "kuchan-shindan-zukan",
+  "globalName": "KuchanDS",
+  "entry": ".design-sync/ds-entry.ts",
+  "buildCmd": "cat app/globals.css app/zukan.css > .design-sync/styles-entry.css",
+  "tsconfig": "tsconfig.json",
+  "cssEntry": ".design-sync/styles-entry.css",
+  "guidelinesGlob": [],
+  "readmeHeader": ".design-sync/conventions.md",
+  "componentSrcMap": {
+    "Radar": "src/ui/Radar.tsx",
+    "StatBar": "src/ui/StatBar.tsx",
+    "ShareCard": "src/ui/ShareCard.tsx",
+    "WardDetail": "src/ui/WardDetail.tsx",
+    "Zukan": "src/ui/Zukan.tsx",
+    "Diagnosis": "src/ui/Diagnosis.tsx",
+    "ResultPage": null,
+    "WardPage": null
+  }
+}
