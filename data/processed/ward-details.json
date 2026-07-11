@@ -1,0 +1,146 @@
+{
+ "sources": {
+  "land_price": "国土交通省 令和7年地価公示（住宅地 区別平均・円/㎡）",
+  "foreign_rate": "東京都の統計「国籍・地域別 外国人人口」（令和8年1月1日現在）÷ 住民基本台帳による世帯と人口 総人口（令和8年1月1日現在）"
+ },
+ "wards": [
+  {
+   "id": "13101",
+   "land_price_avg": 3282857,
+   "land_price_points": 7,
+   "foreign_rate": 6.28
+  },
+  {
+   "id": "13102",
+   "land_price_avg": 1701250,
+   "land_price_points": 8,
+   "foreign_rate": 7.12
+  },
+  {
+   "id": "13103",
+   "land_price_avg": 2577333,
+   "land_price_points": 30,
+   "foreign_rate": 8.86
+  },
+  {
+   "id": "13104",
+   "land_price_avg": 1021481,
+   "land_price_points": 27,
+   "foreign_rate": 14.46
+  },
+  {
+   "id": "13105",
+   "land_price_avg": 1283957,
+   "land_price_points": 23,
+   "foreign_rate": 7.21
+  },
+  {
+   "id": "13106",
+   "land_price_avg": 1152333,
+   "land_price_points": 6,
+   "foreign_rate": 9.81
+  },
+  {
+   "id": "13107",
+   "land_price_avg": 540273,
+   "land_price_points": 11,
+   "foreign_rate": 6.16
+  },
+  {
+   "id": "13108",
+   "land_price_avg": 593577,
+   "land_price_points": 26,
+   "foreign_rate": 7.62
+  },
+  {
+   "id": "13109",
+   "land_price_avg": 1086133,
+   "land_price_points": 30,
+   "foreign_rate": 4.33
+  },
+  {
+   "id": "13110",
+   "land_price_avg": 1232031,
+   "land_price_points": 32,
+   "foreign_rate": 4.34
+  },
+  {
+   "id": "13111",
+   "land_price_avg": 598564,
+   "land_price_points": 55,
+   "foreign_rate": 4.63
+  },
+  {
+   "id": "13112",
+   "land_price_avg": 724064,
+   "land_price_points": 109,
+   "foreign_rate": 3.31
+  },
+  {
+   "id": "13113",
+   "land_price_avg": 1653462,
+   "land_price_points": 26,
+   "foreign_rate": 5.75
+  },
+  {
+   "id": "13114",
+   "land_price_avg": 716259,
+   "land_price_points": 27,
+   "foreign_rate": 7.9
+  },
+  {
+   "id": "13115",
+   "land_price_avg": 648935,
+   "land_price_points": 62,
+   "foreign_rate": 4.34
+  },
+  {
+   "id": "13116",
+   "land_price_avg": 811818,
+   "land_price_points": 22,
+   "foreign_rate": 13.03
+  },
+  {
+   "id": "13117",
+   "land_price_avg": 664355,
+   "land_price_points": 31,
+   "foreign_rate": 9.61
+  },
+  {
+   "id": "13118",
+   "land_price_avg": 633062,
+   "land_price_points": 16,
+   "foreign_rate": 11.38
+  },
+  {
+   "id": "13119",
+   "land_price_avg": 509298,
+   "land_price_points": 47,
+   "foreign_rate": 7.05
+  },
+  {
+   "id": "13120",
+   "land_price_avg": 451400,
+   "land_price_points": 90,
+   "foreign_rate": 3.95
+  },
+  {
+   "id": "13121",
+   "land_price_avg": 379521,
+   "land_price_points": 71,
+   "foreign_rate": 6.87
+  },
+  {
+   "id": "13122",
+   "land_price_avg": 368295,
+   "land_price_points": 44,
+   "foreign_rate": 6.89
+  },
+  {
+   "id": "13123",
+   "land_price_avg": 413174,
+   "land_price_points": 69,
+   "foreign_rate": 7.57
+  }
+ ]
+}
