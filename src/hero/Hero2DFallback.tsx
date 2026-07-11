@@ -63,16 +63,21 @@ export default function Hero2DFallback({ onSelectWard, onCtaClick }: Props) {
         <p style={{ color: '#e8d5a8', letterSpacing: '0.28em', fontSize: 16, marginBottom: 12 }}>
           わたし、何区タイプ？
         </p>
-        <h1
-          style={{
-            color: '#f4e8d0',
-            fontSize: 'clamp(30px, 9vw, 64px)',
-            letterSpacing: '0.12em',
-            whiteSpace: 'nowrap',
-            textShadow: '0 2px 10px rgba(0,0,0,0.5)',
-          }}
-        >
-          うちの区ちゃん
+        <h1 style={{ margin: 0 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="title-w720.webp"
+            srcSet="title-w720.webp 720w, title-w1440.webp 1440w"
+            sizes="(max-width: 720px) 86vw, 560px"
+            alt="うちの区ちゃん"
+            width={1470}
+            height={376}
+            style={{
+              width: 'min(86vw, 560px)',
+              height: 'auto',
+              filter: 'drop-shadow(0 2px 10px rgba(0,0,0,0.5))',
+            }}
+          />
         </h1>
         <p style={{ color: '#b99c6b', margin: '14px 0 40px', letterSpacing: '0.16em', fontSize: 14 }}>
           <span style={{ whiteSpace: 'nowrap' }}>オープンデータで出会う、</span>

@@ -84,17 +84,22 @@ export default function HeroOverlay({ hud, onCtaClick }: Props) {
         <p style={{ color: '#e8d5a8', letterSpacing: '0.3em', fontSize: 'clamp(14px, 2.2vw, 20px)', marginBottom: 16 }}>
           わたし、何区タイプ？
         </p>
-        <h1
-          style={{
-            color: '#f4e8d0',
-            fontSize: 'clamp(34px, 10vw, 76px)',
-            fontWeight: 600,
-            letterSpacing: '0.12em',
-            whiteSpace: 'nowrap',
-            textShadow: '0 0 28px rgba(255, 215, 140, 0.35), 0 2px 8px rgba(0,0,0,0.6)',
-          }}
-        >
-          うちの区ちゃん
+        <h1 style={{ margin: 0 }}>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src="title-w720.webp"
+            srcSet="title-w720.webp 720w, title-w1440.webp 1440w"
+            sizes="(max-width: 720px) 88vw, 640px"
+            alt="うちの区ちゃん"
+            width={1470}
+            height={376}
+            style={{
+              width: 'min(88vw, 640px)',
+              height: 'auto',
+              filter:
+                'drop-shadow(0 0 28px rgba(255, 215, 140, 0.35)) drop-shadow(0 2px 8px rgba(0,0,0,0.6))',
+            }}
+          />
         </h1>
         <p style={{ color: '#cdb27a', marginTop: 18, fontSize: 'clamp(12px, 1.8vw, 17px)', letterSpacing: '0.16em' }}>
           <span style={{ whiteSpace: 'nowrap' }}>オープンデータで出会う、</span>
