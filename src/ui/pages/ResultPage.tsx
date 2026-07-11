@@ -5,10 +5,9 @@ import Link from 'next/link';
 import { SLUG_TO_CODE } from '../../data/slugs';
 import { loadWards } from '../../data/wards';
 import { loadDiagnosis } from '../../lib/diagnosisSession';
-import { rankMatches } from '../../lib/matching';
+import { rankMatches, similarityPercent } from '../../lib/matching';
 import type { AxisVector } from '../../domain/axes';
 import { WardDetail } from '../WardDetail';
-import { similarityPercent } from '../Result';
 import { ShareCard, xShareUrl } from '../ShareCard';
 import { wardTheme } from '../wardTheme';
 

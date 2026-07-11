@@ -24,6 +24,7 @@ const bg = Buffer.from(`<svg width="${W}" height="${H}">
   <rect x="14" y="14" width="${W - 28}" height="${H - 28}" fill="none" stroke="#b8923f" stroke-width="4" rx="18"/>
 </svg>`);
 
+// OG画像の再生成はmacOSで行うこと（Hiragino Mincho ProN はmac専用。他OSではフォールバックして見た目が変わる）
 const label = (name) => Buffer.from(`<svg width="700" height="630">
   <text x="60" y="430" font-family="Hiragino Mincho ProN, serif" font-size="60" fill="#4a3418" letter-spacing="4">${name}ちゃん</text>
   <text x="60" y="500" font-family="Hiragino Mincho ProN, serif" font-size="34" fill="#7a5c2e" letter-spacing="4">タイプのあなたへ</text>
