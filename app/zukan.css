@@ -928,3 +928,20 @@
     transform: none;
   }
 }
+
+/* レーダーチャート（金インクで描き上がる紋章風アニメーション） */
+@keyframes radarDraw {
+  from { stroke-dashoffset: 1; }
+  to { stroke-dashoffset: 0; }
+}
+@keyframes radarFade {
+  from { opacity: 0; }
+}
+@keyframes radarPop {
+  0% { transform: scale(0); opacity: 0; }
+  60% { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .radar * { animation: none !important; }
+}
