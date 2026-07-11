@@ -124,7 +124,7 @@ def main():
         print(f'foreign_rate DROPPED: missing wards {fr_missing or "(no source file)"}')
         fr = {}
     else:
-        sources['foreign_rate'] = '東京都の統計「国籍・地域別 外国人人口」（令和8年1月1日現在）÷ 住民基本台帳による世帯と人口 総人口（令和8年1月1日現在）'
+        sources['foreign_rate'] = '東京都の統計「国籍・地域別 外国人人口」（令和8年1月1日現在）÷ 住民基本台帳による世帯と人口 総人口（令和8年1月1日現在）・％'
 
     ts = top_stations()
     ts_missing = [w for w in WARD_IDS if w not in ts]
