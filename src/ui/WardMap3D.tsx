@@ -1,6 +1,6 @@
 'use client';
 
-import { useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef } from 'react';
 import { Canvas, useFrame } from '@react-three/fiber';
 import * as THREE from 'three';
 import { loadWardGeo, type WardGeo } from '../data/geo';
@@ -31,6 +31,12 @@ function WardMesh({ ward, selected }: { ward: WardGeo; selected: boolean }) {
     return g;
   }, [ward, selected]);
   const edges = useMemo(() => new THREE.EdgesGeometry(geom, 30), [geom]);
+  useEffect(() => {
+    return () => {
+      geom.dispose();
+      edges.dispose();
+    };
+  }, [geom, edges]);
   return (
     <group>
       <mesh geometry={geom}>
