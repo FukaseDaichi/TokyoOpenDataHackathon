@@ -52,8 +52,9 @@
 ### 4.3 ジオデータパイプライン
 
 - 出典: 国土数値情報 行政区域データ N03（2025年版、政府標準利用規約・商用可）。`data/raw/` に取得物を置く。
-- `data/build_geo.py`（新規）: N03 から23区を抽出し、mapshaper（または Python 内簡略化）でポリゴンを簡略化 → `data/processed/ward-geo.json`（TopoJSON、目標 50KB 以下）を生成。`src/data/ward-geo.json` へコピーして同梱（wards.json と同じ二重管理方式）。
-- 区役所代表点23点は同ファイルに `centers` として収録（国土数値情報 P34 またはアマノ技研 CSV を基に手動確認）。
+- 簡略化はトポロジー整合性のため smartnews-smri/japan-topography の簡略化済み TopoJSON（N03 由来、隣接区の境界線が共有アークで一致）を入力に使う。SmartNews 側はクレジット不要、国土数値情報の出典表記のみ必要。
+- `data/build_geo.py`（新規、標準ライブラリのみ）: TopoJSON をデコードして23区を抽出し、東京中心の局所平面座標（km）へ投影 → `data/processed/ward-geo.json`（目標 80KB 以下）を生成。`src/data/ward-geo.json` へコピーして同梱（wards.json と同じ二重管理方式）。
+- 区の代表点（封蝋ピン位置）は最大リングの重心をビルド時に計算して同ファイルに収録する（外部の区役所位置データは使わない）。区面積 `area_km2` も同時に計算し、プロフィールカードで使う。
 - 不変条件: 23区分そろえる。区コード順 13101→13123。`data/processed/` は手編集しない。
 
 ## 5. データ拡充
@@ -80,22 +81,22 @@
 
 ### 5.2 新統計（`data/build_details.py` に追加）
 
-優先順に実装。すべて23区で揃うことを調査済み。
+財政力指数・1人当たり公園面積・外国人人口比率は既に `WardMetrics` / `ward-details.json` に実装済みのため対象外。新規は次の3種（すべて23区で揃うことを調査済み）。
 
 | 統計 | 出典 | 形式 |
 |---|---|---|
-| 財政力指数 | 総務省 主要財政指標一覧 | Excel |
 | 平均所得（納税義務者1人当たり課税対象所得） | 総務省 市町村税課税状況等の調（e-Stat） | CSV |
 | 犯罪認知件数（人口千人当たりに正規化） | 警視庁（都カタログ CC BY 4.0） | CSV・町丁別→区集計 |
 | 待機児童数 | 東京都 保育サービス状況 | Excel |
-| 1人当たり公園面積 | 東京都建設局 都市公園等区市町村別面積 | Excel |
+
+あわせて、プロフィールカード用に総人口（`build_details.py` 内で算出済みの `_total_population()` を出力に追加）と区面積（§4.3 でジオデータから算出）を公開する。
 
 - 各統計は `ward-details.json` に追記し、`buildWardStats` 経由で StatBar 表示。犯罪件数など負のラベルになり得る指標は**中立的な文言**（例:「安心づくりのデータ」）で提示し、順位の見せ方に注意する。
 - 5軸ベクトルの算出には**組み込まない**（診断ロジックは不変）。
 
 ## 6. 変更ファイル一覧
 
-- 新規: `src/ui/WardMap3D.tsx` / `src/ui/WardMap2D.tsx` / `src/lib/geo.ts`（＋テスト） / `src/data/ward-geo.json` / `src/data/ward-policies.json` / `data/build_geo.py` / `public/emblems/*.svg`
+- 新規: `src/ui/WardMap3D.tsx` / `src/ui/WardMap2D.tsx` / `src/ui/WardMapSection.tsx`（品質判定・フォールバック切替） / `src/lib/geo.ts`（＋テスト） / `src/data/ward-geo.json` / `src/data/geo.ts`（ローダー） / `src/data/ward-policies.json` / `src/data/policies.ts`（ローダー） / `data/build_geo.py` / `public/emblems/*.svg`
 - 変更: `src/ui/pages/WardPage.tsx`（セクション再構成） / `data/build_details.py`（新統計） / `src/data/ward-details.json` / `src/ui/wardStats.ts` / `app/zukan.css`（地図・こころざし・プロフィールのスタイル） / `docs/system-design/`（03ドメイン・04データ・05レンダリングの各設計書）
 - `data/raw/` に新規取得データを追加
 
