@@ -1,11 +1,23 @@
 import '@testing-library/jest-dom';
-import { describe, it, expect, vi } from 'vitest';
+import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { WardPage } from './WardPage';
 
 vi.mock('next/link', () => ({ default: ({ href, children, ...p }: any) => <a href={href} {...p}>{children}</a> }));
 
 describe('WardPage', () => {
+  beforeEach(() => {
+    vi.stubGlobal('matchMedia', (query: string) => ({
+      matches: false,
+      media: query,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    }));
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
   it('renders stats with rank and land price for Minato', () => {
     render(<WardPage slug="minato" />);
     expect(screen.getByText(/港区ちゃん/)).toBeInTheDocument();

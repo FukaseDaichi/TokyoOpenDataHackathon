@@ -39,6 +39,11 @@ export function WardMapSection({ code }: { code: string }) {
       ) : (
         <WardMap2D code={code} />
       )}
+      <svg className="ward-map-compass" viewBox="0 0 40 40" aria-hidden="true">
+        <circle cx="20" cy="20" r="14" fill="none" stroke="#b8923f" strokeWidth="1" opacity="0.7" />
+        <path d="M20 4 L23 20 L20 36 L17 20 Z" fill="#b8923f" opacity="0.8" />
+        <text x="20" y="3" fontSize="7" textAnchor="middle" fill="#7a5c2e">N</text>
+      </svg>
     </div>
   );
 }
