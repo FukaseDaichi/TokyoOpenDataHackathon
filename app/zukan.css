@@ -1,0 +1,255 @@
+/* ============================================================
+   図鑑・診断UI — ヒーローと同じ「魔法の絵本」トーン
+   革表紙: #17110c / 羊皮紙: #f7ecd4→#eeddb8 / 金: #b8923f / 墨: #4a3418
+   区ごとのアクセントは --ward-color（キャラ髪色由来）
+   ============================================================ */
+
+.book-section {
+  background: #17110c;
+  color: #f4e8d0;
+  padding: 96px 20px 120px;
+}
+
+.book-section-inner {
+  max-width: 1080px;
+  margin: 0 auto;
+}
+
+.book-section-eyebrow {
+  font-size: 12px;
+  letter-spacing: 0.42em;
+  color: #b8923f;
+  text-align: center;
+  margin-bottom: 14px;
+}
+
+.book-section-title {
+  font-size: clamp(26px, 4.4vw, 40px);
+  letter-spacing: 0.18em;
+  text-align: center;
+  font-weight: 600;
+  margin-bottom: 10px;
+}
+
+.book-section-lede {
+  max-width: 560px;
+  margin: 0 auto 56px;
+  text-align: center;
+  line-height: 2.1;
+  font-size: 14px;
+  color: #d8c8a4;
+}
+
+/* ---- 図鑑グリッド ---- */
+
+.zukan-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  gap: 18px;
+}
+
+.zukan-card {
+  --ward-color: #b8923f;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 10px 14px;
+  background: linear-gradient(180deg, #f7ecd4 0%, #eeddb8 100%);
+  border: 2px solid #b8923f;
+  border-radius: 10px;
+  color: #4a3418;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.25s ease, box-shadow 0.25s ease;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+}
+
+.zukan-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
+}
+
+.zukan-card:focus-visible {
+  outline: 3px solid var(--ward-color);
+  outline-offset: 3px;
+}
+
+.zukan-card-no {
+  position: absolute;
+  top: 14px;
+  left: 14px;
+  z-index: 1;
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  padding: 2px 7px;
+  border-radius: 999px;
+  background: rgba(23, 17, 12, 0.72);
+  color: #f4e8d0;
+}
+
+.zukan-card-img {
+  width: 100%;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 6px;
+  border: 1px solid rgba(184, 146, 63, 0.6);
+  background: radial-gradient(circle at 50% 36%, #fff6e0 0%, #e5d0a4 100%);
+  display: block;
+}
+
+.zukan-card-placeholder {
+  display: block;
+}
+
+.zukan-card-name {
+  font-size: 15px;
+  letter-spacing: 0.14em;
+  font-weight: 600;
+}
+
+.zukan-card-group {
+  font-size: 11px;
+  color: #7a5c2e;
+  letter-spacing: 0.1em;
+}
+
+.zukan-card-group::before {
+  content: '';
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--ward-color);
+  margin-right: 6px;
+  vertical-align: 1px;
+  border: 1px solid rgba(74, 52, 24, 0.4);
+}
+
+/* ---- 個別詳細（羊皮紙の見開き） ---- */
+
+.ward-detail {
+  --ward-color: #b8923f;
+  display: grid;
+  grid-template-columns: minmax(200px, 300px) 1fr;
+  gap: 28px;
+  background: linear-gradient(180deg, #f7ecd4 0%, #eeddb8 100%);
+  border: 3px solid #b8923f;
+  border-radius: 14px;
+  padding: 28px;
+  color: #4a3418;
+  text-align: left;
+}
+
+.ward-detail-portrait img,
+.ward-detail-portrait .zukan-card-placeholder {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid var(--ward-color);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+  background: radial-gradient(circle at 50% 36%, #fff6e0 0%, #e5d0a4 100%);
+}
+
+.ward-detail-group {
+  display: inline-block;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  padding: 3px 12px;
+  border: 1px solid var(--ward-color);
+  border-radius: 999px;
+  color: #7a5c2e;
+  margin-bottom: 10px;
+}
+
+.ward-detail-name {
+  font-size: clamp(24px, 3.6vw, 34px);
+  letter-spacing: 0.16em;
+  margin-bottom: 8px;
+}
+
+.ward-detail-catch {
+  line-height: 1.9;
+  font-size: 14px;
+  color: #6a4f26;
+  margin-bottom: 12px;
+}
+
+.ward-detail-radar {
+  display: flex;
+  justify-content: center;
+  margin: 4px 0 8px;
+}
+
+.ward-detail-evidence-title {
+  font-size: 13px;
+  letter-spacing: 0.24em;
+  color: #7a5c2e;
+  border-bottom: 1px solid rgba(184, 146, 63, 0.5);
+  padding-bottom: 6px;
+  margin-bottom: 8px;
+}
+
+.ward-detail-evidence {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.ward-detail-evidence th,
+.ward-detail-evidence td {
+  padding: 7px 8px;
+  border-bottom: 1px dashed rgba(184, 146, 63, 0.4);
+  vertical-align: top;
+}
+
+.ward-detail-evidence th {
+  text-align: left;
+  white-space: nowrap;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+}
+
+.evidence-metric {
+  color: #6a4f26;
+}
+
+.evidence-value {
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.evidence-score {
+  white-space: nowrap;
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+  color: #7a5c2e;
+}
+
+.ward-detail-sources {
+  margin-top: 12px;
+  font-size: 11px;
+  line-height: 1.8;
+  color: #8a6c3c;
+}
+
+@media (max-width: 640px) {
+  .ward-detail {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+  .ward-detail-portrait {
+    max-width: 240px;
+    margin: 0 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .zukan-card,
+  .zukan-card:hover {
+    transition: none;
+    transform: none;
+  }
+}
