@@ -1,4 +1,4 @@
-import { AXIS_KEYS, AXIS_LABELS, type AxisKey, type Ward, type WardMetrics } from '../domain/axes';
+import { AXIS_KEYS, AXIS_LABELS, type AxisKey, type AxisVector, type Ward, type WardMetrics } from '../domain/axes';
 import { Radar } from './Radar';
 import { ssrImage, wardTheme } from './wardTheme';
 
@@ -21,7 +21,7 @@ function evidenceRows(m: WardMetrics): { axis: AxisKey; label: string; value: st
   ];
 }
 
-export function WardDetail({ ward }: { ward: Ward }) {
+export function WardDetail({ ward, userOverlay }: { ward: Ward; userOverlay?: AxisVector }) {
   const theme = wardTheme(ward.code);
   return (
     <article className="ward-detail" style={{ ['--ward-color' as string]: theme.color }}>
@@ -38,8 +38,11 @@ export function WardDetail({ ward }: { ward: Ward }) {
         <h3 className="ward-detail-name">{ward.name}ちゃん</h3>
         {theme.catch && <p className="ward-detail-catch">{theme.catch}</p>}
         <div className="ward-detail-radar">
-          <Radar vector={ward.axes} color={theme.color} />
+          <Radar vector={ward.axes} color={theme.color} overlay={userOverlay} />
         </div>
+        {userOverlay && (
+          <p className="ward-detail-sources">— {ward.name} / - - あなた</p>
+        )}
         {ward.metrics && (
           <>
             <h4 className="ward-detail-evidence-title">データの根拠</h4>
