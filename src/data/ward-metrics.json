@@ -1,0 +1,311 @@
+{
+  "generated_from": "data/raw/",
+  "sources": {
+    "daytime_population_ratio": "令和2年国勢調査 従業地・通学地による人口・就業状態等集計（東京都, CC BY 4.0）",
+    "aging_rate/youth_rate": "住民基本台帳による東京都の世帯と人口 年齢別人口（令和8年1月）",
+    "park_area_per_capita": "東京都建設局 都市公園等区市町村別面積・人口割合表（令和7年4月1日現在）公立公園合計ハ/Ｂ",
+    "single/family_household_rate": "令和2年国勢調査 人口等基本集計 第10表 世帯の家族類型",
+    "fiscal_strength_index": "総務省 全市町村の主要財政指標（令和5年度）"
+  },
+  "wards": [
+    {
+      "id": "13101",
+      "name": "千代田区",
+      "metrics": {
+        "daytime_population_ratio": 1355.4,
+        "aging_rate": 16.74,
+        "youth_rate": 12.92,
+        "park_area_per_capita": 3.99,
+        "single_household_rate": 57.02,
+        "family_household_rate": 26.0,
+        "fiscal_strength_index": 0.84
+      }
+    },
+    {
+      "id": "13102",
+      "name": "中央区",
+      "metrics": {
+        "daytime_population_ratio": 374.4,
+        "aging_rate": 14.24,
+        "youth_rate": 13.66,
+        "park_area_per_capita": 3.61,
+        "single_household_rate": 52.6,
+        "family_household_rate": 26.15,
+        "fiscal_strength_index": 0.61
+      }
+    },
+    {
+      "id": "13103",
+      "name": "港区",
+      "metrics": {
+        "daytime_population_ratio": 373.4,
+        "aging_rate": 17.39,
+        "youth_rate": 13.35,
+        "park_area_per_capita": 4.25,
+        "single_household_rate": 56.88,
+        "family_household_rate": 25.32,
+        "fiscal_strength_index": 1.15
+      }
+    },
+    {
+      "id": "13104",
+      "name": "新宿区",
+      "metrics": {
+        "daytime_population_ratio": 227.1,
+        "aging_rate": 18.76,
+        "youth_rate": 8.25,
+        "park_area_per_capita": 1.62,
+        "single_household_rate": 67.8,
+        "family_household_rate": 17.84,
+        "fiscal_strength_index": 0.66
+      }
+    },
+    {
+      "id": "13105",
+      "name": "文京区",
+      "metrics": {
+        "daytime_population_ratio": 147.3,
+        "aging_rate": 18.55,
+        "youth_rate": 12.41,
+        "park_area_per_capita": 1.57,
+        "single_household_rate": 57.89,
+        "family_household_rate": 25.09,
+        "fiscal_strength_index": 0.62
+      }
+    },
+    {
+      "id": "13106",
+      "name": "台東区",
+      "metrics": {
+        "daytime_population_ratio": 145.3,
+        "aging_rate": 20.35,
+        "youth_rate": 8.05,
+        "park_area_per_capita": 3.45,
+        "single_household_rate": 59.05,
+        "family_household_rate": 21.63,
+        "fiscal_strength_index": 0.49
+      }
+    },
+    {
+      "id": "13107",
+      "name": "墨田区",
+      "metrics": {
+        "daytime_population_ratio": 103.6,
+        "aging_rate": 20.43,
+        "youth_rate": 9.38,
+        "park_area_per_capita": 2.79,
+        "single_household_rate": 52.17,
+        "family_household_rate": 26.68,
+        "fiscal_strength_index": 0.42
+      }
+    },
+    {
+      "id": "13108",
+      "name": "江東区",
+      "metrics": {
+        "daytime_population_ratio": 120.9,
+        "aging_rate": 20.73,
+        "youth_rate": 11.67,
+        "park_area_per_capita": 10.7,
+        "single_household_rate": 46.76,
+        "family_household_rate": 31.99,
+        "fiscal_strength_index": 0.5
+      }
+    },
+    {
+      "id": "13109",
+      "name": "品川区",
+      "metrics": {
+        "daytime_population_ratio": 137.8,
+        "aging_rate": 19.38,
+        "youth_rate": 11.22,
+        "park_area_per_capita": 3.21,
+        "single_household_rate": 57.28,
+        "family_household_rate": 24.64,
+        "fiscal_strength_index": 0.57
+      }
+    },
+    {
+      "id": "13110",
+      "name": "目黒区",
+      "metrics": {
+        "daytime_population_ratio": 104.8,
+        "aging_rate": 19.66,
+        "youth_rate": 10.6,
+        "park_area_per_capita": 1.7,
+        "single_household_rate": 53.2,
+        "family_household_rate": 26.02,
+        "fiscal_strength_index": 0.73
+      }
+    },
+    {
+      "id": "13111",
+      "name": "大田区",
+      "metrics": {
+        "daytime_population_ratio": 96.5,
+        "aging_rate": 22.04,
+        "youth_rate": 9.84,
+        "park_area_per_capita": 3.97,
+        "single_household_rate": 53.61,
+        "family_household_rate": 27.11,
+        "fiscal_strength_index": 0.54
+      }
+    },
+    {
+      "id": "13112",
+      "name": "世田谷区",
+      "metrics": {
+        "daytime_population_ratio": 90.6,
+        "aging_rate": 20.71,
+        "youth_rate": 10.99,
+        "park_area_per_capita": 2.85,
+        "single_household_rate": 50.97,
+        "family_household_rate": 29.28,
+        "fiscal_strength_index": 0.68
+      }
+    },
+    {
+      "id": "13113",
+      "name": "渋谷区",
+      "metrics": {
+        "daytime_population_ratio": 226.1,
+        "aging_rate": 18.76,
+        "youth_rate": 10.03,
+        "park_area_per_capita": 3.08,
+        "single_household_rate": 64.53,
+        "family_household_rate": 19.0,
+        "fiscal_strength_index": 0.96
+      }
+    },
+    {
+      "id": "13114",
+      "name": "中野区",
+      "metrics": {
+        "daytime_population_ratio": 94.5,
+        "aging_rate": 19.41,
+        "youth_rate": 8.65,
+        "park_area_per_capita": 1.38,
+        "single_household_rate": 62.35,
+        "family_household_rate": 19.86,
+        "fiscal_strength_index": 0.49
+      }
+    },
+    {
+      "id": "13115",
+      "name": "杉並区",
+      "metrics": {
+        "daytime_population_ratio": 84.3,
+        "aging_rate": 20.89,
+        "youth_rate": 10.11,
+        "park_area_per_capita": 2.24,
+        "single_household_rate": 58.59,
+        "family_household_rate": 23.71,
+        "fiscal_strength_index": 0.6
+      }
+    },
+    {
+      "id": "13116",
+      "name": "豊島区",
+      "metrics": {
+        "daytime_population_ratio": 136.6,
+        "aging_rate": 18.9,
+        "youth_rate": 8.69,
+        "park_area_per_capita": 0.76,
+        "single_household_rate": 64.03,
+        "family_household_rate": 20.14,
+        "fiscal_strength_index": 0.53
+      }
+    },
+    {
+      "id": "13117",
+      "name": "北区",
+      "metrics": {
+        "daytime_population_ratio": 93.5,
+        "aging_rate": 22.74,
+        "youth_rate": 10.11,
+        "park_area_per_capita": 3.06,
+        "single_household_rate": 52.23,
+        "family_household_rate": 27.02,
+        "fiscal_strength_index": 0.39
+      }
+    },
+    {
+      "id": "13118",
+      "name": "荒川区",
+      "metrics": {
+        "daytime_population_ratio": 89.0,
+        "aging_rate": 21.6,
+        "youth_rate": 10.27,
+        "park_area_per_capita": 2.02,
+        "single_household_rate": 49.52,
+        "family_household_rate": 29.83,
+        "fiscal_strength_index": 0.34
+      }
+    },
+    {
+      "id": "13119",
+      "name": "板橋区",
+      "metrics": {
+        "daytime_population_ratio": 89.5,
+        "aging_rate": 22.54,
+        "youth_rate": 9.74,
+        "park_area_per_capita": 3.19,
+        "single_household_rate": 54.39,
+        "family_household_rate": 26.69,
+        "fiscal_strength_index": 0.43
+      }
+    },
+    {
+      "id": "13120",
+      "name": "練馬区",
+      "metrics": {
+        "daytime_population_ratio": 79.9,
+        "aging_rate": 21.98,
+        "youth_rate": 11.14,
+        "park_area_per_capita": 2.88,
+        "single_household_rate": 47.66,
+        "family_household_rate": 31.58,
+        "fiscal_strength_index": 0.46
+      }
+    },
+    {
+      "id": "13121",
+      "name": "足立区",
+      "metrics": {
+        "daytime_population_ratio": 89.1,
+        "aging_rate": 23.92,
+        "youth_rate": 10.01,
+        "park_area_per_capita": 4.64,
+        "single_household_rate": 47.35,
+        "family_household_rate": 31.35,
+        "fiscal_strength_index": 0.38
+      }
+    },
+    {
+      "id": "13122",
+      "name": "葛飾区",
+      "metrics": {
+        "daytime_population_ratio": 83.2,
+        "aging_rate": 23.98,
+        "youth_rate": 10.52,
+        "park_area_per_capita": 4.36,
+        "single_household_rate": 43.57,
+        "family_household_rate": 33.74,
+        "fiscal_strength_index": 0.35
+      }
+    },
+    {
+      "id": "13123",
+      "name": "江戸川区",
+      "metrics": {
+        "daytime_population_ratio": 81.9,
+        "aging_rate": 21.08,
+        "youth_rate": 11.19,
+        "park_area_per_capita": 11.26,
+        "single_household_rate": 44.7,
+        "family_household_rate": 34.87,
+        "fiscal_strength_index": 0.39
+      }
+    }
+  ]
+}
