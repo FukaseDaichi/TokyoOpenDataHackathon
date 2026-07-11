@@ -380,6 +380,151 @@
   white-space: nowrap;
 }
 
+.diagnosis-start {
+  display: flex;
+  justify-content: center;
+}
+
+.diagnosis-start-button {
+  min-width: 260px;
+  font-size: 17px;
+  letter-spacing: 0.2em;
+}
+
+.result-actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-top: 30px;
+}
+
+.result-share-link {
+  display: inline-block;
+  text-decoration: none;
+  min-width: 240px;
+  text-align: center;
+}
+
+.result-retry {
+  background: none;
+  border: none;
+  color: #b8923f;
+  font-size: 13px;
+  letter-spacing: 0.16em;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+  padding: 8px;
+}
+
+.result-retry:focus-visible {
+  outline: 3px solid #e8c56b;
+  outline-offset: 2px;
+}
+
+.result-share-card {
+  display: flex;
+  justify-content: center;
+  margin-top: 34px;
+}
+
+/* ---- シェアカード ---- */
+
+.share-card {
+  --ward-color: #b8923f;
+  width: min(520px, 100%);
+  background: linear-gradient(180deg, #f7ecd4 0%, #eeddb8 100%);
+  border: 3px solid var(--ward-color);
+  border-radius: 14px;
+  padding: 20px 24px;
+  color: #4a3418;
+  text-align: center;
+}
+
+.share-card-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.34em;
+  color: #7a5c2e;
+  margin-bottom: 12px;
+}
+
+.share-card-main {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 18px;
+}
+
+.share-card-main img {
+  width: 130px;
+  height: auto;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 2px solid var(--ward-color);
+}
+
+.share-card-name {
+  font-size: 22px;
+  letter-spacing: 0.14em;
+  margin-bottom: 4px;
+}
+
+.share-card-group {
+  font-size: 12px;
+  color: #7a5c2e;
+  margin-bottom: 4px;
+}
+
+.share-card-tag {
+  margin-top: 10px;
+  font-size: 12px;
+  color: #8a6c3c;
+  letter-spacing: 0.08em;
+}
+
+/* ---- 詳細モーダル ---- */
+
+.ward-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 50;
+  background: rgba(12, 8, 3, 0.78);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.ward-modal-inner {
+  max-width: 760px;
+  width: 100%;
+  max-height: 88vh;
+  overflow: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center;
+}
+
+.ward-modal-close {
+  background: #4a3418;
+  color: #f4e8d0;
+  border: 1px solid #b8923f;
+  border-radius: 999px;
+  padding: 10px 34px;
+  cursor: pointer;
+  font-size: 14px;
+  letter-spacing: 0.2em;
+}
+
+.ward-modal-close:focus-visible {
+  outline: 3px solid #e8c56b;
+  outline-offset: 2px;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .diagnosis-option,
   .diagnosis-option:hover,
