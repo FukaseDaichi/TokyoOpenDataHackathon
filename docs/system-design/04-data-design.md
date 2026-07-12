@@ -27,8 +27,31 @@
 | `population` | 総人口（年少+生産年齢+老年） | 住民基本台帳による世帯と人口（令和8年1月1日現在） |
 | `income_per_taxpayer` | 納税義務者1人当たり課税対象所得（千円） | 総務省「市町村税課税状況等の調」（令和6年度）〔市町村別内訳〕第11表（`soumu_J51-24-b.xlsx`）。課税対象所得 ÷ 所得割の納税義務者数で算出する |
 | `foreign_rate` | 外国人人口 ÷ 住民基本台帳総人口 | 東京都の統計「国籍・地域別 外国人人口」および住民基本台帳（令和8年1月1日） |
+| `crime_per_1000` | 人口千人当たり刑法犯認知件数 | 警視庁「区市町村の町丁別、罪種別及び手口別認知件数」令和6年分（`keishicho_R6_ninchikensu.csv`）。「市区町丁」列が区名と完全一致する公式合計行の「総合計」を採用し、町丁明細行の合算はしない（区名のみの合計行を町丁行と二重集計しないため） |
+| `waiting_children` | 待機児童数（人） | 東京都福祉局「保育サービスの状況」令和7年4月1日現在（`tocho_hoiku_r7_hyou4.xlsx` 表4） |
 
 駅乗降人員用の `top_stations` は型とUIの受け口だけがある。現在の生成処理は23区を一貫して対応づけられる入力を持たないため、全区分を不採用にしてJSONへ出力しない。
+
+### ジオデータ
+
+| JSONキー | 内容 | スナップショットの出典 |
+|---|---|---|
+| `wards[].rings` | 区境界の外周リングのみ（面積降順、内穴は保持しない）、局所平面km座標 | 「国土数値情報（行政区域データ）」（国土交通省）を [smartnews-smri/japan-topography](https://github.com/smartnews-smri/japan-topography) が簡略化したTopoJSON（`data/raw/N03-21_13_city.topojson`、実DL元ファイル名 `N03-21_13_210101.json`、s0010簡略度） |
+| `wards[].center` | 最大リングの符号付き面積（shoelace公式）から算出した重心 | 同上 |
+| `wards[].area_km2` | 全リングの面積絶対値の合計 | 同上 |
+
+投影は東京中心（lon139.75 / lat35.69）の等距円筒近似で、経度1度=111.320×cos(lat0) km、緯度1度=110.574 kmの固定係数を使う装飾地図用途の近似であり、測地系変換や正確な行政界描画には使わない。0.02km²未満の微小リング（岩礁等）は捨てる。地図表示は3D（`WardMap3D`）・2D（`WardMap2D`）とも `src/data/geo.ts` の `loadWardGeo()` と `src/lib/geo.ts` の純関数（`geoBounds` / `toView` / `ringToPath` / `nearestWards`）を共有する。
+
+### 区プロフィール（手動キュレーション）
+
+`src/data/ward-policies.json` は集計パイプラインを経ない唯一の手編集データで、区コードをキーに次を持つ。
+
+| フィールド | 内容 | 制約 |
+|---|---|---|
+| `flower` / `tree` / `bird` | 区の花・木・鳥（任意） | 文字列 |
+| `policies[]` | 基本構想・総合計画等からの政策キュレーション（任意） | 最大5件、`title`は30字以内、`summary`は120字以内、`url`は`https://`で始まる |
+
+未収録区・未収録フィールドがあってもよく、ローダー `src/data/policies.ts` の `loadWardProfile()` は未収録区に `null` を返す。区章画像 `public/emblems/{slug}.svg` はWikimedia CommonsのパブリックドメインまたはCC0確認済みファイルを手動配置したもので、同じく生成パイプラインの対象外である。区詳細ページは画像読み込み失敗時に `onError` で非表示にする。
 
 ## 3. ファイルと所有権
 
@@ -40,8 +63,13 @@
 | `data/processed/wards.json` | 基本指標の生成物 | `build_wards.py` で再生成 |
 | `data/processed/wards.csv` | 基本指標の確認用生成物 | `build_wards.py` で再生成 |
 | `data/processed/ward-details.json` | 詳細指標の生成物 | `build_details.py` で再生成 |
+| `data/build_geo.py` | ジオデータジェネレーター | 手編集するソース |
+| `data/processed/ward-geo.json` | ジオデータの生成物 | `build_geo.py` で再生成 |
 | `src/data/ward-metrics.json` | アプリ同梱スナップショット | processedから手動コピー |
 | `src/data/ward-details.json` | アプリ同梱スナップショット | processedから手動コピー |
+| `src/data/ward-geo.json` | アプリ同梱スナップショット | processedから手動コピー |
+| `src/data/ward-policies.json` | アプリ同梱データ | `data/processed` に対応物はなく直接手編集する |
+| `public/emblems/*.svg` | アプリ同梱データ | Wikimedia Commonsから手動取得・配置（生成処理なし） |
 
 `data/processed` と `src/data` の同期は現在自動化されていない。アプリ動作の正は `src/data`、集計結果の正は `data/processed` であるため、データ更新時は必ず同一内容にそろえる。
 
@@ -51,15 +79,23 @@
 flowchart LR
   Raw["data/raw"] --> WardsPy["build_wards.py"]
   Raw --> DetailsPy["build_details.py"]
+  Raw --> GeoPy["build_geo.py"]
   WardsPy --> WardsProcessed["processed/wards.json + wards.csv"]
   DetailsPy --> DetailsProcessed["processed/ward-details.json"]
+  GeoPy --> GeoProcessed["processed/ward-geo.json"]
   WardsProcessed -->|手動コピー| WardsBundle["src/data/ward-metrics.json"]
   DetailsProcessed -->|手動コピー| DetailsBundle["src/data/ward-details.json"]
+  GeoProcessed -->|手動コピー| GeoBundle["src/data/ward-geo.json"]
+  PoliciesJson["src/data/ward-policies.json\n（手編集・生成処理なし）"]
   WardsBundle --> Loader["loadWards()"]
   DetailsBundle --> DetailLoader["loadWardDetails()"]
+  GeoBundle --> GeoLoader["loadWardGeo()"]
+  PoliciesJson --> ProfileLoader["loadWardProfile()"]
   Loader --> Normalize["5軸正規化 + k-means"]
   Normalize --> UI["診断・図鑑・詳細"]
   DetailLoader --> UI
+  GeoLoader --> UI
+  ProfileLoader --> UI
 ```
 
 ### エンコーディング
@@ -73,19 +109,24 @@ flowchart LR
 ```bash
 /usr/bin/python3 data/build_wards.py
 /usr/bin/python3 data/build_details.py
+/usr/bin/python3 data/build_geo.py
 
 cp data/processed/wards.json src/data/ward-metrics.json
 cp data/processed/ward-details.json src/data/ward-details.json
+cp data/processed/ward-geo.json src/data/ward-geo.json
 
 npm test
 npm run build
 ```
+
+`build_geo.py` は `data/raw/N03-21_13_city.topojson` の更新が前提であり、基本5軸・区詳細のraw更新とは独立して再実行できる。`src/data/ward-policies.json` と `public/emblems/*.svg` は生成コマンドを持たないため、この手順の対象外（手動キュレーションの更新運用は本ページ末尾を参照）。
 
 更新後は次も確認する。
 
 ```bash
 cmp data/processed/wards.json src/data/ward-metrics.json
 cmp data/processed/ward-details.json src/data/ward-details.json
+cmp data/processed/ward-geo.json src/data/ward-geo.json
 git diff -- data/processed src/data
 ```
 
@@ -94,12 +135,23 @@ git diff -- data/processed src/data
 ジェネレーターは次のゲートを持つ。
 
 - 基本5軸の全入力が23区分そろわなければassertで停止する。
-- 地価公示が23区分そろわなければassertで停止する。
-- 外国人人口比率または駅情報に欠損区があれば、その指標全体を出力対象から落とす。
+- 地価公示・総人口（住民基本台帳）・犯罪統計・待機児童数が23区分そろわなければassertで停止する。
+- 外国人人口比率・平均所得（課税対象所得）・駅情報に欠損区があれば、その指標全体を出力対象から落とす（`inc_missing` / `fr_missing` / `ts_missing` を出力してdrop）。
 - 区コードは `13101` から `13123`、並び順はJIS区コード順とする。
+- `build_geo.py` はWARD_IDS 23区分の欠損があればassertで停止し、生成物サイズが120KBを超えてもassertで停止する（簡略化率を上げて再生成する）。
 
-Vitestは、23区件数、基本指標の存在、正規化範囲、代表値、詳細データ件数、slugの双方向対応を検証する。
+Vitestは、23区件数、基本指標の存在、正規化範囲、代表値、詳細データ件数、slugの双方向対応、ジオデータ23区分の座標・面積の妥当性、`ward-policies.json` のキー・文字数上限・出典URL形式を検証する。
 
-## 7. 表示用マスター
+## 7. 手動キュレーションデータの更新運用
+
+`src/data/ward-policies.json`（区の花・木・鳥、政策）と `public/emblems/*.svg`（区章）は集計パイプラインを持たない手編集データであり、次を目安に見直す。
+
+- 更新頻度: 区の基本構想・総合計画の改定は数年単位のため、年1回程度の棚卸しで十分とする。
+- 出典: `policies[].source` / `url` は必ず一次情報（区公式サイト等）を指し、`https://` のURLを持つ。
+- 中立性: `title` ≤30字・`summary` ≤120字の制約は、キュレーション文を簡潔かつ主観の混入しにくい長さに収めるためのガード。区の表現は中立・前向きにする全体方針（AGENTS.md）に従う。
+- 区章: Wikimedia CommonsでパブリックドメインまたはCC0が確認できるファイルのみを採用し、ライセンスが不明な画像は使わない。画像取得に失敗しても区詳細ページの他の内容に影響しないよう、`<img onError>` で非表示にする実装（`src/ui/pages/WardPage.tsx`）を維持する。
+- 収録は23区必須ではない。`loadWardProfile()` は未収録区に `null` を返し、対応するUIセクション（区のこころざし・区の花木鳥）はその区だけ非表示になる。
+
+## 8. 表示用マスター
 
 区名、slug、キャッチコピー、テーマカラー、地理相対座標は `src/hero/wards.ts` に固定テーブルとして置く。これは統計JSONとは別の表示用マスターであり、画像パス、静的ルート、テーマ、ヒーロー配置に共有される。

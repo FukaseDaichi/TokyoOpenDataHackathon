@@ -56,9 +56,9 @@ NEXT_PUBLIC_SITE_URL=https://<公開ホスト> npm run build
 
 データまたは画像を変更した場合は、追加で次を確認する。
 
-- `data/processed/*.json` と `src/data/*.json` が一致する。
+- `data/processed/*.json` と `src/data/*.json` が一致する（`ward-geo.json` を含む）。
 - 23区すべてに512px・896pxのWebPとOGP PNGが存在する。
-- `?view=high`、`?view=low`、`?view=2d` で主要導線が動く。
+- `?view=high`、`?view=low`、`?view=2d` で主要導線が動く。ヒーローに加え、区詳細ページの「東京のどこにいる？」地図も3D/2Dが切り替わることを確認する。
 - `/result/{slug}/` と `/ward/{slug}/` の代表ページを直接開ける。
 - X共有画面へ渡すURLとOGPが公開ホストを指す。
 
@@ -78,6 +78,17 @@ Cloudflare Pagesへ静的成果物を配信する。
 ## 6. データ更新運用
 
 データ更新は [04-data-design.md](04-data-design.md) の生成・同期・検証を行ってから通常の品質ゲートを通す。取得元の公表時点が指標ごとに異なるため、全ファイルを一律の年度へそろえるのではなく、JSONの `sources` と画面の出典が実ファイルの時点を正しく示すことを確認する。
+
+次の指標は取得元が年次公表であり、公表のたびに更新可否を確認する。
+
+| 指標 | 取得元・公表周期 |
+|---|---|
+| `waiting_children`（待機児童数） | 東京都福祉局「保育サービスの状況」、例年8月頃に4月1日現在分を公表 |
+| `crime_per_1000`（犯罪統計） | 警視庁の区市町村別犯罪認知件数、年次 |
+| `income_per_taxpayer`（課税対象所得） | 総務省「市町村税課税状況等の調」、年次 |
+| `population`（住民基本台帳人口） | 東京都「住民基本台帳による世帯と人口」、年次（他の基本5軸の年齢別人口とも同じ取得元） |
+
+境界ジオメトリ（`data/raw/N03-21_13_city.topojson` → `build_geo.py`）と手動キュレーション（`src/data/ward-policies.json`、`public/emblems/*.svg`）は行政区域や区の基本構想が変わらない限り再取得の必要が薄く、上記の年次更新とは別に見直す（更新運用は [04-data-design.md](04-data-design.md) 末尾を参照）。
 
 ## 7. 障害時の確認順
 
