@@ -5,7 +5,8 @@ import { SLUG_TO_CODE, CODE_TO_SLUG } from '../../data/slugs';
 import { loadWards } from '../../data/wards';
 import { loadWardDetails, DETAIL_SOURCES } from '../../data/details';
 import { DATA_SOURCES } from '../../data/wards';
-import { GEO_SOURCE } from '../../data/geo';
+import { GEO_SOURCE, loadWardGeo } from '../../data/geo';
+import { loadWardProfile } from '../../data/policies';
 import { rankOf, ratioToMean } from '../../lib/rank';
 import { Radar } from '../Radar';
 import { StatBar } from '../StatBar';
@@ -24,6 +25,8 @@ export function WardPage({ slug }: { slug: string }) {
   const all = WARDS.map((w) => w.metrics!);
   const allDetails = [...DETAILS.values()];
   const fellows = WARDS.filter((w) => w.group === ward.group && w.code !== ward.code);
+  const profile = loadWardProfile(ward.code);
+  const geo = loadWardGeo().find((g) => g.code === ward.code)!;
 
   const stats = buildWardStats(m, detail, all, allDetails);
 
@@ -65,6 +68,35 @@ export function WardPage({ slug }: { slug: string }) {
                 </tbody></table>
               </>
             )}
+
+            {profile && profile.policies.length > 0 && (
+              <>
+                <h2 className="ward-detail-evidence-title" style={{ marginTop: 24 }}>{ward.name}のこころざし</h2>
+                <ol className="ward-policy-list">
+                  {profile.policies.map((p) => (
+                    <li key={p.title} className="ward-policy-item">
+                      <h3>{p.title}</h3>
+                      <p>{p.summary}</p>
+                      <a href={p.url} target="_blank" rel="noopener noreferrer">出典: {p.source}</a>
+                    </li>
+                  ))}
+                </ol>
+              </>
+            )}
+
+            <h2 className="ward-detail-evidence-title" style={{ marginTop: 24 }}>区のプロフィール</h2>
+            <div className="ward-profile-card">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img className="ward-profile-emblem" src={`/emblems/${theme.slug}.svg`} alt={`${ward.name}の区章`}
+                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+              <dl>
+                <div><dt>人口</dt><dd>{detail.population.toLocaleString()}人</dd></div>
+                <div><dt>面積</dt><dd>{geo.areaKm2.toFixed(1)}km²</dd></div>
+                {profile?.flower && <div><dt>区の花</dt><dd>{profile.flower}</dd></div>}
+                {profile?.tree && <div><dt>区の木</dt><dd>{profile.tree}</dd></div>}
+                {profile?.bird && <div><dt>区の鳥</dt><dd>{profile.bird}</dd></div>}
+              </dl>
+            </div>
 
             {fellows.length > 0 && (
               <>

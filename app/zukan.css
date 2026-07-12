@@ -963,3 +963,38 @@
 .ward-map-frame canvas { display: block; }
 .ward-map2d { width: 100%; height: 100%; display: block; }
 .ward-map-compass { position: absolute; top: 10px; right: 10px; width: 40px; height: 40px; overflow: visible; pointer-events: none; }
+
+/* 区のこころざし（巻物風リスト） */
+.ward-policy-list { list-style: none; margin: 8px 0 0; padding: 0; counter-reset: policy; }
+.ward-policy-item {
+  counter-increment: policy;
+  padding: 12px 14px 12px 44px;
+  position: relative;
+  border-bottom: 1px dashed rgba(184, 146, 63, 0.4);
+}
+.ward-policy-item::before {
+  content: counter(policy, cjk-ideographic);
+  position: absolute;
+  left: 10px;
+  top: 12px;
+  color: #b8923f;
+  font-weight: 700;
+}
+.ward-policy-item h3 { margin: 0 0 4px; font-size: 15px; color: #4a3418; letter-spacing: 0.06em; }
+.ward-policy-item p { margin: 0 0 6px; font-size: 13px; line-height: 1.7; color: #6a4f26; }
+.ward-policy-item a { font-size: 11px; color: #7a5c2e; }
+
+/* 区のプロフィール */
+.ward-profile-card {
+  display: flex;
+  gap: 18px;
+  align-items: center;
+  padding: 14px 16px;
+  border: 1px solid rgba(184, 146, 63, 0.55);
+  border-radius: 8px;
+  background: rgba(247, 236, 212, 0.6);
+}
+.ward-profile-emblem { width: 72px; height: 72px; filter: sepia(0.35) saturate(0.8); }
+.ward-profile-card dl { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 0; }
+.ward-profile-card dt { font-size: 11px; color: #7a5c2e; }
+.ward-profile-card dd { margin: 0; font-size: 14px; font-weight: 600; color: #4a3418; }
