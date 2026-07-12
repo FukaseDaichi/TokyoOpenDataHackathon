@@ -68,6 +68,6 @@ OGPはmacOSのヒラギノ明朝を使うため、同じ見た目での再生成
 - `docs/research/` — 大会、競合、データ、技術の調査
 - `docs/strategy/` — 作品設計とキャラクター設定
 - `docs/ideas/` — アイデア資料
-- `docs/提出資料について.md` — 大会提出物の要件
+- `docs/submission/` — 大会提出物の要件とフォーム回答案
 
 大会公式サイト: <https://odhackathon.metro.tokyo.lg.jp>
