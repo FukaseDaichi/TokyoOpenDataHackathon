@@ -12,7 +12,7 @@
 
 | 優先度 | 懸念 | コード上の根拠 | 影響 | 推奨対応 |
 |---|---|---|---|---|
-| P1 | 診断セッションと結果slugが結び付いていない | `diagnosisSession.ts` はベクトルだけを保存し、`ResultPage` はURLの区と無条件に組み合わせる | 診断後に別区の結果URLを開くと、その区を「一番似ている」と表示しながらランキング先頭が別区になる可能性がある | 保存時に結果区コードも持たせ、slug一致時だけ自分向け表示にする。もしくは読み込み後に `bestMatch` とslugを照合する |
+| P1 | 診断セッションと結果slugが結び付いておらず、有効期限もない | `diagnosisSession.ts` はベクトルと未使用のtimestampだけを保存し、`ResultPage` はURLの区と無条件に組み合わせる | 診断後に別区の結果URLを開く場合や、同じタブで後日共有URLを開く場合に、その区を「一番似ている」と表示しながらランキング先頭が別区になる可能性がある | 保存時に結果区コードを持たせ、slug一致時だけ自分向け表示にする。必要ならtimestampで有効期限も判定する |
 | P1 | 配信用サイトURLの欠落がビルド失敗にならない | `next.config.ts` は警告だけで、動的メタデータは未設定時に相対OGPを返す | 本番ビルドが成功してもOGPの基準URLがlocalhostになり、Xカードが表示されない | CI/デプロイ用ビルドでは環境変数を必須化し、公開HTMLの `og:image` を検査する |
 | P1 | 集計JSONと配信用JSONが手動コピー | `data/processed/*.json` と `src/data/*.json` の間に生成処理がない | データを再集計してもアプリが古い値を配信できる | ジェネレーターから配信用JSONも同時生成するか、同期・差分検査をnpm script/CIへ組み込む |
 | P2 | 区マスターが複数箇所に重複 | 区一覧が `data/build_wards.py`、`src/hero/wards.ts`、`build-og-images.mjs` に存在する | 区名、slug、画像、ルートの追加・修正漏れが起きる | 1つの機械可読マスターからTypeScript、Python、OGP処理を参照する |
@@ -22,6 +22,7 @@
 | P2 | WebGLの主要カードはキーボード操作できない | `HeroCanvas` のカード選択はThree.jsのpointer/clickイベントだけ | 3D表示中はヒーロー内の区カードをキーボードで選べない | DOMラベルをボタン/リンク化するか、同位置にキーボード用操作層を置く。後段の図鑑導線は維持する |
 | P2 | 自動化された配信品質ゲートがない | リポジトリ内にCI設定、E2E、実ブラウザ/WebGL検証がない | 静的ルート、OGP、レスポンシブ、3Dフォールバックの回帰を単体テストだけでは検出できない | test/build/リンク検査と代表ブラウザE2EをCIへ追加する |
 | P2 | アセット生成コマンドと区一覧が統一されていない | package scriptはキャラWebPだけで、タイトル・OGPは直接実行。OGPは独自の区配列を持つ | 一部画像の再生成漏れや23区間の不一致が起きる | `build:assets` に統合し、共通区マスターを参照して全件数を検証する |
+| P3 | 生成済みアセットに未使用ファイルがある | `build-modal-images.mjs` は `public/magic-circle.png` を生成するが、現行のTSX/CSSは参照しない | 生成手順と配信物が増え、用途を誤解しやすい | 再利用予定がなければ原本・生成処理・生成物を削除し、必要なら参照元を実装して用途を明示する |
 | P3 | jsdomテストがCanvas警告を出す | `WardModal` テストで `HTMLCanvasElement.getContext` が未実装のstderrを出しつつ成功する | 本当の警告を見落としやすく、CIログが読みにくい | テストセットアップでCanvas/WebGL判定を明示的にmockし、想定ティアごとに検証する |
 | P3 | `npm run start` が静的配信方式と一致しない | package scriptは `next start`、本番成果物は `output: 'export'` の `out/` | ローカルで本番成果物を確認するコマンドとして誤解される | 静的サーバーで `out/` を配信するpreview scriptへ置き換える |
 | P3 | OGP再生成がmacOSフォントへ依存する | `build-og-images.mjs` はヒラギノ明朝を指定する | OSによって文字幅・見た目が変わり、再現性が低い | 配布可能なフォントを同梱し、Sharpへフォントファイルを明示する |
@@ -30,10 +31,10 @@
 
 ## 現在確認できている品質状態
 
-- `npm test`: 全テスト成功。ただし上記のCanvas警告がstderrへ出る。
-- `npm run build`: 静的エクスポート成功。
+- `npm test`: 24ファイル・101テストが成功。ただし上記のCanvas警告がstderrへ出る。
+- `NEXT_PUBLIC_SITE_URL=https://example.pages.dev npm run build`: 静的エクスポート成功。
 - `NEXT_PUBLIC_SITE_URL` 未設定時: ビルドは成功するが、Next.jsが `metadataBase` のlocalhostフォールバックを警告する。
-- `data/processed/wards.json` と `src/data/ward-metrics.json`、`data/processed/ward-details.json` と `src/data/ward-details.json` は現時点では同一サイズ・内容である。
+- `data/processed/wards.json` と `src/data/ward-metrics.json`、`data/processed/ward-details.json` と `src/data/ward-details.json`、`data/processed/ward-geo.json` と `src/data/ward-geo.json` はバイト単位で一致する。
 
 ## 受容している制約
 

@@ -42,9 +42,11 @@ NEXT_PUBLIC_SITE_URL=https://example.pages.dev npm run build
 ```bash
 /usr/bin/python3 data/build_wards.py
 /usr/bin/python3 data/build_details.py
+/usr/bin/python3 data/build_geo.py
 
 cp data/processed/wards.json src/data/ward-metrics.json
 cp data/processed/ward-details.json src/data/ward-details.json
+cp data/processed/ward-geo.json src/data/ward-geo.json
 
 npm test
 npm run build
@@ -56,6 +58,7 @@ npm run build
 
 ```bash
 npm run build:images             # キャラクターPNG → 512/896px WebP
+node scripts/build-modal-images.mjs # モーダル表紙など
 node scripts/build-title.mjs     # タイトル画像
 node scripts/build-og-images.mjs # 23区分のOGP画像
 ```

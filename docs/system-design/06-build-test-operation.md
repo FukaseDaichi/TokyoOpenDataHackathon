@@ -22,9 +22,10 @@ npm run dev
 | `npm run build:images` | `node scripts/build-hero-images.mjs` | キャラクターWebP生成 |
 | `npm run start` | `next start` | package上は存在するが、静的エクスポートの配信手順には使わない |
 
-タイトルとOGPの生成はpackage scriptsに登録されていないため、直接実行する。
+モーダル用画像、タイトル、OGPの生成はpackage scriptsに登録されていないため、直接実行する。
 
 ```bash
+node scripts/build-modal-images.mjs
 node scripts/build-title.mjs
 node scripts/build-og-images.mjs
 ```
@@ -37,9 +38,9 @@ Vitestは `src/**/*.test.{ts,tsx}` をjsdom環境で実行する。
 |---|---|
 | ドメイン | 軸キー、空ベクトル |
 | 純ロジック | 正規化、採点、距離、ランキング、k-means、順位 |
-| データ | 23区カバレッジ、代表値、正規化範囲、詳細データ、slug対応 |
+| データ | 23区カバレッジ、代表値、正規化範囲、詳細・地理・政策データ、slug対応 |
 | ヒーロー | seed乱数、manifestのアセット・配置、タイムライン |
-| UI | 診断進行、図鑑、モーダル開閉、結果、区詳細、シェアカード |
+| UI | 診断進行、図鑑、モーダル開閉、結果、区詳細、2D地図、地図フォールバック、シェアカード |
 
 現行テストは純関数と主要コンポーネントの振る舞いを対象とし、実ブラウザE2E、WebGL描画結果、スクリーンショット差分、アクセシビリティ自動監査は対象外である。
 

@@ -82,7 +82,7 @@ similarity = round(max(0, 1 - distance / √20) × 100)
 
 ## 6. 順位と平均比
 
-区詳細の順位は、対象値より大きい区の数に1を加えて算出する。既定は値が大きいほど上位である。平均比は対象値を23区平均で割り、平均が0の場合だけ0を返す。
+区詳細の順位は、対象値より大きい区の数に1を加えて算出する。既定は値が大きいほど上位である。待機児童数はUI層で符号を反転してから順位と平均比を求めるため、少ないほど上位になる。平均比は対象値を23区平均で割り、平均が0の場合だけ0を返す。
 
 ## 7. ドメイン不変条件
 
@@ -100,7 +100,7 @@ similarity = round(max(0, 1 - distance / √20) × 100)
 | 型 | 定義箇所 | 内容 |
 |---|---|---|
 | `WardGeo` | `src/data/geo.ts` | 区境界（外周リングのみ、面積降順）、重心、面積。地図描画専用で診断ロジックからは独立 |
-| `WardDetails`（新規フィールド） | `src/data/details.ts` | `population`・`incomePerTaxpayer`・`crimePer1000`・`waitingChildren` を追加。`population` 以外は取得元データが23区分そろわない場合に指標ごと欠落しうる任意フィールド |
+| `WardDetails` | `src/data/details.ts` | 地価、人口、平均所得、外国人人口比率、主要駅、人口千人当たり刑法犯認知件数、待機児童数。人口と地価以外は指標ごと欠落しうる任意フィールド |
 | `WardProfile` | `src/data/policies.ts` | 区の花・木・鳥、区章、政策キュレーション（`policies[]`、最大5件）。`data/ward-policies.json` を手編集する唯一の非生成データ |
 
 `WardMetrics` のような23区必須の集計値と異なり、`WardProfile` は区ごとに収録状況が異なってよい設計であり、未収録区は `loadWardProfile()` が `null` を返し、該当UIセクションを非表示にする。
