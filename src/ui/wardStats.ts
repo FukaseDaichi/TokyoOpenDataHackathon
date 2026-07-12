@@ -28,5 +28,14 @@ export function buildWardStats(
     ...(detail.foreignRate !== undefined
       ? [{ label: '外国人人口比率', v: detail.foreignRate, vs: allDetails.map((d) => d.foreignRate!), text: `${detail.foreignRate.toFixed(1)}%`, note: '多いほど国際色ゆたかな街' }]
       : []),
+    ...(detail.incomePerTaxpayer !== undefined
+      ? [{ label: '平均所得（納税者1人当たり）', v: detail.incomePerTaxpayer, vs: allDetails.map((d) => d.incomePerTaxpayer!), text: `${Math.round(detail.incomePerTaxpayer / 100) / 10}百万円`, note: '課税対象所得ベース' }]
+      : []),
+    ...(detail.crimePer1000 !== undefined
+      ? [{ label: '街の安全データ（人口千人当たり認知件数）', v: detail.crimePer1000, vs: allDetails.map((d) => d.crimePer1000!), text: `${detail.crimePer1000.toFixed(1)}件`, note: '昼間人口が多い区ほど値が出やすい統計です' }]
+      : []),
+    ...(detail.waitingChildren !== undefined
+      ? [{ label: '待機児童数', v: -detail.waitingChildren, vs: allDetails.map((d) => -d.waitingChildren!), text: `${detail.waitingChildren}人`, note: '少ないほど保育に入りやすい（順位は少ない順）' }]
+      : []),
   ];
 }

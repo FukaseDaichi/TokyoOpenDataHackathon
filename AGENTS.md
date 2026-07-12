@@ -16,11 +16,13 @@ npm run dev
 npm test
 NEXT_PUBLIC_SITE_URL=https://example.pages.dev npm run build
 
-# データ再生成。build_wards.py は openpyxl が必要
+# データ再生成。build_wards.py / build_details.py は openpyxl が必要
 /usr/bin/python3 data/build_wards.py
 /usr/bin/python3 data/build_details.py
+/usr/bin/python3 data/build_geo.py
 cp data/processed/wards.json src/data/ward-metrics.json
 cp data/processed/ward-details.json src/data/ward-details.json
+cp data/processed/ward-geo.json src/data/ward-geo.json
 
 # 画像再生成
 npm run build:images

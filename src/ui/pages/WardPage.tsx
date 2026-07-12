@@ -5,10 +5,13 @@ import { SLUG_TO_CODE, CODE_TO_SLUG } from '../../data/slugs';
 import { loadWards } from '../../data/wards';
 import { loadWardDetails, DETAIL_SOURCES } from '../../data/details';
 import { DATA_SOURCES } from '../../data/wards';
+import { GEO_SOURCE, loadWardGeo } from '../../data/geo';
+import { loadWardProfile } from '../../data/policies';
 import { rankOf, ratioToMean } from '../../lib/rank';
 import { Radar } from '../Radar';
 import { StatBar } from '../StatBar';
 import { buildWardStats } from '../wardStats';
+import { WardMapSection } from '../WardMapSection';
 import { ssrImage, wardTheme } from '../wardTheme';
 
 const WARDS = loadWards();
@@ -22,6 +25,8 @@ export function WardPage({ slug }: { slug: string }) {
   const all = WARDS.map((w) => w.metrics!);
   const allDetails = [...DETAILS.values()];
   const fellows = WARDS.filter((w) => w.group === ward.group && w.code !== ward.code);
+  const profile = loadWardProfile(ward.code);
+  const geo = loadWardGeo().find((g) => g.code === ward.code)!;
 
   const stats = buildWardStats(m, detail, all, allDetails);
 
@@ -40,6 +45,8 @@ export function WardPage({ slug }: { slug: string }) {
             <p className="ward-detail-group">{ward.group}</p>
             <h1 className="ward-detail-name">{ward.name}ちゃん</h1>
             <p className="ward-detail-catch">{theme.catch}</p>
+            <h2 className="ward-detail-evidence-title">東京のどこにいる？</h2>
+            <WardMapSection code={ward.code} />
             <div className="ward-detail-radar"><Radar vector={ward.axes} color={theme.color} /></div>
 
             <h2 className="ward-detail-evidence-title">データで見る{ward.name}</h2>
@@ -61,6 +68,35 @@ export function WardPage({ slug }: { slug: string }) {
                 </tbody></table>
               </>
             )}
+
+            {profile && profile.policies.length > 0 && (
+              <>
+                <h2 className="ward-detail-evidence-title" style={{ marginTop: 24 }}>{ward.name}のこころざし</h2>
+                <ol className="ward-policy-list">
+                  {profile.policies.map((p) => (
+                    <li key={p.title} className="ward-policy-item">
+                      <h3>{p.title}</h3>
+                      <p>{p.summary}</p>
+                      <a href={p.url} target="_blank" rel="noopener noreferrer">出典: {p.source}</a>
+                    </li>
+                  ))}
+                </ol>
+              </>
+            )}
+
+            <h2 className="ward-detail-evidence-title" style={{ marginTop: 24 }}>区のプロフィール</h2>
+            <div className="ward-profile-card">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img className="ward-profile-emblem" src={`/emblems/${theme.slug}.svg`} alt={`${ward.name}の区章`}
+                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+              <dl>
+                <div><dt>人口</dt><dd>{detail.population.toLocaleString()}人</dd></div>
+                <div><dt>面積</dt><dd>{geo.areaKm2.toFixed(1)}km²</dd></div>
+                {profile?.flower && <div><dt>区の花</dt><dd>{profile.flower}</dd></div>}
+                {profile?.tree && <div><dt>区の木</dt><dd>{profile.tree}</dd></div>}
+                {profile?.bird && <div><dt>区の鳥</dt><dd>{profile.bird}</dd></div>}
+              </dl>
+            </div>
 
             {fellows.length > 0 && (
               <>
@@ -84,7 +120,7 @@ export function WardPage({ slug }: { slug: string }) {
 
             <h2 className="ward-detail-evidence-title" style={{ marginTop: 24 }}>出典</h2>
             <p className="ward-detail-sources">
-              {[...Object.values(DATA_SOURCES), ...Object.values(DETAIL_SOURCES)].join(' / ')}
+              {[...Object.values(DATA_SOURCES), ...Object.values(DETAIL_SOURCES), GEO_SOURCE].join(' / ')}
               （数値は取得時点のスナップショット）
             </p>
           </div>

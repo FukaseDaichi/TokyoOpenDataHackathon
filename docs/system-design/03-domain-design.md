@@ -92,3 +92,15 @@ similarity = round(max(0, 1 - distance / √20) × 100)
 - 診断結果は `bestMatch()` とランキング先頭が一致する。
 - 正規化後の区ベクトルは全軸 `[-1, 1]` に収まる。
 - 同じスナップショットから生成する系統は決定的である。
+
+## 8. 区詳細ページの周辺データ型
+
+診断・マッチングの中核である `Ward` / `AxisVector` に加え、区詳細ページ（`/ward/[slug]/`）は次のデータ層の型を参照する。いずれも5軸ベクトルの正規化には関与しない付帯情報であり、型定義とローダーの詳細は [04-data-design.md](04-data-design.md) を正とする。
+
+| 型 | 定義箇所 | 内容 |
+|---|---|---|
+| `WardGeo` | `src/data/geo.ts` | 区境界（外周リングのみ、面積降順）、重心、面積。地図描画専用で診断ロジックからは独立 |
+| `WardDetails`（新規フィールド） | `src/data/details.ts` | `population`・`incomePerTaxpayer`・`crimePer1000`・`waitingChildren` を追加。`population` 以外は取得元データが23区分そろわない場合に指標ごと欠落しうる任意フィールド |
+| `WardProfile` | `src/data/policies.ts` | 区の花・木・鳥、区章、政策キュレーション（`policies[]`、最大5件）。`data/ward-policies.json` を手編集する唯一の非生成データ |
+
+`WardMetrics` のような23区必須の集計値と異なり、`WardProfile` は区ごとに収録状況が異なってよい設計であり、未収録区は `loadWardProfile()` が `null` を返し、該当UIセクションを非表示にする。
