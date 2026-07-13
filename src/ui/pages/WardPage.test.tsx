@@ -21,12 +21,19 @@ describe('WardPage', () => {
   it('renders stats with rank and land price for Minato', () => {
     render(<WardPage slug="minato" />);
     expect(screen.getByText(/港区ちゃん/)).toBeInTheDocument();
-    expect(screen.getByText(/財政力指数/)).toBeInTheDocument();
+    // 設定理由文にも「財政力指数」が含まれるため複数ヒットを許容
+    expect(screen.getAllByText(/財政力指数/).length).toBeGreaterThanOrEqual(1);
     expect(screen.getAllByText(/23区中 1位/).length).toBeGreaterThanOrEqual(1); // 財政力1.15は最大
     // 出典欄にも「地価公示」の語が含まれるため複数ヒットする（getAllByTextで許容）
     expect(screen.getAllByText(/地価公示/).length).toBeGreaterThanOrEqual(1);
     expect(screen.getByText('アジサイ、バラ')).toBeInTheDocument();
     expect(screen.getByText('ハナミズキ')).toBeInTheDocument();
+  });
+  it('renders AI character rationale section', () => {
+    render(<WardPage slug="chiyoda" />);
+    expect(screen.getByText('キャラクター設定理由')).toBeInTheDocument();
+    expect(screen.getByText('AIによるキャラクター設定')).toBeInTheDocument();
+    expect(screen.getByText(/昼夜間人口比率1355%/)).toBeInTheDocument();
   });
   it('links to fellow wards of the same group', () => {
     // 港区は実データのk-means分類で単独クラスタ（系統3）になるため、

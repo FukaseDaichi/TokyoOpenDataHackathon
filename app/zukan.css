@@ -238,8 +238,8 @@
 /* ---- 詳細ページ 指標バー ---- */
 
 .stat-bar { padding: 12px 0; border-bottom: 1px dashed rgba(184, 146, 63, 0.4); }
-.stat-bar-head { display: flex; align-items: baseline; gap: 12px; margin-bottom: 8px; }
-.stat-bar-label { font-weight: 600; letter-spacing: 0.08em; font-size: 14px; }
+.stat-bar-head { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; margin-bottom: 8px; }
+.stat-bar-label { font-weight: 600; letter-spacing: 0.08em; font-size: 14px; white-space: nowrap; }
 .stat-bar-value { font-variant-numeric: tabular-nums; font-size: 14px; color: #6a4f26; }
 .stat-bar-rank { margin-left: auto; font-size: 12px; color: #7a5c2e; white-space: nowrap; }
 .stat-bar-track { position: relative; height: 8px; border-radius: 999px; background: rgba(184, 146, 63, 0.18); overflow: hidden; }
@@ -998,3 +998,135 @@
 .ward-profile-card dl { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 0; }
 .ward-profile-card dt { font-size: 11px; color: #7a5c2e; }
 .ward-profile-card dd { margin: 0; font-size: 14px; font-weight: 600; color: #4a3418; }
+
+/* ---- 区詳細ページ（固定ポートレート型リデザイン） ---- */
+
+.ward-page {
+  --ward-color: #b8923f;
+  display: grid;
+  grid-template-columns: minmax(240px, 340px) 1fr;
+  gap: 28px;
+  align-items: start;
+  background: linear-gradient(180deg, #f7ecd4 0%, #eeddb8 100%);
+  border: 3px solid #b8923f;
+  border-radius: 14px;
+  padding: 28px;
+  color: #4a3418;
+  text-align: left;
+}
+
+/* 左カラム: PCではスクロールしてもキャラが見えるよう固定 */
+.ward-page-side {
+  position: sticky;
+  top: 24px;
+}
+
+.ward-page-portrait img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 2 / 3;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid var(--ward-color);
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.28);
+  background: radial-gradient(circle at 50% 36%, #fff6e0 0%, #e5d0a4 100%);
+}
+
+.ward-page-ident {
+  margin-top: 14px;
+  text-align: center;
+}
+
+.ward-page-ident .ward-detail-name {
+  margin-bottom: 6px;
+}
+
+.ward-page-ident .ward-detail-catch {
+  margin-bottom: 0;
+}
+
+/* 右カラム: カードセクション */
+.ward-page-main {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+
+.ward-section {
+  background: rgba(255, 250, 236, 0.55);
+  border: 1px solid rgba(184, 146, 63, 0.45);
+  border-radius: 10px;
+  padding: 16px 18px;
+  box-shadow: 0 2px 8px rgba(74, 52, 24, 0.06);
+}
+
+.ward-section-title {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
+  letter-spacing: 0.18em;
+  color: #7a5c2e;
+  border-bottom: 1px solid rgba(184, 146, 63, 0.5);
+  padding-bottom: 8px;
+  margin: 0 0 12px;
+}
+
+.ward-section-icon {
+  flex: 0 0 auto;
+  color: var(--ward-color, #b8923f);
+}
+
+.ward-section-badge {
+  margin-left: auto;
+  flex: 0 0 auto;
+  font-size: 10px;
+  letter-spacing: 0.08em;
+  padding: 2px 10px;
+  border: 1px solid rgba(184, 146, 63, 0.6);
+  border-radius: 999px;
+  color: #8a6c3c;
+  background: rgba(255, 250, 236, 0.8);
+  white-space: nowrap;
+}
+
+.ward-rationale {
+  margin: 0;
+  font-size: 14px;
+  line-height: 2;
+  color: #5c4522;
+}
+
+.ward-section .ward-map-frame {
+  margin-bottom: 0;
+}
+
+.ward-section .ward-detail-radar {
+  margin-top: 0;
+}
+
+@media (max-width: 900px) {
+  .ward-page {
+    grid-template-columns: 1fr;
+    padding: 20px;
+    gap: 20px;
+  }
+  .ward-page-side {
+    position: static;
+  }
+  .ward-page-portrait {
+    max-width: 300px;
+    margin: 0 auto;
+  }
+  .ward-section {
+    padding: 14px;
+  }
+  .ward-section-title {
+    flex-wrap: wrap;
+    letter-spacing: 0.12em;
+  }
+  .ward-section-badge {
+    margin-left: 0;
+  }
+}

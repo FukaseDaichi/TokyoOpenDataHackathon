@@ -44,9 +44,13 @@
 
 地図表示は3D（`WardMap3D`）・2D（`WardMap2D`）とも `src/data/geo.ts` の `loadWardGeo()` を使う。`src/lib/geo.ts` の純関数（`geoBounds` / `toView` / `ringToPath` / `nearestWards`）は2D SVGの座標変換、パス生成、近隣ラベル選択を担当する。3D側は同じリング列からThree.jsの `Shape` を直接生成する。
 
+### キャラクター設定理由（AI執筆・コード同梱）
+
+`src/data/rationale.ts` は23区分の「キャラクター設定理由」テキストを区コードキーの定数として同梱する。`docs/strategy/ward-character-profiles.md` のデータ→ビジュアル変換ルールと各区の根拠数値に基づきAIが執筆した3〜4文で、実データ指標からデザイン判断への流れを説明する。ローダー `loadCharacterRationale()` は未知コードに `null` を返す。文中の数値は取得時点のスナップショットであり、データ更新時は本文との整合を確認する。
+
 ### 区プロフィール（手動キュレーション）
 
-`src/data/ward-policies.json` は集計パイプラインを経ない唯一の手編集データで、区コードをキーに次を持つ。
+`src/data/ward-policies.json` は集計パイプラインを経ない手編集データで、区コードをキーに次を持つ。
 
 | フィールド | 内容 | 制約 |
 |---|---|---|
@@ -71,6 +75,7 @@
 | `src/data/ward-details.json` | アプリ同梱スナップショット | processedから手動コピー |
 | `src/data/ward-geo.json` | アプリ同梱スナップショット | processedから手動コピー |
 | `src/data/ward-policies.json` | アプリ同梱データ | `data/processed` に対応物はなく直接手編集する |
+| `src/data/rationale.ts` | アプリ同梱データ（AI執筆テキスト） | `docs/strategy/ward-character-profiles.md` を根拠に手編集する |
 | `public/emblems/*.svg` | アプリ同梱データ | Wikimedia Commonsから手動取得・配置（生成処理なし） |
 
 `data/processed` と `src/data` の同期は現在自動化されていない。アプリ動作の正は `src/data`、集計結果の正は `data/processed` であるため、データ更新時は必ず同一内容にそろえる。
