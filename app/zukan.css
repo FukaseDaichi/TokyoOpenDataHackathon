@@ -837,7 +837,7 @@
   border-radius: 50%;
   border: 1px dashed rgba(184, 146, 63, 0.3);
 }
-/* ステータス（データで見る◯◯。区詳細ページのStatBarを共用） */
+/* ステータス（レーダー5軸の根拠となる7指標のみ） */
 .ward-modal-stat-head {
   margin: 30px 0 4px;
   display: flex;

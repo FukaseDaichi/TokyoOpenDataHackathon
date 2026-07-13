@@ -26,8 +26,8 @@ describe('WardModal', () => {
     expect(cta).toHaveAttribute('href', '/ward/minato/');
   });
 
-  it('renders the same stat bars as the ward detail page', () => {
-    render(<WardModal ward={minato} detailHref="/ward/minato/" onClose={() => {}} />);
+  it('renders only the seven source metrics used by the radar chart', () => {
+    const { container } = render(<WardModal ward={minato} detailHref="/ward/minato/" onClose={() => {}} />);
 
     for (const label of [
       '昼夜間人口比率',
@@ -37,10 +37,20 @@ describe('WardModal', () => {
       '単身世帯率',
       '子育て世帯率',
       '財政力指数',
-      '地価公示（住宅地平均）',
     ]) {
       expect(screen.getByText(label)).toBeInTheDocument();
     }
+
+    for (const label of [
+      '地価公示（住宅地平均）',
+      '外国人人口比率',
+      '平均所得（納税者1人当たり）',
+      '街の安全データ（人口千人当たり認知件数）',
+      '待機児童数',
+    ]) {
+      expect(screen.queryByText(label)).not.toBeInTheDocument();
+    }
+    expect(container.querySelectorAll('.stat-bar')).toHaveLength(7);
   });
 
   it('ranks 港区 first on 財政力指数 (top of 23 wards)', () => {

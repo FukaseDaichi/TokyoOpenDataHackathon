@@ -18,6 +18,28 @@ describe('ward-policies.json', () => {
       expect((p.policies ?? []).length).toBeLessThanOrEqual(5);
     }
   });
+
+  it('区の花・木・鳥は重複のない文字列配列', () => {
+    for (const profile of Object.values(raw) as {
+      flowers?: string[];
+      trees?: string[];
+      birds?: string[];
+    }[]) {
+      for (const symbols of [profile.flowers, profile.trees, profile.birds]) {
+        if (!symbols) continue;
+        expect(symbols.length).toBeGreaterThan(0);
+        expect(new Set(symbols).size).toBe(symbols.length);
+        for (const symbol of symbols) expect(symbol.trim().length).toBeGreaterThan(0);
+      }
+    }
+  });
+
+  it('複数指定と区章のハトを公式情報どおりに扱う', () => {
+    expect(loadWardProfile('13103')?.flowers).toEqual(['アジサイ', 'バラ']);
+    expect(loadWardProfile('13109')?.trees).toEqual(['シイノキ', 'カエデ']);
+    expect(loadWardProfile('13115')?.trees).toEqual(['杉', 'アケボノスギ', 'サザンカ']);
+    expect(loadWardProfile('13123')?.birds).toBeUndefined();
+  });
 });
 
 describe('loadWardProfile', () => {

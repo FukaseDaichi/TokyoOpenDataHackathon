@@ -92,9 +92,9 @@ export function WardPage({ slug }: { slug: string }) {
               <dl>
                 <div><dt>人口</dt><dd>{detail.population.toLocaleString()}人</dd></div>
                 <div><dt>面積</dt><dd>{geo.areaKm2.toFixed(1)}km²</dd></div>
-                {profile?.flower && <div><dt>区の花</dt><dd>{profile.flower}</dd></div>}
-                {profile?.tree && <div><dt>区の木</dt><dd>{profile.tree}</dd></div>}
-                {profile?.bird && <div><dt>区の鳥</dt><dd>{profile.bird}</dd></div>}
+                {profile?.flowers && <div><dt>区の花</dt><dd>{profile.flowers.join('、')}</dd></div>}
+                {profile?.trees && <div><dt>区の木</dt><dd>{profile.trees.join('、')}</dd></div>}
+                {profile?.birds && <div><dt>区の鳥</dt><dd>{profile.birds.join('、')}</dd></div>}
               </dl>
             </div>
 

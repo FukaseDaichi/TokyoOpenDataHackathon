@@ -2,9 +2,9 @@ import raw from './ward-policies.json';
 
 export interface WardPolicy { title: string; summary: string; source: string; url: string }
 export interface WardProfile {
-  flower?: string;
-  tree?: string;
-  bird?: string;
+  flowers?: string[];
+  trees?: string[];
+  birds?: string[];
   emblemNote?: string;
   policies: WardPolicy[];
 }

@@ -4,16 +4,15 @@ import Link from 'next/link';
 import { useEffect, useMemo, useState, type AnimationEvent } from 'react';
 import type { Ward } from '../domain/axes';
 import { loadWards } from '../data/wards';
-import { loadWardDetails } from '../data/details';
 import { rankOf, ratioToMean } from '../lib/rank';
 import { Radar } from './Radar';
 import { StatBar } from './StatBar';
-import { buildWardStats } from './wardStats';
+import { buildRadarStats } from './wardStats';
 import { ssrImage, wardTheme } from './wardTheme';
 import { zukanNo } from './Zukan';
 
 const WARDS = loadWards();
-const DETAILS = loadWardDetails();
+const ALL_METRICS = WARDS.map((ward) => ward.metrics!);
 
 /** 魔法の絵本の光の粉（背景の減光オーバーレイ上を舞う） */
 const PARTICLES = [
@@ -44,8 +43,8 @@ const CLOSE_FALLBACK_MS = 1300;
 
 /**
  * 区ちゃん詳細モーダル。羊皮紙×金の絵本トーンのゲームUI。
- * 表紙が開く絵本演出で登場し、立ち絵カード＋レーダーチャート＋ステータスバーを見せる。
- * レーダーとステータスは区詳細ページと同じ部品（Radar / StatBar）を共用する。
+ * 表紙が開く絵本演出で登場し、立ち絵カード＋レーダーチャート＋軸の根拠となるステータスバーを見せる。
+ * 詳細指標はここでは表示せず、区詳細ページへの導線を提供する。
  */
 export function WardModal({
   ward,
@@ -64,12 +63,7 @@ export function WardModal({
   const index = WARDS.findIndex((w) => w.code === ward.code);
   const no = zukanNo(index);
   const m = ward.metrics;
-  const detail = DETAILS.get(ward.code);
-  const stats = useMemo(() => {
-    if (!m || !detail) return [];
-    return buildWardStats(m, detail, WARDS.map((w) => w.metrics!), [...DETAILS.values()]);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [ward.code]);
+  const stats = useMemo(() => (m ? buildRadarStats(m, ALL_METRICS) : []), [m]);
 
   const requestClose = () => {
     if (!animate) {
@@ -179,11 +173,11 @@ export function WardModal({
               </div>
             </div>
 
-            {/* 下段: データで見るステータス（区詳細ページと同じ内容） */}
+            {/* 下段: レーダーチャートの5軸に使う基本指標だけを表示 */}
             <h3 className="ward-modal-stat-head">
               <span>ステータス</span>
               <span className="ward-modal-stat-rule" aria-hidden="true" />
-              <span className="ward-modal-stat-sub">データで見る{ward.name}</span>
+              <span className="ward-modal-stat-sub">レーダーをつくる7指標</span>
             </h3>
 
             {stats.length > 0 && (
@@ -203,7 +197,7 @@ export function WardModal({
             )}
 
             <p className="ward-modal-sources">
-              出典: 令和2年国勢調査・住民基本台帳・都建設局公園調書・総務省主要財政指標・国土交通省地価公示（数値は取得時点のスナップショット）。順位は23区中の順位。
+              出典: 令和2年国勢調査・住民基本台帳・都建設局公園調書・総務省主要財政指標（数値は取得時点のスナップショット）。順位は23区中の順位。
             </p>
 
             <div className="ward-modal-cta-wrap">

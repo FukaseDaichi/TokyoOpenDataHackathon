@@ -1,8 +1,8 @@
 {
   "13101": {
-    "flower": "さくら",
-    "tree": "まつ",
-    "bird": "はくちょう",
+    "flowers": ["さくら"],
+    "trees": ["まつ"],
+    "birds": ["はくちょう"],
     "policies": [
       {
         "title": "自分らしく健やかに暮らし、笑顔で成長しあえるまち",
@@ -25,8 +25,8 @@
     ]
   },
   "13102": {
-    "flower": "つつじ（さつきを含む）",
-    "tree": "やなぎ",
+    "flowers": ["つつじ（さつきを含む）"],
+    "trees": ["やなぎ"],
     "policies": [
       {
         "title": "一人一人の生き方が大切にされるまち",
@@ -49,32 +49,32 @@
     ]
   },
   "13103": {
-    "flower": "アジサイ",
-    "tree": "ハナミズキ",
+    "flowers": ["アジサイ", "バラ"],
+    "trees": ["ハナミズキ"],
     "policies": [
       {
         "title": "かがやくまち（街づくり・環境）",
         "summary": "都心の活力と安全・安心・快適な暮らしを支える、街づくりと環境保全の取り組みです。",
-        "source": "港区基本計画（令和3年度～令和8年度）",
-        "url": "https://www.city.minato.tokyo.jp/kikaku/kuse/shisaku/kihonkoso/kekaku_r3-r8.html"
+        "source": "港区基本計画（令和3年度～令和8年度）令和5年度改定版",
+        "url": "https://www.city.minato.tokyo.jp/kikaku/kuse/shisaku/kihonkoso/kekaku.html"
       },
       {
         "title": "にぎわうまち（コミュニティ・産業）",
         "summary": "地域コミュニティの活性化や、伝統と最先端技術が融合した産業の振興を進める取り組みです。",
-        "source": "港区基本計画（令和3年度～令和8年度）",
-        "url": "https://www.city.minato.tokyo.jp/kikaku/kuse/shisaku/kihonkoso/kekaku_r3-r8.html"
+        "source": "港区基本計画（令和3年度～令和8年度）令和5年度改定版",
+        "url": "https://www.city.minato.tokyo.jp/kikaku/kuse/shisaku/kihonkoso/kekaku.html"
       },
       {
         "title": "はぐくむまち（福祉・保健・教育）",
         "summary": "地域の支え合いや自分らしい自立した生活の支援など、福祉・保健・教育の充実をめざす取り組みです。",
-        "source": "港区基本計画（令和3年度～令和8年度）",
-        "url": "https://www.city.minato.tokyo.jp/kikaku/kuse/shisaku/kihonkoso/kekaku_r3-r8.html"
+        "source": "港区基本計画（令和3年度～令和8年度）令和5年度改定版",
+        "url": "https://www.city.minato.tokyo.jp/kikaku/kuse/shisaku/kihonkoso/kekaku.html"
       }
     ]
   },
   "13104": {
-    "flower": "つつじ",
-    "tree": "けやき",
+    "flowers": ["つつじ"],
+    "trees": ["けやき"],
     "policies": [
       {
         "title": "暮らしやすさ1番の新宿",
@@ -109,8 +109,8 @@
     ]
   },
   "13105": {
-    "flower": "つつじ",
-    "tree": "いちょう",
+    "flowers": ["つつじ"],
+    "trees": ["いちょう"],
     "policies": [
       {
         "title": "子どもたちに輝く未来をつなぐ",
@@ -145,38 +145,38 @@
     ]
   },
   "13106": {
-    "flower": "あさがお",
-    "tree": "さくら",
+    "flowers": ["あさがお"],
+    "trees": ["さくら"],
     "policies": [
       {
         "title": "あらゆる世代が生涯成長し輝くまち",
         "summary": "子どもから高齢者まで、すべての世代が学びや活動を通じて成長し、生涯にわたって力を発揮できるまちづくりを進める。",
-        "source": "台東区行政計画（令和5～7年度）",
-        "url": "https://www.city.taito.lg.jp/kusei/kunokeikaku/kihonkoso/gyoseikeikaku/gyouseikeikaku.html"
+        "source": "台東区行政計画（令和8～10年度）",
+        "url": "https://www.city.taito.lg.jp/kusei/kunokeikaku/kihonkoso/gyoseikeikaku/gyoukei.html"
       },
       {
         "title": "いつまでも健やかに自分らしく暮らせるまち",
         "summary": "誰もが心身ともに健やかで、自分らしい生活を続けられるよう、健康づくりや福祉の充実を図る。",
-        "source": "台東区行政計画（令和5～7年度）",
-        "url": "https://www.city.taito.lg.jp/kusei/kunokeikaku/kihonkoso/gyoseikeikaku/gyouseikeikaku.html"
+        "source": "台東区行政計画（令和8～10年度）",
+        "url": "https://www.city.taito.lg.jp/kusei/kunokeikaku/kihonkoso/gyoseikeikaku/gyoukei.html"
       },
       {
         "title": "活力にあふれ多彩な魅力が輝くまち",
         "summary": "伝統と新しさが共存する多彩な地域資源を活かし、活力とにぎわいのあるまちの実現をめざす。",
-        "source": "台東区行政計画（令和5～7年度）",
-        "url": "https://www.city.taito.lg.jp/kusei/kunokeikaku/kihonkoso/gyoseikeikaku/gyouseikeikaku.html"
+        "source": "台東区行政計画（令和8～10年度）",
+        "url": "https://www.city.taito.lg.jp/kusei/kunokeikaku/kihonkoso/gyoseikeikaku/gyoukei.html"
       },
       {
         "title": "誰もが誇りや憧れを抱く安全安心で快適なまち",
         "summary": "災害への備えや暮らしの快適さを高め、区民が誇りと憧れを持てる安全・安心なまちづくりを進める。",
-        "source": "台東区行政計画（令和5～7年度）",
-        "url": "https://www.city.taito.lg.jp/kusei/kunokeikaku/kihonkoso/gyoseikeikaku/gyouseikeikaku.html"
+        "source": "台東区行政計画（令和8～10年度）",
+        "url": "https://www.city.taito.lg.jp/kusei/kunokeikaku/kihonkoso/gyoseikeikaku/gyoukei.html"
       }
     ]
   },
   "13107": {
-    "flower": "つつじ",
-    "tree": "さくら",
+    "flowers": ["つつじ"],
+    "trees": ["さくら"],
     "policies": [
       {
         "title": "豊かな感性が磨かれる",
@@ -199,8 +199,8 @@
     ]
   },
   "13108": {
-    "flower": "サザンカ",
-    "tree": "クロマツ",
+    "flowers": ["サザンカ"],
+    "trees": ["クロマツ"],
     "policies": [
       {
         "title": "水と緑豊かな地球環境にやさしいまち",
@@ -235,9 +235,9 @@
     ]
   },
   "13109": {
-    "flower": "サツキ",
-    "tree": "シイノキ",
-    "bird": "ユリカモメ",
+    "flowers": ["サツキ"],
+    "trees": ["シイノキ", "カエデ"],
+    "birds": ["ユリカモメ"],
     "policies": [
       {
         "title": "誰もがつながる魅力ある地域社会の実現",
@@ -272,9 +272,9 @@
     ]
   },
   "13110": {
-    "flower": "ハギ",
-    "tree": "シイ",
-    "bird": "シジュウカラ",
+    "flowers": ["ハギ"],
+    "trees": ["シイ"],
+    "birds": ["シジュウカラ"],
     "policies": [
       {
         "title": "学び合い成長し合えるまち",
@@ -309,9 +309,9 @@
     ]
   },
   "13111": {
-    "flower": "ウメ",
-    "tree": "クスノキ",
-    "bird": "ウグイス",
+    "flowers": ["ウメ"],
+    "trees": ["クスノキ"],
+    "birds": ["ウグイス"],
     "policies": [
       {
         "title": "こどもが夢と希望を持てるまち",
@@ -340,9 +340,9 @@
     ]
   },
   "13112": {
-    "flower": "サギソウ",
-    "tree": "ケヤキ",
-    "bird": "オナガ",
+    "flowers": ["サギソウ"],
+    "trees": ["ケヤキ"],
+    "birds": ["オナガ"],
     "policies": [
       {
         "title": "参加と協働を基盤とするまちづくり",
@@ -371,8 +371,8 @@
     ]
   },
   "13113": {
-    "flower": "ハナショウブ",
-    "tree": "ケヤキ",
+    "flowers": ["ハナショウブ"],
+    "trees": ["ケヤキ"],
     "policies": [
       {
         "title": "子育て・教育・生涯学習",
@@ -407,8 +407,8 @@
     ]
   },
   "13114": {
-    "tree": "シイ",
-    "flower": "ツツジ",
+    "trees": ["しい"],
+    "flowers": ["つつじ"],
     "policies": [
       {
         "title": "人と人がつながり活力を生むまち",
@@ -437,7 +437,7 @@
     ]
   },
   "13115": {
-    "tree": "スギ",
+    "trees": ["杉", "アケボノスギ", "サザンカ"],
     "policies": [
       {
         "title": "認め合い支え合うまち",
@@ -460,8 +460,8 @@
     ]
   },
   "13116": {
-    "flower": "ツツジ",
-    "tree": "ソメイヨシノ",
+    "flowers": ["ツツジ"],
+    "trees": ["ソメイヨシノ"],
     "policies": [
       {
         "title": "地域と共に支えあう安全・安心なまち",
@@ -496,8 +496,8 @@
     ]
   },
   "13117": {
-    "flower": "つつじ",
-    "tree": "さくら",
+    "flowers": ["つつじ"],
+    "trees": ["さくら"],
     "policies": [
       {
         "title": "多様なつながりが織りなすにぎわいと活力のまち",
@@ -520,8 +520,8 @@
     ]
   },
   "13118": {
-    "flower": "ツツジ",
-    "tree": "サクラ",
+    "flowers": ["ツツジ"],
+    "trees": ["サクラ"],
     "policies": [
       {
         "title": "生涯健康都市",
@@ -556,9 +556,9 @@
     ]
   },
   "13119": {
-    "flower": "ニリンソウ",
-    "tree": "ケヤキ",
-    "bird": "ハクセキレイ",
+    "flowers": ["ニリンソウ"],
+    "trees": ["ケヤキ"],
+    "birds": ["ハクセキレイ"],
     "policies": [
       {
         "title": "子育て世代が住みたくなるまち",
@@ -593,8 +593,8 @@
     ]
   },
   "13120": {
-    "flower": "ツツジ",
-    "tree": "コブシ",
+    "flowers": ["ツツジ"],
+    "trees": ["コブシ"],
     "policies": [
       {
         "title": "子どもたちの笑顔輝くまち",
@@ -629,8 +629,8 @@
     ]
   },
   "13121": {
-    "flower": "チューリップ",
-    "tree": "さくら",
+    "flowers": ["チューリップ"],
+    "trees": ["さくら"],
     "policies": [
       {
         "title": "多様性を認めあい挑戦する人",
@@ -659,8 +659,8 @@
     ]
   },
   "13122": {
-    "flower": "花しょうぶ",
-    "tree": "しだれやなぎ",
+    "flowers": ["花しょうぶ"],
+    "trees": ["しだれやなぎ"],
     "policies": [
       {
         "title": "いきいきと幸せに暮らせる安全・安心なまち",
@@ -695,9 +695,8 @@
     ]
   },
   "13123": {
-    "flower": "ツツジ",
-    "tree": "クスノキ",
-    "bird": "ハト",
+    "flowers": ["ツツジ"],
+    "trees": ["クスノキ"],
     "policies": [
       {
         "title": "人とともに生きる",

@@ -9,13 +9,8 @@ export interface WardStatItem {
   note?: string;
 }
 
-/** 「データで見る◯◯」のステータス項目。区詳細ページとモーダルで共用する */
-export function buildWardStats(
-  m: WardMetrics,
-  detail: WardDetails,
-  all: WardMetrics[],
-  allDetails: WardDetails[],
-): WardStatItem[] {
+/** レーダーチャートの5軸を組み立てる7つの基本指標。 */
+export function buildRadarStats(m: WardMetrics, all: WardMetrics[]): WardStatItem[] {
   return [
     { label: '昼夜間人口比率', v: m.daytime_population_ratio, vs: all.map((x) => x.daytime_population_ratio), text: `${m.daytime_population_ratio.toFixed(1)}%`, note: '100%を超えるほど昼に人が集まる街' },
     { label: '高齢化率', v: m.aging_rate, vs: all.map((x) => x.aging_rate), text: `${m.aging_rate.toFixed(1)}%`, note: '高いほど成熟した落ち着きのある街' },
@@ -24,6 +19,18 @@ export function buildWardStats(
     { label: '単身世帯率', v: m.single_household_rate, vs: all.map((x) => x.single_household_rate), text: `${m.single_household_rate.toFixed(1)}%` },
     { label: '子育て世帯率', v: m.family_household_rate, vs: all.map((x) => x.family_household_rate), text: `${m.family_household_rate.toFixed(1)}%` },
     { label: '財政力指数', v: m.fiscal_strength_index, vs: all.map((x) => x.fiscal_strength_index), text: m.fiscal_strength_index.toFixed(2) },
+  ];
+}
+
+/** 区詳細ページで表示する、基本7指標と付帯する詳細指標。 */
+export function buildWardStats(
+  m: WardMetrics,
+  detail: WardDetails,
+  all: WardMetrics[],
+  allDetails: WardDetails[],
+): WardStatItem[] {
+  return [
+    ...buildRadarStats(m, all),
     { label: '地価公示（住宅地平均）', v: detail.landPriceAvg, vs: allDetails.map((d) => d.landPriceAvg), text: `${Math.round(detail.landPriceAvg / 10000).toLocaleString()}万円/㎡`, note: `区内${detail.landPricePoints}地点の平均` },
     ...(detail.foreignRate !== undefined
       ? [{ label: '外国人人口比率', v: detail.foreignRate, vs: allDetails.map((d) => d.foreignRate!), text: `${detail.foreignRate.toFixed(1)}%`, note: '多いほど国際色ゆたかな街' }]

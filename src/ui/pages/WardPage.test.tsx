@@ -25,6 +25,8 @@ describe('WardPage', () => {
     expect(screen.getAllByText(/23区中 1位/).length).toBeGreaterThanOrEqual(1); // 財政力1.15は最大
     // 出典欄にも「地価公示」の語が含まれるため複数ヒットする（getAllByTextで許容）
     expect(screen.getAllByText(/地価公示/).length).toBeGreaterThanOrEqual(1);
+    expect(screen.getByText('アジサイ、バラ')).toBeInTheDocument();
+    expect(screen.getByText('ハナミズキ')).toBeInTheDocument();
   });
   it('links to fellow wards of the same group', () => {
     // 港区は実データのk-means分類で単独クラスタ（系統3）になるため、
