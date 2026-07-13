@@ -36,7 +36,7 @@ node scripts/build-og-images.mjs
 - `src/domain/` — 5軸と区データの型
 - `src/lib/` — 正規化、診断採点、最近傍、順位、k-means、セッション保存の純ロジック
 - `src/data/` — アプリへ同梱するJSONとローダー
-- `src/ui/` — 診断、図鑑、結果、区詳細、2D/3Dレーダー
+- `src/ui/` — 診断、図鑑、結果、区詳細、2Dレーダー、2D/3D区地図
 - `src/hero/` — スクロール連動3Dヒーロー、品質判定、2Dフォールバック
 - `data/raw/` — 取得した公式データ
 - `data/processed/` — Pythonジェネレーターの生成物。手編集しない
@@ -61,6 +61,7 @@ node scripts/build-og-images.mjs
 - 基本指標、詳細データ、slug、キャラクターはすべて23区分そろえる。
 - `data/processed/wards.json` と `src/data/ward-metrics.json` を同一にする。
 - `data/processed/ward-details.json` と `src/data/ward-details.json` を同一にする。
+- `data/processed/ward-geo.json` と `src/data/ward-geo.json` を同一にする。
 - 区コード順は `13101` から `13123`。
 - キャラクター画像は各slugについて512px版、896px版、OGPをそろえる。
 - データまたは区マスターの変更後は `npm test` と本番相当の `npm run build` を実行する。
