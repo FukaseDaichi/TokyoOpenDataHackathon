@@ -15,6 +15,7 @@
 ## 2. クライアント境界
 
 - `app/layout.tsx` と各動的ページモジュールは、静的HTMLとメタデータを生成する層である。
+- 全ルート共通のファビコン、Apple Touch Icon、Web App Manifestは `public/favicon/` に配置し、`app/layout.tsx` のメタデータから参照する。
 - `src/App.tsx`、`ResultPage`、`WardPage` は操作を扱うクライアントコンポーネントである。
 - `HeroCanvas` と `WardMap3D` は `next/dynamic` の `ssr: false` で遅延ロードし、サーバー描画の対象外とする。
 - 区データはJSON importでバンドルされ、`fetch` は行わない。
