@@ -52,6 +52,12 @@ npm test
 npm run build
 ```
 
+質問、基本5軸、区順序を変更した場合は、全回答パターンの校正済み割り当ても再生成します。
+
+```bash
+npm run build:diagnosis
+```
+
 `data/raw/` は取得した公式データ、`data/processed/` は集計生成物、`src/data/` はアプリへ同梱するスナップショットです。指標、出典、同期時の注意は [データ設計](docs/system-design/04-data-design.md) を参照してください。
 
 ## 画像更新

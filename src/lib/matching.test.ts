@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { distance, rankMatches, bestMatch } from './matching';
+import { distance, rankDiagnosisMatches, rankMatches, bestMatch } from './matching';
 import { emptyVector, type Ward } from '../domain/axes';
 
 const wardAt = (name: string, liveliness: number): Ward => ({
@@ -18,5 +18,10 @@ describe('matching', () => {
     const ranked = rankMatches(user, wards);
     expect(ranked[0].ward.name).toBe('near');
     expect(bestMatch(user, wards).name).toBe('near');
+  });
+  it('puts the calibrated diagnosis winner first and keeps the remaining distance order', () => {
+    const wards = [wardAt('first', 0.1), wardAt('second', 0.2), wardAt('calibrated', 0.3)];
+    const ranked = rankDiagnosisMatches(emptyVector(), wards, 'calibrated');
+    expect(ranked.map((match) => match.ward.name)).toEqual(['calibrated', 'first', 'second']);
   });
 });

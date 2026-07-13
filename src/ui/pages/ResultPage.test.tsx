@@ -17,9 +17,15 @@ describe('ResultPage', () => {
     expect(screen.queryByText(/相性ランキング/)).not.toBeInTheDocument();
   });
   it('shows owner view (ranking + share) with a saved diagnosis', () => {
-    saveDiagnosis({ ...emptyVector(), luxury: 1 });
+    saveDiagnosis({ ...emptyVector(), luxury: 1 }, '13103');
     render(<ResultPage slug="minato" />);
     expect(screen.getByText(/相性ランキング/)).toBeInTheDocument();
     expect(screen.getByText(/Xで結果をシェアする/)).toBeInTheDocument();
+  });
+  it('shows visitor view when the saved result belongs to a different ward', () => {
+    saveDiagnosis({ ...emptyVector(), luxury: 1 }, '13101');
+    render(<ResultPage slug="minato" />);
+    expect(screen.queryByText(/相性ランキング/)).not.toBeInTheDocument();
+    expect(screen.getByText(/あなたも診断する/)).toBeInTheDocument();
   });
 });

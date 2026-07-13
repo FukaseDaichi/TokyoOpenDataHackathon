@@ -8,7 +8,7 @@ import { loadWards } from './data/wards';
 import { Zukan } from './ui/Zukan';
 import { WardModal } from './ui/WardModal';
 import { Diagnosis } from './ui/Diagnosis';
-import { bestMatch } from './lib/matching';
+import { bestDiagnosisMatch } from './lib/diagnosisMatching';
 import { saveDiagnosis } from './lib/diagnosisSession';
 import { CODE_TO_SLUG } from './data/slugs';
 
@@ -52,9 +52,10 @@ export default function App() {
           )}
           {phase.name === 'quiz' && (
             <Diagnosis
-              onComplete={(userVector) => {
-                saveDiagnosis(userVector);
-                router.push(`/result/${CODE_TO_SLUG[bestMatch(userVector, WARDS).code]}/`);
+              onComplete={(userVector, answers) => {
+                const result = bestDiagnosisMatch(answers, WARDS);
+                saveDiagnosis(userVector, result.code);
+                router.push(`/result/${CODE_TO_SLUG[result.code]}/`);
               }}
             />
           )}

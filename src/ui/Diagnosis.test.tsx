@@ -11,6 +11,7 @@ describe('Diagnosis', () => {
       fireEvent.click(screen.getAllByRole('button')[0]); // always pick first option
     }
     expect(onComplete).toHaveBeenCalledTimes(1);
+    expect(onComplete.mock.calls[0][1]).toEqual(new Array(10).fill(0));
   });
   it('shows progress', () => {
     render(<Diagnosis onComplete={() => {}} />);

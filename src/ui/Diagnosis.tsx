@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { QUESTIONS, scoreAnswers } from '../lib/quiz';
 import type { AxisVector } from '../domain/axes';
 
-export function Diagnosis({ onComplete }: { onComplete: (v: AxisVector) => void }) {
+export function Diagnosis({ onComplete }: { onComplete: (v: AxisVector, answers: number[]) => void }) {
   const [step, setStep] = useState(0);
   const [answers, setAnswers] = useState<number[]>([]);
   const q = QUESTIONS[step];
@@ -12,7 +12,7 @@ export function Diagnosis({ onComplete }: { onComplete: (v: AxisVector) => void 
   const pick = (optionIndex: number) => {
     const next = [...answers, optionIndex];
     if (step + 1 >= QUESTIONS.length) {
-      onComplete(scoreAnswers(QUESTIONS, next));
+      onComplete(scoreAnswers(QUESTIONS, next), next);
     } else {
       setAnswers(next);
       setStep(step + 1);

@@ -23,6 +23,7 @@ NEXT_PUBLIC_SITE_URL=https://example.pages.dev npm run build
 cp data/processed/wards.json src/data/ward-metrics.json
 cp data/processed/ward-details.json src/data/ward-details.json
 cp data/processed/ward-geo.json src/data/ward-geo.json
+npm run build:diagnosis
 
 # 画像再生成
 npm run build:images
@@ -51,7 +52,7 @@ node scripts/build-og-images.mjs
 - 5軸キーと順序は `src/domain/axes.ts` の `AXIS_KEYS` を正とする。値は `[-1, 1]`。
 - 賑わいは昼夜間人口比率のlog min-max、他軸は合成値のmin-max。式は `src/data/wards.ts` と [ドメイン設計](docs/system-design/03-domain-design.md) を参照する。
 - 純ロジックは副作用のないTypeScriptモジュールとして保ち、変更時はVitestを先に追加または更新する。
-- 診断回答は `sessionStorage` だけに保存し、外部送信しない。
+- 診断の5軸ベクトルと結果区コードは `sessionStorage` だけに保存し、個別回答は保存・外部送信しない。
 - WebGL非対応、reduced motion、Canvas初期化失敗時の2D導線を維持する。
 - UIコピーは日本語。区の表現は中立・前向きにし、地域スティグマにつながる否定的ラベルを避ける。
 - `NEXT_PUBLIC_SITE_URL` 未設定でもビルドは通るがOGPが壊れるため、本番ビルドでは必須とする。
@@ -63,6 +64,7 @@ node scripts/build-og-images.mjs
 - `data/processed/ward-details.json` と `src/data/ward-details.json` を同一にする。
 - `data/processed/ward-geo.json` と `src/data/ward-geo.json` を同一にする。
 - 区コード順は `13101` から `13123`。
+- 診断割り当ては全区1%以上10%以下、未校正の距離順位5位以内とし、質問・基本指標・区順序の変更後は `npm run build:diagnosis` で再生成する。
 - キャラクター画像は各slugについて512px版、896px版、OGPをそろえる。
 - データまたは区マスターの変更後は `npm test` と本番相当の `npm run build` を実行する。
 

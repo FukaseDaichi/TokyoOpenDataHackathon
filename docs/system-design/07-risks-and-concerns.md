@@ -12,7 +12,6 @@
 
 | 優先度 | 懸念 | コード上の根拠 | 影響 | 推奨対応 |
 |---|---|---|---|---|
-| P1 | 診断セッションと結果slugが結び付いておらず、有効期限もない | `diagnosisSession.ts` はベクトルと未使用のtimestampだけを保存し、`ResultPage` はURLの区と無条件に組み合わせる | 診断後に別区の結果URLを開く場合や、同じタブで後日共有URLを開く場合に、その区を「一番似ている」と表示しながらランキング先頭が別区になる可能性がある | 保存時に結果区コードを持たせ、slug一致時だけ自分向け表示にする。必要ならtimestampで有効期限も判定する |
 | P1 | 配信用サイトURLの欠落がビルド失敗にならない | `next.config.ts` は警告だけで、動的メタデータは未設定時に相対OGPを返す | 本番ビルドが成功してもOGPの基準URLがlocalhostになり、Xカードが表示されない | CI/デプロイ用ビルドでは環境変数を必須化し、公開HTMLの `og:image` を検査する |
 | P1 | 集計JSONと配信用JSONが手動コピー | `data/processed/*.json` と `src/data/*.json` の間に生成処理がない | データを再集計してもアプリが古い値を配信できる | ジェネレーターから配信用JSONも同時生成するか、同期・差分検査をnpm script/CIへ組み込む |
 | P1 | 区章の取得・権利情報をリポジトリ内で追跡できない | `public/emblems/*.svg` は23区分あるが、取得URL、取得日、ライセンス根拠、自治体章としての利用条件を対応づける台帳がない | 再配布・提出時に各ファイルの利用根拠を監査できない | slugごとの取得元・取得日・ライセンス・利用条件を台帳化し、不明なものは公開対象から外す |
@@ -32,7 +31,7 @@
 
 ## 現在確認できている品質状態
 
-- `npm test`: 24ファイル・101テストが成功。ただし上記のCanvas警告がstderrへ出る。
+- `npm test`: 26ファイル・112テストが成功。ただし上記のCanvas警告がstderrへ出る。
 - `NEXT_PUBLIC_SITE_URL=https://example.pages.dev npm run build`: 静的エクスポート成功。
 - `NEXT_PUBLIC_SITE_URL` 未設定時: ビルドは成功するが、Next.jsが `metadataBase` のlocalhostフォールバックを警告する。
 - `data/processed/wards.json` と `src/data/ward-metrics.json`、`data/processed/ward-details.json` と `src/data/ward-details.json`、`data/processed/ward-geo.json` と `src/data/ward-geo.json` はバイト単位で一致する。

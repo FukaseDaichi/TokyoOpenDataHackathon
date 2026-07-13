@@ -4,9 +4,8 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { SLUG_TO_CODE } from '../../data/slugs';
 import { loadWards } from '../../data/wards';
-import { loadDiagnosis } from '../../lib/diagnosisSession';
-import { rankMatches, similarityPercent } from '../../lib/matching';
-import type { AxisVector } from '../../domain/axes';
+import { loadDiagnosisSession, type DiagnosisSession } from '../../lib/diagnosisSession';
+import { rankDiagnosisMatches, similarityPercent } from '../../lib/matching';
 import { WardDetail } from '../WardDetail';
 import { ShareCard, xShareUrl } from '../ShareCard';
 import { wardTheme } from '../wardTheme';
@@ -16,10 +15,14 @@ const WARDS = loadWards();
 export function ResultPage({ slug }: { slug: string }) {
   const ward = WARDS.find((w) => w.code === SLUG_TO_CODE[slug])!;
   // hydration差異を避けるため、sessionStorageはマウント後に読む
-  const [userVector, setUserVector] = useState<AxisVector | null>(null);
-  useEffect(() => setUserVector(loadDiagnosis()), []);
+  const [diagnosis, setDiagnosis] = useState<DiagnosisSession | null>(null);
+  useEffect(() => {
+    const saved = loadDiagnosisSession();
+    setDiagnosis(saved?.resultCode === ward.code ? saved : null);
+  }, [ward.code]);
 
-  const ranked = userVector ? rankMatches(userVector, WARDS) : null;
+  const userVector = diagnosis?.vector ?? null;
+  const ranked = userVector ? rankDiagnosisMatches(userVector, WARDS, ward.code) : null;
   const shareUrl = typeof window !== 'undefined' ? window.location.href : '';
 
   return (

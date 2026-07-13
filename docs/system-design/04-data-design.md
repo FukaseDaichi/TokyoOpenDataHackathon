@@ -74,6 +74,7 @@
 | `src/data/ward-metrics.json` | アプリ同梱スナップショット | processedから手動コピー |
 | `src/data/ward-details.json` | アプリ同梱スナップショット | processedから手動コピー |
 | `src/data/ward-geo.json` | アプリ同梱スナップショット | processedから手動コピー |
+| `src/data/diagnosis-assignments.json` | アプリ同梱の診断割り当て | `npm run build:diagnosis` で再生成 |
 | `src/data/ward-policies.json` | アプリ同梱データ | `data/processed` に対応物はなく直接手編集する |
 | `src/data/rationale.ts` | アプリ同梱データ（AI執筆テキスト） | `docs/strategy/ward-character-profiles.md` を根拠に手編集する |
 | `public/emblems/*.svg` | アプリ同梱データ | Wikimedia Commonsから手動取得・配置（生成処理なし） |
@@ -94,12 +95,15 @@ flowchart LR
   DetailsProcessed -->|手動コピー| DetailsBundle["src/data/ward-details.json"]
   GeoProcessed -->|手動コピー| GeoBundle["src/data/ward-geo.json"]
   PoliciesJson["src/data/ward-policies.json\n（手編集・生成処理なし）"]
+  Normalize --> DiagnosisBuild["build:diagnosis\n全回答パターンの配分校正"]
+  DiagnosisBuild --> DiagnosisBundle["src/data/diagnosis-assignments.json"]
   WardsBundle --> Loader["loadWards()"]
   DetailsBundle --> DetailLoader["loadWardDetails()"]
   GeoBundle --> GeoLoader["loadWardGeo()"]
   PoliciesJson --> ProfileLoader["loadWardProfile()"]
   Loader --> Normalize["5軸正規化 + k-means"]
   Normalize --> UI["診断・図鑑・詳細"]
+  DiagnosisBundle --> UI
   DetailLoader --> UI
   GeoLoader --> UI
   ProfileLoader --> UI
@@ -122,11 +126,12 @@ cp data/processed/wards.json src/data/ward-metrics.json
 cp data/processed/ward-details.json src/data/ward-details.json
 cp data/processed/ward-geo.json src/data/ward-geo.json
 
+npm run build:diagnosis
 npm test
 npm run build
 ```
 
-`build_geo.py` は `data/raw/N03-21_13_city.topojson` の更新が前提であり、基本5軸・区詳細のraw更新とは独立して再実行できる。`src/data/ward-policies.json` と `public/emblems/*.svg` は生成コマンドを持たないため、この手順の対象外（手動キュレーションの更新運用は本ページ末尾を参照）。
+`build_geo.py` は `data/raw/N03-21_13_city.topojson` の更新が前提であり、基本5軸・区詳細のraw更新とは独立して再実行できる。`build:diagnosis` は質問、基本5軸、区順序のいずれかを変更した場合に必ず実行する。`src/data/ward-policies.json` と `public/emblems/*.svg` は生成コマンドを持たないため、この手順の対象外（手動キュレーションの更新運用は本ページ末尾を参照）。
 
 更新後は次も確認する。
 
@@ -147,7 +152,7 @@ git diff -- data/processed src/data
 - 区コードは `13101` から `13123`、並び順はJIS区コード順とする。
 - `build_geo.py` はWARD_IDS 23区分の欠損があればassertで停止し、生成物サイズが120KBを超えてもassertで停止する（簡略化率を上げて再生成する）。
 
-Vitestは、23区件数、基本指標の存在、正規化範囲、代表値、詳細データ件数、slugの双方向対応、ジオデータ23区分の座標・面積の妥当性、`ward-policies.json` のキー・文字数上限・出典URL形式、および花・木・鳥の配列が空文字と重複を含まないことを検証する。
+Vitestは、23区件数、基本指標の存在、正規化範囲、代表値、詳細データ件数、slugの双方向対応、ジオデータ23区分の座標・面積の妥当性、診断割り当ての再生成一致・全区1〜10%・距離順位5位以内、`ward-policies.json` のキー・文字数上限・出典URL形式、および花・木・鳥の配列が空文字と重複を含まないことを検証する。
 
 ## 7. 手動キュレーションデータの更新運用
 

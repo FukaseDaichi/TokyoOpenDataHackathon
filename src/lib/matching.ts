@@ -24,6 +24,17 @@ export function bestMatch(user: AxisVector, wards: Ward[]): Ward {
   return rankMatches(user, wards)[0].ward;
 }
 
+export function rankDiagnosisMatches(
+  user: AxisVector,
+  wards: Ward[],
+  resultCode: string,
+): MatchResult[] {
+  const ranked = rankMatches(user, wards);
+  const winnerIndex = ranked.findIndex((match) => match.ward.code === resultCode);
+  if (winnerIndex <= 0) return ranked;
+  return [ranked[winnerIndex], ...ranked.slice(0, winnerIndex), ...ranked.slice(winnerIndex + 1)];
+}
+
 /** 距離→「にてる度」%（0距離=100%、5軸最大距離で0%へ線形） */
 export function similarityPercent(distance: number): number {
   const maxD = Math.sqrt(5 * 4); // 各軸差 ±2 の理論最大
