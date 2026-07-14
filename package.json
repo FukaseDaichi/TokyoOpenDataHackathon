@@ -9,7 +9,8 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "build:diagnosis": "vite-node scripts/build-diagnosis-assignments.ts",
-    "build:images": "node scripts/build-hero-images.mjs"
+    "build:images": "node scripts/build-hero-images.mjs",
+    "build:og": "node scripts/build-og-images.mjs"
   },
   "dependencies": {
     "@react-three/fiber": "^9.0.0",

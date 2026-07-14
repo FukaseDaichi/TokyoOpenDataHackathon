@@ -20,6 +20,7 @@ npm run dev
 | `npm run test:watch` | `vitest` | 監視テスト |
 | `npm run build` | `next build` | 型検査を含む静的ビルド、`out/` 出力 |
 | `npm run build:images` | `node scripts/build-hero-images.mjs` | キャラクターWebP生成 |
+| `npm run build:og` | `node scripts/build-og-images.mjs` | OGP用JPEG生成（`assets/og/*.png` → `public/og/*.jpg`） |
 | `npm run start` | `next start` | package上は存在するが、静的エクスポートの配信手順には使わない |
 
 モーダル用画像とタイトルの生成はpackage scriptsに登録されていないため、直接実行する。
@@ -29,7 +30,7 @@ node scripts/build-modal-images.mjs
 node scripts/build-title.mjs
 ```
 
-OGP画像はスクリプトで生成しない。AIで作成した原本を `assets/og/{slug}.png` に置き、1200×630のPNGへ加工して `public/og/{slug}.png` に配置する（[05-frontend-rendering-design.md](05-frontend-rendering-design.md) を参照）。
+OGPの原本はスクリプトで合成しない。AIで作成した原本を `assets/og/{slug}.png` に置き、`npm run build:og` で1200×630のJPEGへ加工して `public/og/{slug}.jpg` に配置する（[05-frontend-rendering-design.md](05-frontend-rendering-design.md) を参照）。
 
 ## 3. テスト構成
 

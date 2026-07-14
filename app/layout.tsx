@@ -3,11 +3,24 @@ import FirstLoad from '../src/ui/FirstLoad';
 import './globals.css';
 import './zukan.css';
 
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
+
 export const metadata: Metadata = {
   title: 'うちの区ちゃん',
   description:
     '東京23区をオープンデータで性格分類し擬人化。10問の診断で、あなたに一番似ている区ちゃんに出会える図鑑。',
   applicationName: 'うちの区ちゃん',
+  ...(SITE_URL && { metadataBase: new URL(SITE_URL) }),
+  openGraph: {
+    type: 'website',
+    siteName: 'うちの区ちゃん',
+    locale: 'ja_JP',
+    title: 'うちの区ちゃん',
+    description:
+      '東京23区をオープンデータで性格分類し擬人化。10問の診断で、あなたに一番似ている区ちゃんに出会える図鑑。',
+    images: [{ url: '/og/home.jpg', width: 1200, height: 630, alt: 'うちの区ちゃん — 東京23区擬人化図鑑' }],
+  },
+  twitter: { card: 'summary_large_image' },
   manifest: '/favicon/site.webmanifest',
   icons: {
     icon: [

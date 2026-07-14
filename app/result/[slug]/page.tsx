@@ -10,12 +10,18 @@ export function generateStaticParams() {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const ward = HERO_WARDS.find((w) => w.id === SLUG_TO_CODE[slug])!;
-  const site = process.env.NEXT_PUBLIC_SITE_URL;
   return {
     title: `${ward.name}ちゃんタイプ | うちの区ちゃん`,
     description: `診断結果: あなたは${ward.name}ちゃんタイプ。${ward.catch}`,
-    ...(site && { metadataBase: new URL(site) }),
-    openGraph: { images: [`/og/${slug}.png`], title: `${ward.name}ちゃんタイプ`, description: ward.catch },
+    // layoutのopenGraphは継承されず丸ごと置き換わるため、siteName等もここで指定する
+    openGraph: {
+      type: 'website',
+      siteName: 'うちの区ちゃん',
+      locale: 'ja_JP',
+      title: `あなたは${ward.name}ちゃんタイプ！`,
+      description: `${ward.catch} — 10問診断であなたに一番似ている区ちゃんが見つかる`,
+      images: [{ url: `/og/${slug}.jpg`, width: 1200, height: 630, alt: `${ward.name}ちゃん` }],
+    },
     twitter: { card: 'summary_large_image' },
   };
 }

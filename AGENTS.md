@@ -28,8 +28,9 @@ cp data/processed/ward-details.json src/data/ward-details.json
 cp data/processed/ward-geo.json src/data/ward-geo.json
 npm run build:diagnosis
 
-# 画像再生成（OGPは対象外。下記「重要な実装制約」を参照）
+# 画像再生成（OGP原本は生成しない。下記「重要な実装制約」を参照）
 npm run build:images
+npm run build:og
 node scripts/build-title.mjs
 ```
 
@@ -58,7 +59,7 @@ node scripts/build-title.mjs
 - WebGL非対応、reduced motion、Canvas初期化失敗時の2D導線を維持する。
 - UIコピーは日本語。区の表現は中立・前向きにし、地域スティグマにつながる否定的ラベルを避ける。
 - `NEXT_PUBLIC_SITE_URL` 未設定でもビルドは通るがOGPが壊れるため、本番ビルドでは必須とする。
-- OGP画像はコード合成しない。生成AIに依頼して作成した原本を `assets/og/{slug}.png` に置き、1200×630のPNGへ加工して `public/og/{slug}.png` に配置する。プロンプトは [docs/strategy/og-image-prompts.md](docs/strategy/og-image-prompts.md) にある。
+- OGP画像はコード合成しない。生成AIに依頼して作成した原本を `assets/og/{slug}.png`（トップ用は `home.png`）に置き、`npm run build:og` で1200×630のJPEGへ加工して `public/og/{slug}.jpg` に配置する。プロンプトは [docs/strategy/og-image-prompts.md](docs/strategy/og-image-prompts.md) にある。
 
 ## データ更新時の不変条件
 
