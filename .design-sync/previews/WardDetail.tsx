@@ -1,4 +1,4 @@
-import { WardDetail, loadWards } from 'kuchan-shindan-zukan';
+import { WardDetail, loadWards } from 'uchinokuchan';
 
 const wards = loadWards();
 const suginami = wards.find((w) => w.name === '杉並区')!;

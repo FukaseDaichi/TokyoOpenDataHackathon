@@ -1,4 +1,4 @@
-import { StatBar } from 'kuchan-shindan-zukan';
+import { StatBar } from 'uchinokuchan';
 
 // StatBarは羊皮紙（.ward-detail）上で使う想定なので、実アプリと同じ羊皮紙トーンで包む
 const Parchment = ({ children }: { children?: any }) => (

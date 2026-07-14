@@ -1,7 +1,7 @@
 {
   "projectId": "88ed2aba-05a7-45a8-bef8-dac106f9858e",
   "shape": "package",
-  "pkg": "kuchan-shindan-zukan",
+  "pkg": "uchinokuchan",
   "globalName": "KuchanDS",
   "entry": ".design-sync/ds-entry.ts",
   "buildCmd": "cat app/globals.css app/zukan.css > .design-sync/styles-entry.css",

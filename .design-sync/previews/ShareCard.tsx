@@ -1,4 +1,4 @@
-import { ShareCard, loadWards } from 'kuchan-shindan-zukan';
+import { ShareCard, loadWards } from 'uchinokuchan';
 
 const wards = loadWards();
 const shibuya = wards.find((w) => w.name === '渋谷区')!;

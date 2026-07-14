@@ -253,8 +253,8 @@ Style: high-quality anime gacha-game splash art, vivid saturated colors, dramati
 Negative: no extra text, no logo, no watermark, no multiple characters, no plain white background, no empty gradient background, no tiny character, no redesigned outfit, no missing props, no wrong spelling.
 
 Character: Setagaya — the gentle big sister of the largest family in Tokyo, unhurried, caring, always with room for one more. Milk-tea beige long wavy hair loosely braided over one shoulder, soft smiling eyes, long relaxed cardigan over a spring dress, wicker picnic basket, a hand-knit scarf trailing in the breeze.
-Pose direction: top-down bird's-eye drone shot looking straight down — she lies back gently on a picnic blanket on the grass, hair fanned out in soft waves around her head, one hand holding her hat, a colorful kite floating between her and the camera casting a playful shadow across the lawn.
-Background: wide afternoon park with families picnicking as soft bokeh, suburban rooftops and green trees; a calm grass area on the left side holds the title.
+Pose direction: do NOT reuse the reference image's top-down lying-on-the-picnic-blanket pose with a kite overhead — invent a distinctly different, bolder action instead. Ground-level side tracking shot through the grass blades: she runs laughing across the sunlit lawn pulling a kite string taut over her shoulder, caught mid-stride with her skirt and braid swept back, straw hat held to her head with the other hand, the hand-knit scarf and picnic blanket corner lifting in her wake.
+Background: the kite climbing high into the warm afternoon sky ahead of her, families picnicking as soft bokeh beyond the running line, suburban rooftops and green treetops rimmed with golden light; the open sky on the left holds the title.
 Palette: cream, milk-tea beige, sage green.
 ```
 
@@ -273,8 +273,8 @@ Style: high-quality anime gacha-game splash art, vivid saturated colors, dramati
 Negative: no extra text, no logo, no watermark, no multiple characters, no plain white background, no empty gradient background, no tiny character, no redesigned outfit, no missing props, no wrong spelling.
 
 Character: Shibuya — the trendsetter at the center of the world's busiest crossing, free, loud and impossible to ignore. Pink-to-cyan gradient hair in an asymmetric cut, glitter makeup, mixed street fashion — cropped neon jacket, layered accessories, platform sneakers, holographic phone in hand.
-Pose direction: low fisheye-style dynamic shot from knee height — sprinting across the scramble crossing mid-stride toward the camera, jacket flying open, pointing forward at the viewer with a fearless grin; the buildings curve around the frame edges and motion trails of neon light follow her.
-Background: Shibuya scramble at night — giant glowing video billboards, crowds as streaks of light; a darker billboard glow on the left keeps the title punchy and readable.
+Pose direction: do NOT reuse the reference image's low fisheye shot sprinting toward the camera and pointing at the viewer — invent a distinctly different, bolder action instead. Bird's-eye aerial shot from directly above the scramble crossing: she is the still center of the storm, caught mid-spin in a dance move on the white zebra stripes, one arm flung out and the holographic phone raised high like a mirror ball, jacket flared in a full circle, looking straight up at the camera with a fearless grin.
+Background: the crowd streams around her as long-exposure streaks of light radiating outward, the zebra stripes and neon billboard reflections turning the pavement into a glowing stage; a darker sweep of asphalt on the left keeps the title punchy and readable.
 Palette: magenta, cyan, electric yellow.
 ```
 
@@ -293,8 +293,8 @@ Style: high-quality anime gacha-game splash art, vivid saturated colors, dramati
 Negative: no extra text, no logo, no watermark, no multiple characters, no plain white background, no empty gradient background, no tiny character, no redesigned outfit, no missing props, no wrong spelling.
 
 Character: Nakano — a laid-back subculture girl connoisseur living her best solo life, surrounded by treasures only she understands. Ash-gray messy medium hair, sharp knowing eyes behind the glow of a screen, oversized hoodie with retro game patches, chunky headphones around neck, handheld console in one hand.
-Pose direction: tilted top-down shot — she leans back mid-float above her cushion in zero-gravity ease, one leg kicked up, console raised in victory as orbiting figures, capsule toys, manga volumes and glowing UI windows spiral around her in a dynamic ring.
-Background: a dim room at night lit by shelf LEDs and a CRT glow, walls of collectibles in loving chaos; a soft dark gradient on the left gives the title space.
+Pose direction: do NOT reuse the reference image's tilted top-down shot of her sitting on a cushion surrounded by a ring of collectibles — invent a distinctly different, bolder action instead. Low ground-level shot down a narrow collector's arcade aisle in hard one-point perspective: she slides in on her knees toward the camera, arm stretched to snatch a rare figure box off the bottom shelf a heartbeat before it topples, hoodie ballooning, headphones slipping off her neck, handheld console skidding beside her, a triumphant grin breaking through her cool.
+Background: towering display shelves of figures, capsule machines and manga converge to a glowing vanishing point behind her, price tags and a couple of capsule toys knocked into the air by the slide, warm LED and CRT glow pooling on the floor; the darker shelf wall on the left gives the title space.
 Palette: ash gray, warm amber, LED cyan.
 ```
 
@@ -313,8 +313,8 @@ Style: high-quality anime gacha-game splash art, vivid saturated colors, dramati
 Negative: no extra text, no logo, no watermark, no multiple characters, no plain white background, no empty gradient background, no tiny character, no redesigned outfit, no missing props, no wrong spelling.
 
 Character: Suginami — a mellow bookish girl musician who found the perfect quiet street to live slow and deep. Olive-green soft shoulder-length hair tucked behind one ear, calm gentle eyes, loose vintage shirt with a corduroy jacket, canvas tote full of paperbacks, acoustic guitar.
-Pose direction: caught at the emotional peak of a song — rising off her stool under the arcade lamp, leaning back with the final strum, hair swinging, glowing musical notes bursting upward in a diagonal stream, a cat startled mid-leap beside her.
-Background: a quiet retro arcade street after closing time, shuttered shops with warm lamplight pools receding into depth; the dark arcade left side carries the title in warm light.
+Pose direction: do NOT reuse the reference image's sitting-on-a-stool-playing-guitar pose in the arcade — invent a distinctly different, bolder action instead. Low dutch-angle shot from the paving stones: she has kicked the stool over behind her and leaps into the air at the final chord, guitar thrust skyward in one hand, body arched back in a hard diagonal, corduroy jacket and olive hair flying, the canvas tote spilling paperbacks that hang weightless around her, the cat springing after a trailing page.
+Background: the retro arcade's lamp rows rushing away in steep perspective below her, glowing musical notes exploding outward from the raised guitar like fireworks, shuttered shops washed in warm light; the dark upper arcade vault on the left carries the title in warm light.
 Palette: olive, amber, lamplight gold.
 ```
 
@@ -333,8 +333,8 @@ Style: high-quality anime gacha-game splash art, vivid saturated colors, dramati
 Negative: no extra text, no logo, no watermark, no multiple characters, no plain white background, no empty gradient background, no tiny character, no redesigned outfit, no missing props, no wrong spelling.
 
 Character: Toshima — a small explosive city kid who turned the densest concrete jungle into her personal playground, never runs out of energy. Vivid yellow twin-tails with black inner color, huge sparkling eyes, sporty oversized streetwear in yellow and black, sneakers with LED soles, a small owl companion perched on her shoulder.
-Pose direction: extreme vertical shot from street level directly below — she leaps across the gap between rooftops high overhead, framed against the sliver of sky between the towers, grinning down at the camera, cap held tight, legs kicked up mid-jump, her owl diving alongside.
-Background: densely packed Ikebukuro buildings and signs closing in on all sides, laundry lines and rooftop gardens as her 'parks'; the deepest slice of sky sits left for the title.
+Pose direction: do NOT reuse the reference image's extreme low-angle shot from the street looking up at her leaping between rooftops — invent a distinctly different, bolder action instead. High-angle rooftop tracking shot looking down past her into the street canyon: she sprints full-tilt along the very edge of a rooftop parapet toward the camera, planting one hand on a railing to vault it, twin-tails and jacket snapping sideways, LED soles flashing, her owl diving in a spiral below her against the dizzying drop of signs and streets.
+Background: the dense Ikebukuro canyon plunging away beneath the parapet, rooftop gardens, water tanks and laundry lines racing past in motion blur, sunlight flaring off distant towers; the bright open sky band across the upper-left holds the title.
 Palette: vivid yellow, black, sky blue.
 ```
 
@@ -353,8 +353,8 @@ Style: high-quality anime gacha-game splash art, vivid saturated colors, dramati
 Negative: no extra text, no logo, no watermark, no multiple characters, no plain white background, no empty gradient background, no tiny character, no redesigned outfit, no missing props, no wrong spelling.
 
 Character: Kita — a warm-hearted girl raised by her grandmother, keeper of Showa-era warmth, croquettes and cherry blossoms by the train tracks. Brick-red bob hair with a retro flower pin, round warm eyes, vintage-style sailor blouse with a hand-me-down cardigan, paper bag of fresh croquettes hugged to her chest.
-Pose direction: leaning far out of a moving retro tram window waving with her whole arm, hair, scarf and cherry petals streaming backward with the motion, one croquette almost escaping the bag; side tracking shot with warm lens glow.
-Background: a Showa-era shopping street and cherry trees rolling past at golden dusk with gentle motion blur and film-grain nostalgia; the blurred street on the left holds the title.
+Pose direction: do NOT reuse the reference image's leaning-out-of-the-tram-window waving pose in a side tracking shot — invent a distinctly different, bolder action instead. Low frontal shot from the foot of a pedestrian footbridge over the tracks: she leaps down the last three steps toward the camera in one joyful bound, both feet off the stairs, cardigan and low twin-tails lifted by the jump, hugging the paper bag of croquettes safe against her chest as one croquette pops free and she catches it mid-air with her free hand.
+Background: the retro tram sliding past beneath the footbridge behind her, cherry trees showering petals down the staircase like confetti, a Showa-era shopping street glowing at golden dusk with warm film-grain nostalgia; the soft dusk sky above the tracks on the left holds the title.
 Palette: brick red, sakura pink, dusk gold.
 ```
 
@@ -373,8 +373,8 @@ Style: high-quality anime gacha-game splash art, vivid saturated colors, dramati
 Negative: no extra text, no logo, no watermark, no multiple characters, no plain white background, no empty gradient background, no tiny character, no redesigned outfit, no missing props, no wrong spelling.
 
 Character: Arakawa — a modest, endlessly family-minded girl whose small acts of care are her greatest treasure. Cream-blonde gentle low twin-tails with ribbon, kind humble smile, simple hand-sewn apron dress in cream and sky blue, holding a beautifully packed homemade bento wrapped in cloth.
-Pose direction: low child's-eye camera — she springs up from the tram-stop bench toward the camera, holding the bento out with both hands and a burst of a smile, ribbon and apron fluttering, rose petals from the trackside swirling around her.
-Background: a cute retro streetcar approaching along rose-lined tracks in soft morning light, quiet downtown waking up; the soft morning sky on the left carries the title.
+Pose direction: do NOT reuse the reference image's sitting-on-the-bench pose offering the bento toward a child's-eye camera — invent a distinctly different, bolder action instead. Side tracking shot at platform height: she dashes along the rose-lined track path chasing the departing streetcar, caught mid-stride in full profile, holding the cloth-wrapped bento high overhead with both hands as if to say "you forgot your lunch!", ribbon, apron ties and a swirl of rose petals streaming straight back with her sprint.
+Background: the cute retro streetcar pulling away just ahead of her with a passenger leaning out to reach back, roses blurring along the fence line, quiet downtown rooftops waking in soft morning light; the pale morning sky on the left carries the title.
 Palette: cream, sky blue, rose pink.
 ```
 
@@ -393,8 +393,8 @@ Style: high-quality anime gacha-game splash art, vivid saturated colors, dramati
 Negative: no extra text, no logo, no watermark, no multiple characters, no plain white background, no empty gradient background, no tiny character, no redesigned outfit, no missing props, no wrong spelling.
 
 Character: Itabashi — the dependable neighborhood big sister in a jersey, humble on the surface, quietly mature and steady inside. Greenish-black hair in a sporty high ponytail, easygoing reliable smile, classic green-line jersey worn open over a tee, sports towel, carrying overflowing shopping bags from the local arcade in both arms.
-Pose direction: low tracking shot from near the ground — mid-stride power-walk through a shopping street at evening, kids running alongside her as blurred silhouettes, one bag balanced on her shoulder, the pavement rushing past in the blurred foreground.
-Background: a lively evening shotengai with a sento chimney and rising bath steam behind, paper flyers fluttering; warm shop lights blur left into space for the title.
+Pose direction: do NOT reuse the reference image's low frontal walking shot with shopping bags and kids running alongside — invent a distinctly different, bolder action instead. High three-quarter crane shot from above the shop awnings: she coasts down the gentle slope of the shotengai standing on the pedals of an old delivery bicycle, basket piled with overflowing shopping bags, one arm out wide for balance with the sports towel snapping like a banner, jersey flying open, glancing back over her shoulder to laugh at the kids pedaling hard to keep up.
+Background: the evening shotengai streaming past below in warm motion blur, the sento chimney puffing bath steam into the dusk sky ahead, paper flyers spiraling up in her slipstream; the soft steam-lit sky on the left leaves space for the title.
 Palette: jersey green, warm brown, steam white.
 ```
 
@@ -413,8 +413,8 @@ Style: high-quality anime gacha-game splash art, vivid saturated colors, dramati
 Negative: no extra text, no logo, no watermark, no multiple characters, no plain white background, no empty gradient background, no tiny character, no redesigned outfit, no missing props, no wrong spelling.
 
 Character: Nerima — the eldest daughter of a big family, half farmer half anime nerd, takes care of everyone with a huge open smile. Yellow-green tousled twin braids under a pushed-back straw hat, bright friendly eyes, work overalls with one strap down over an anime-print tee, watering can in one hand, a cabbage under the other arm.
-Pose direction: low-angle shot from between the cabbage leaves looking up at her against the wide open sky — mid-laugh, watering can raised high as droplets catch the light like sparkles, strips of anime film spiraling around her in the wind.
-Background: neat vegetable fields meeting suburban homes, an anime studio building in the distance, drifting clouds; the wide blue sky on the left holds the title.
+Pose direction: do NOT reuse the reference image's low-angle shot from the cabbage field looking up at her with the watering can raised — invent a distinctly different, bolder action instead. Top-down bird's-eye shot from directly above the field rows: she spins on one heel between the green furrows and hurls a cabbage straight up at the camera like a game-winning pass, the cabbage huge and sharp in the foreground, her laughing face and overalls foreshortened below it, straw hat knocked loose and hanging by its cord, strips of anime film coiling around her in the updraft.
+Background: the vegetable rows fanning out beneath her as bold graphic stripes of green and soil, watering-can droplets scattered mid-air catching the sun, suburban homes and the anime studio tiny at the field's edge; a calm stretch of field rows on the left holds the title.
 Palette: yellow-green, sky blue, straw gold.
 ```
 
@@ -433,8 +433,8 @@ Style: high-quality anime gacha-game splash art, vivid saturated colors, dramati
 Negative: no extra text, no logo, no watermark, no multiple characters, no plain white background, no empty gradient background, no tiny character, no redesigned outfit, no missing props, no wrong spelling.
 
 Character: Adachi — the gentle-hearted big-sister boss (anego) of downtown, twisted headband, big laugh, everyone's protector on fireworks night. Sunset-orange wild long hair swept back with a navy twisted hachimaki, broad fearless grin, open festival vest over a summer yukata tied boldly, strong athletic build, a paper fan tucked in her obi belt.
-Pose direction: heroic super-low angle — she throws one fist to the sky as the biggest firework bursts, laughing head-back, vest and hair blasted sideways by the shockwave, sparks reflecting in her eyes; stance wide and unshakable on the riverbank grass.
-Background: massive fireworks blooming over the Arakawa river at night, families on picnic sheets below as warm silhouettes, festival stalls glowing; the dark river sky on the left carries the title between bursts.
+Pose direction: do NOT reuse the reference image's heroic low-angle standing pose watching the fireworks with arms crossed or a fist raised — invent a distinctly different, bolder action instead. High crane shot from over the river looking back at the bank: she charges down the grassy levee slope in a wild diagonal sprint, one arm sweeping the paper fan forward like a general's signal and the other pulling a laughing kid along by the hand, yukata hem and open vest streaming behind her, sandals barely touching the grass.
+Background: the biggest firework of the night erupting directly behind the levee crest above her, its light rolling down the slope across families on picnic sheets as warm silhouettes, festival stalls glowing along the water; the dark river surface on the left carries the title between reflected bursts.
 Palette: sunset orange, navy, firework gold.
 ```
 
@@ -453,8 +453,8 @@ Style: high-quality anime gacha-game splash art, vivid saturated colors, dramati
 Negative: no extra text, no logo, no watermark, no multiple characters, no plain white background, no empty gradient background, no tiny character, no redesigned outfit, no missing props, no wrong spelling.
 
 Character: Katsushika — a wandering free-spirited girl with the deepest family bonds in Tokyo, a Tora-san-inspired charmer who always comes home. Warm brown slightly wavy hair under a classic fedora-style hat, crinkled smiling eyes, retro checked jacket over a haramaki belly band, old leather travel trunk in one hand.
-Pose direction: cinematic crane shot from slightly above and behind — she spins back toward the camera mid-stride on the riverbank path, hat caught in one hand as the wind takes it, trunk swinging wide, coat and long grass swept in one motion, big fond grin and a raised farewell hand.
-Background: the Shibamata riverside at dusk, an old temple street with lanterns lighting up, a family waving from afar, her shadow stretching long across the path; the dusk sky on the left holds the title.
+Pose direction: do NOT reuse the reference image's crane shot from behind of her turning back and waving on the riverbank path — invent a distinctly different, bolder action instead. Low water-level shot from out on the river, slight dutch angle: she takes a flying leap from the wooden pier onto the small departing ferry boat, caught mid-air above the gap, trunk swung wide in one hand, the other pressing her fedora down against the wind, coat tails and river spray flung upward, laughing with her whole face.
+Background: the old boatman steadying the rocking ferry with his pole in the lower frame, the pier and her waving family shrinking behind her, the Shibamata temple street lighting its lanterns along the dusk shoreline, ripples spreading gold across the water; the open dusk sky on the left holds the title.
 Palette: warm brown, retro gold, dusk orange.
 ```
 
@@ -473,8 +473,8 @@ Style: high-quality anime gacha-game splash art, vivid saturated colors, dramati
 Negative: no extra text, no logo, no watermark, no multiple characters, no plain white background, no empty gradient background, no tiny character, no redesigned outfit, no missing props, no wrong spelling.
 
 Character: Edogawa — the youngest of the whole 23-ward family, a little tomboy gang-leader girl of the great outdoors with the biggest park kingdom in Tokyo. Vivid green unruly short twin-tails with a big leaf perched on top like a crown, sparkling mischievous eyes, tank top and shorts with a net over her shoulder, insect cage on her hip, band-aid on one cheek, a little penguin buddy running beside her.
-Pose direction: super-wide-angle shot sprinting straight at the camera across a huge sunlit lawn, net swung high, grass and butterflies exploding around her, penguin flapping behind; ground-level action shot.
-Background: an endless green park under a brilliant blue summer sky, giant ferris wheel and water fountains in the distance; the open lawn-and-sky left side carries the title.
+Pose direction: do NOT reuse the reference image's ground-level shot of her sprinting straight at the camera with the net raised — invent a distinctly different, bolder action instead. High-angle shot from directly above the lawn: she launches into a full-stretch horizontal dive after a giant swallowtail butterfly, body flying flat above the grass with the net swung out at maximum reach, twin-tails and net mesh trailing, tongue-out grin of total commitment, her penguin buddy tumbling head-over-heels beside her in the same dive.
+Background: the sunlit lawn spreading below like a green ocean with grass blades and clover exploding outward from her dive path, butterflies scattering in a sparkling spiral, the giant ferris wheel and fountains tiny at the frame edge; a calm sweep of open lawn on the left carries the title.
 Palette: vivid green, summer blue, sun white.
 ```
 

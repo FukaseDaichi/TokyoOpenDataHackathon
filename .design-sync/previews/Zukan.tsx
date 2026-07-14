@@ -1,4 +1,4 @@
-import { Zukan } from 'kuchan-shindan-zukan';
+import { Zukan } from 'uchinokuchan';
 
 // 23区すべてのカードを図鑑グリッドで表示（クリックで onSelect(ward) が呼ばれる）
 export const Grid = () => (

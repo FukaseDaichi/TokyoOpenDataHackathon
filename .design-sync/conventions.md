@@ -33,7 +33,7 @@ All content is real open data — never fabricate ward stats. Get wards from the
 
 ```tsx
 import { Zukan, WardDetail, Radar, StatBar, ShareCard, Diagnosis,
-         loadWards, wardTheme, ssrImage, xShareUrl, DATA_SOURCES } from 'kuchan-shindan-zukan';
+         loadWards, wardTheme, ssrImage, xShareUrl, DATA_SOURCES } from 'uchinokuchan';
 
 const wards = loadWards();                 // 23 wards: {code, name, axes, group, metrics}
 const w = wards.find((x) => x.name === '渋谷区')!;
