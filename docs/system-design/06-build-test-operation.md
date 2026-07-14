@@ -2,7 +2,7 @@
 
 ## 1. 開発環境
 
-Node.js依存関係は `package-lock.json` を使って再現する。Python集計はPython 3を使い、基本データ生成だけ `openpyxl` を必要とする。画像生成はNode.js依存のSharpを使う。
+Node.js依存関係は `package-lock.json` を使って再現する。Python集計はPython 3を使い、`build_wards.py` と `build_details.py` が `openpyxl` を必要とする。`build_geo.py` はPython標準ライブラリだけを使う。画像生成はNode.js依存のSharpを使う。
 
 ```bash
 npm install
@@ -19,6 +19,7 @@ npm run dev
 | `npm test` | `vitest run` | 全単体テスト |
 | `npm run test:watch` | `vitest` | 監視テスト |
 | `npm run build` | `next build` | 型検査を含む静的ビルド、`out/` 出力 |
+| `npm run build:diagnosis` | `vite-node scripts/build-diagnosis-assignments.ts` | 全回答パターンの校正済み診断割り当てを再生成 |
 | `npm run build:images` | `node scripts/build-hero-images.mjs` | キャラクターWebP生成 |
 | `npm run build:og` | `node scripts/build-og-images.mjs` | OGP用JPEG生成（`assets/og/*.png` → `public/og/*.jpg`） |
 | `npm run start` | `next start` | package上は存在するが、静的エクスポートの配信手順には使わない |
@@ -60,7 +61,7 @@ NEXT_PUBLIC_SITE_URL=https://<公開ホスト> npm run build
 データまたは画像を変更した場合は、追加で次を確認する。
 
 - `data/processed/*.json` と `src/data/*.json` が一致する（`ward-geo.json` を含む）。
-- 23区すべてに512px・896pxのWebPとOGP PNGが存在する。
+- 23区すべてにキャラクター原本PNG、512px・896pxのWebP、OGP原本PNG、配信用OGP JPEGが存在し、トップ用 `home.png` / `home.jpg` も存在する。
 - `?view=high`、`?view=low`、`?view=2d` で主要導線が動く。ヒーローに加え、区詳細ページの「東京のどこにいる？」地図も3D/2Dが切り替わることを確認する。
 - `/result/{slug}/` と `/ward/{slug}/` の代表ページを直接開ける。
 - X共有画面へ渡すURLとOGPが公開ホストを指す。

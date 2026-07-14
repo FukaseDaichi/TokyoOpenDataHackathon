@@ -8,12 +8,12 @@
 
 ```mermaid
 flowchart LR
-  Raw["公式オープンデータ\nCSV / XLSX"] --> Py["Python集計"]
+  Raw["公式オープンデータ\nCSV / XLSX / TopoJSON"] --> Py["Python集計"]
   Py --> Processed["data/processed\n検証・確認用生成物"]
   Processed --> Snapshot["src/data\nアプリ同梱JSON"]
-  Assets["キャラクター原本 PNG"] --> Sharp["Sharp画像生成"]
+  Assets["キャラクター・タイトル等の原本 PNG"] --> Sharp["Sharp画像変換"]
   Sharp --> Public["public\nWebP / OGP"]
-  OgArt["AI作成OGP原本 PNG"] --> Public
+  OgArt["AI作成OGP原本 PNG"] --> Sharp
   Snapshot --> Next["Next.js 静的ビルド"]
   Public --> Next
   Next --> Out["out/ 静的サイト"]

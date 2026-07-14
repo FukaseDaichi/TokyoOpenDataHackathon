@@ -112,7 +112,7 @@ similarity = round(max(0, 1 - distance / √20) × 100)
 | 型 | 定義箇所 | 内容 |
 |---|---|---|
 | `WardGeo` | `src/data/geo.ts` | 区境界（外周リングのみ、面積降順）、重心、面積。地図描画専用で診断ロジックからは独立 |
-| `WardDetails` | `src/data/details.ts` | 地価、人口、平均所得、外国人人口比率、主要駅、人口千人当たり刑法犯認知件数、待機児童数。人口と地価以外は指標ごと欠落しうる任意フィールド |
-| `WardProfile` | `src/data/policies.ts` | 区の花・木・鳥（各項目は複数指定に対応する配列）、区章、政策キュレーション（`policies[]`、最大5件）。`src/data/ward-policies.json` を手編集する唯一の非生成データ |
+| `WardDetails` | `src/data/details.ts` | 地価、人口、平均所得、外国人人口比率、主要駅、人口千人当たり刑法犯認知件数、待機児童数。型上は人口と地価以外が任意で、現在のスナップショットは主要駅を除く全項目を23区分持つ |
+| `WardProfile` | `src/data/policies.ts` | 区の花・木・鳥（各項目は複数指定に対応する配列）と政策キュレーション（`policies[]`、最大5件）。`src/data/ward-policies.json` を直接手編集する非生成データ |
 
-`WardMetrics` のような23区必須の集計値と異なり、`WardProfile` は区ごとに収録状況が異なってよい設計であり、未収録区は `loadWardProfile()` が `null` を返し、該当UIセクションを非表示にする。
+現在の `ward-policies.json` は23区すべてにプロフィールと政策を収録している。ただし型とローダーは部分収録を許容し、未知または未収録の区では `loadWardProfile()` が `null` を返す。花・木・鳥の各項目も任意で、未制定・未収録の項目だけをUIから省く。区章は `WardProfile` ではなく、slugに対応する `public/emblems/{slug}.svg` を区詳細ページが直接参照する。
