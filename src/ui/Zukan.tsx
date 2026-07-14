@@ -32,6 +32,11 @@ export function Zukan({ onSelect }: { onSelect: (w: Ward) => void }) {
                 loading="lazy"
                 width={512}
                 height={768}
+                onLoad={(e) => e.currentTarget.classList.add('is-loaded')}
+                ref={(el) => {
+                  // キャッシュ済みでonLoadがハイドレーション前に発火済みのケースを拾う
+                  if (el?.complete) el.classList.add('is-loaded');
+                }}
               />
             ) : (
               <span className="zukan-card-img zukan-card-placeholder" aria-hidden="true" />

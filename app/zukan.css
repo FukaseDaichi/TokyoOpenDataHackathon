@@ -90,12 +90,33 @@
 
 .zukan-card-img {
   width: 100%;
+  /* height属性(768)の presentational hint に勝たせ、aspect-ratioで高さを決める */
+  height: auto;
   aspect-ratio: 2 / 3;
   object-fit: cover;
   border-radius: 6px;
   border: 1px solid rgba(184, 146, 63, 0.6);
   background: radial-gradient(circle at 50% 36%, #fff6e0 0%, #e5d0a4 100%);
   display: block;
+}
+
+/* 読み込み中は羊皮紙色の下地（background）が見え、完了時にフェードインさせて
+   ポップインを防ぐ。未ロード状態をopacity:0にするとChromiumがlazy画像を
+   「不可視」とみなし取得自体をスキップするため、完了時のアニメーション方式にする */
+html.uk-js .zukan-card-img.is-loaded {
+  animation: zukan-img-fade 0.3s ease;
+}
+
+@keyframes zukan-img-fade {
+  from {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html.uk-js .zukan-card-img.is-loaded {
+    animation: none;
+  }
 }
 
 .zukan-card-placeholder {

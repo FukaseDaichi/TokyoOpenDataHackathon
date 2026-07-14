@@ -18,3 +18,140 @@ body {
 button {
   font-family: inherit;
 }
+
+/* ===== 初回ロード演出（#first-load） =====
+   静的HTMLに含まれ、JSロード前から画面を覆う。
+   - 訪問済み（html.uk-revisit）なら即非表示
+   - 閉じるのは FirstLoad.tsx（プリロード完了 or 2秒）と inline script の4秒フォールバック */
+#first-load {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at 50% 42%, #2a1e12 0%, #1d140c 55%, #140e08 100%);
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+html.uk-revisit #first-load {
+  display: none;
+}
+
+#first-load.uk-fl-hide {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.uk-fl-inner {
+  text-align: center;
+}
+
+/* 開いた絵本。左右ページ＋中央でめくれる1枚 */
+.uk-fl-book {
+  position: relative;
+  width: 128px;
+  height: 88px;
+  margin: 0 auto 26px;
+  perspective: 480px;
+}
+
+.uk-fl-page {
+  position: absolute;
+  top: 6px;
+  width: 62px;
+  height: 78px;
+  background: linear-gradient(160deg, #f7ecd4 0%, #eeddb8 60%, #d9c290 100%);
+  border: 1.5px solid #b8923f;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
+}
+
+.uk-fl-page-left {
+  left: 1px;
+  border-radius: 8px 2px 2px 8px;
+  transform: rotateY(9deg);
+  transform-origin: right center;
+}
+
+.uk-fl-page-right {
+  right: 1px;
+  border-radius: 2px 8px 8px 2px;
+  transform: rotateY(-9deg);
+  transform-origin: left center;
+}
+
+.uk-fl-page-flip {
+  left: 50%;
+  margin-left: -1px;
+  width: 62px;
+  border-radius: 2px 8px 8px 2px;
+  transform-origin: left center;
+  animation: uk-fl-flip 1.8s ease-in-out infinite;
+  background: linear-gradient(160deg, #fff6e0 0%, #f2e3c0 60%, #e0ca9c 100%);
+}
+
+@keyframes uk-fl-flip {
+  0% {
+    transform: rotateY(-6deg);
+  }
+  55%,
+  70% {
+    transform: rotateY(-174deg);
+  }
+  100% {
+    transform: rotateY(-174deg);
+  }
+}
+
+.uk-fl-text {
+  color: #e8d5a8;
+  font-size: 15px;
+  letter-spacing: 0.18em;
+}
+
+.uk-fl-dots {
+  margin-top: 14px;
+}
+
+.uk-fl-dots span {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  margin: 0 5px;
+  border-radius: 50%;
+  background: #b8923f;
+  animation: uk-fl-dot 1.4s ease-in-out infinite;
+}
+
+.uk-fl-dots span:nth-child(2) {
+  animation-delay: 0.2s;
+}
+
+.uk-fl-dots span:nth-child(3) {
+  animation-delay: 0.4s;
+}
+
+@keyframes uk-fl-dot {
+  0%,
+  60%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  30% {
+    opacity: 1;
+    transform: translateY(-5px);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .uk-fl-page-flip {
+    animation: none;
+    transform: rotateY(-90deg);
+  }
+
+  .uk-fl-dots span {
+    animation: none;
+  }
+}

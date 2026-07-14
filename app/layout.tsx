@@ -1,4 +1,5 @@
 import type { Metadata, Viewport } from 'next';
+import FirstLoad from '../src/ui/FirstLoad';
 import './globals.css';
 import './zukan.css';
 
@@ -33,10 +34,39 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
+// 描画前に実行する初回判定スクリプト。
+// - JS有効の印（uk-js）を付け、画像フェードイン等のJS前提の演出をCSS側でゲートする
+// - 訪問済みなら uk-revisit を付け、ロード画面をCSSで即非表示にする
+// - ハイドレーション失敗時もロード画面が残り続けないよう4秒で強制フェードする
+const FIRST_LOAD_SCRIPT = `(function(){var d=document.documentElement;d.classList.add('uk-js');try{if(sessionStorage.getItem('uk-visited'))d.classList.add('uk-revisit')}catch(e){}setTimeout(function(){var el=document.getElementById('first-load');if(el)el.classList.add('uk-fl-hide')},4000)})();`;
+
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="ja">
-      <body>{children}</body>
+    <html lang="ja" suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: FIRST_LOAD_SCRIPT }} />
+      </head>
+      <body>
+        {/* 初回ロード演出。静的HTMLに含めることでJSロード前から画面を覆う。
+            閉じる処理は src/ui/FirstLoad.tsx（本命）と上記スクリプトの4秒フォールバック */}
+        <div id="first-load" aria-hidden="true">
+          <div className="uk-fl-inner">
+            <div className="uk-fl-book">
+              <span className="uk-fl-page uk-fl-page-left" />
+              <span className="uk-fl-page uk-fl-page-right" />
+              <span className="uk-fl-page uk-fl-page-flip" />
+            </div>
+            <p className="uk-fl-text">うちの区ちゃん図鑑をひらいています…</p>
+            <p className="uk-fl-dots">
+              <span />
+              <span />
+              <span />
+            </p>
+          </div>
+        </div>
+        <FirstLoad />
+        {children}
+      </body>
     </html>
   );
 }
