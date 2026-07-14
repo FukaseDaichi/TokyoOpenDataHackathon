@@ -21,6 +21,11 @@ describe('ResultPage', () => {
     render(<ResultPage slug="minato" />);
     expect(screen.getByText(/相性ランキング/)).toBeInTheDocument();
     expect(screen.getByText(/Xで結果をシェアする/)).toBeInTheDocument();
+    expect(screen.getByRole('img', { name: '港区ちゃんの診断結果シェア画像' })).toHaveAttribute('src', '/og/minato.jpg');
+    expect(screen.getByText(/なぜ、このキャラクター/)).toBeInTheDocument();
+    expect(screen.getByText('昼夜間人口比率')).toBeInTheDocument();
+    expect(screen.getAllByRole('img', { name: /診断結果画像/ })).toHaveLength(3);
+    expect(screen.getByRole('link', { name: '港区ちゃんを詳しく見る' })).toHaveAttribute('href', '/ward/minato/');
   });
   it('shows visitor view when the saved result belongs to a different ward', () => {
     saveDiagnosis({ ...emptyVector(), luxury: 1 }, '13101');

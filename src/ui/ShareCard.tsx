@@ -26,6 +26,6 @@ export function ShareCard({ ward }: { ward: Ward }) {
 
 /** X（Twitter）シェアリンク。ユーザー自身のクリックで投稿画面を開くだけ。 */
 export function xShareUrl(ward: Ward, appUrl: string): string {
-  const text = `わたしに一番似ているのは「${ward.name}ちゃん」でした！ #うちの区ちゃん`;
+  const text = `「${ward.name}ちゃん」っぽいらしい。${wardTheme(ward.code).catch}\n#うちの区ちゃん\n#都知事杯オープンデータハッカソン`;
   return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(appUrl)}`;
 }
