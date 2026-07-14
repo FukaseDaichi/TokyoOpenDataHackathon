@@ -22,13 +22,14 @@ npm run dev
 | `npm run build:images` | `node scripts/build-hero-images.mjs` | キャラクターWebP生成 |
 | `npm run start` | `next start` | package上は存在するが、静的エクスポートの配信手順には使わない |
 
-モーダル用画像、タイトル、OGPの生成はpackage scriptsに登録されていないため、直接実行する。
+モーダル用画像とタイトルの生成はpackage scriptsに登録されていないため、直接実行する。
 
 ```bash
 node scripts/build-modal-images.mjs
 node scripts/build-title.mjs
-node scripts/build-og-images.mjs
 ```
+
+OGP画像はスクリプトで生成しない。AIで作成した原本を `assets/og/{slug}.png` に置き、1200×630のPNGへ加工して `public/og/{slug}.png` に配置する（[05-frontend-rendering-design.md](05-frontend-rendering-design.md) を参照）。
 
 ## 3. テスト構成
 
@@ -74,7 +75,14 @@ Cloudflare Pagesへ静的成果物を配信する。
 | Environment variable | `NEXT_PUBLIC_SITE_URL=https://<公開ホスト>` |
 | Runtime API / Functions | 使用しない |
 
-公開URLは末尾パスを含まないサイトルートを設定する。独自ドメインは必須ではなく、`*.pages.dev` を利用できる。
+公開URLは末尾パスを含まないサイトルートを設定する。現在の公開URLは `https://uchinokuchan.pages.dev` である。
+
+Wrangler CLIから直接デプロイする場合は次を実行する。
+
+```bash
+NEXT_PUBLIC_SITE_URL=https://uchinokuchan.pages.dev npm run build
+wrangler pages deploy out --project-name=uchinokuchan
+```
 
 ## 6. データ更新運用
 

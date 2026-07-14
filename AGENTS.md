@@ -1,6 +1,6 @@
 # AGENTS.md
 
-このファイルは、このリポジトリで作業するコーディングエージェント向けの現行ガイドである。
+このファイルは、このリポジトリで作業するコーディングエージェント向けの現行ガイドである。人間向けの概要・クイックスタート・デプロイ手順は [README.md](README.md) に置き、このファイルにはエージェントが作業判断に使う制約・不変条件・コマンドだけを置く。両者の内容は重複させず、役割を分ける。
 
 ## プロジェクト概要
 
@@ -14,7 +14,10 @@
 npm install
 npm run dev
 npm test
-NEXT_PUBLIC_SITE_URL=https://example.pages.dev npm run build
+
+# 本番ビルドとデプロイ（Cloudflare Pages）
+NEXT_PUBLIC_SITE_URL=https://uchinokuchan.pages.dev npm run build
+wrangler pages deploy out --project-name=uchinokuchan
 
 # データ再生成。build_wards.py / build_details.py は openpyxl が必要
 /usr/bin/python3 data/build_wards.py
@@ -25,10 +28,9 @@ cp data/processed/ward-details.json src/data/ward-details.json
 cp data/processed/ward-geo.json src/data/ward-geo.json
 npm run build:diagnosis
 
-# 画像再生成
+# 画像再生成（OGPは対象外。下記「重要な実装制約」を参照）
 npm run build:images
 node scripts/build-title.mjs
-node scripts/build-og-images.mjs
 ```
 
 ## アーキテクチャ
@@ -41,7 +43,7 @@ node scripts/build-og-images.mjs
 - `src/hero/` — スクロール連動3Dヒーロー、品質判定、2Dフォールバック
 - `data/raw/` — 取得した公式データ
 - `data/processed/` — Pythonジェネレーターの生成物。手編集しない
-- `assets/` — キャラクター・タイトル原本
+- `assets/` — キャラクター・タイトル・OGPの原本（`assets/og/` はAI作成のOGP原本）
 - `public/` — 配信用WebPとOGP
 - `out/` — `npm run build` の静的成果物。手編集しない
 
@@ -56,6 +58,7 @@ node scripts/build-og-images.mjs
 - WebGL非対応、reduced motion、Canvas初期化失敗時の2D導線を維持する。
 - UIコピーは日本語。区の表現は中立・前向きにし、地域スティグマにつながる否定的ラベルを避ける。
 - `NEXT_PUBLIC_SITE_URL` 未設定でもビルドは通るがOGPが壊れるため、本番ビルドでは必須とする。
+- OGP画像はコード合成しない。生成AIに依頼して作成した原本を `assets/og/{slug}.png` に置き、1200×630のPNGへ加工して `public/og/{slug}.png` に配置する。プロンプトは [docs/strategy/og-image-prompts.md](docs/strategy/og-image-prompts.md) にある。
 
 ## データ更新時の不変条件
 

@@ -13,6 +13,7 @@ flowchart LR
   Processed --> Snapshot["src/data\nアプリ同梱JSON"]
   Assets["キャラクター原本 PNG"] --> Sharp["Sharp画像生成"]
   Sharp --> Public["public\nWebP / OGP"]
+  OgArt["AI作成OGP原本 PNG"] --> Public
   Snapshot --> Next["Next.js 静的ビルド"]
   Public --> Next
   Next --> Out["out/ 静的サイト"]
@@ -29,7 +30,7 @@ flowchart LR
 | 3D描画 | Three.js / React Three Fiber | スクロール連動3Dヒーロー |
 | テスト | Vitest / Testing Library / jsdom | 純ロジックとReactコンポーネントの単体テスト |
 | データ集計 | Python 3 / openpyxl | CSV・XLSXから区別スナップショットを生成 |
-| 画像生成 | Node.js / Sharp | WebPとOGP画像を生成 |
+| 画像生成 | Node.js / Sharp | キャラクター・タイトルのWebPを生成。OGPはAI作成の原本を加工して配置する |
 | 配信 | Next.js `output: 'export'` / Cloudflare Pages | `out/` の静的配信 |
 
 依存バージョンの宣言は `package.json` と `package-lock.json`、TypeScript設定は `tsconfig.json`、テスト設定は `vitest.config.ts` を正とする。
@@ -61,9 +62,9 @@ flowchart TD
 | `src/hero/` | スクロール連動3Dヒーローと2Dフォールバック |
 | `data/raw/` | 取得した公式データ原本 |
 | `data/processed/` | Pythonで再生成する確認用JSON/CSV |
-| `assets/` | キャラクターとタイトルの原本 |
+| `assets/` | キャラクター、タイトル、OGP（AI作成）の原本 |
 | `public/` | ブラウザへ配信する画像 |
-| `scripts/` | 診断割り当て、画像変換、OGPの生成 |
+| `scripts/` | 診断割り当て、画像変換 |
 | `out/` | 静的エクスポート成果物。手編集しない |
 
 ## 5. 設計上の制約
