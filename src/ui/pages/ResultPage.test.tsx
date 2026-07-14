@@ -24,8 +24,10 @@ describe('ResultPage', () => {
     expect(screen.getByRole('img', { name: '港区ちゃんの診断結果シェア画像' })).toHaveAttribute('src', '/og/minato.jpg');
     expect(screen.getByText(/なぜ、このキャラクター/)).toBeInTheDocument();
     expect(screen.getByText('昼夜間人口比率')).toBeInTheDocument();
-    expect(screen.getAllByRole('img', { name: /診断結果画像/ })).toHaveLength(3);
-    expect(screen.getByRole('link', { name: '港区ちゃんを詳しく見る' })).toHaveAttribute('href', '/ward/minato/');
+    const rankLinks = screen.getAllByRole('img', { name: /ちゃんの詳細を見る/ });
+    expect(rankLinks).toHaveLength(3);
+    expect(rankLinks[0].closest('a')).toHaveAttribute('href', expect.stringMatching(/^\/ward\/.+\/$/));
+    expect(screen.getByRole('link', { name: 'より詳しく見る' })).toHaveAttribute('href', '/ward/minato/');
   });
   it('shows visitor view when the saved result belongs to a different ward', () => {
     saveDiagnosis({ ...emptyVector(), luxury: 1 }, '13101');

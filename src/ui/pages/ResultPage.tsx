@@ -80,6 +80,9 @@ export function ResultPage({ slug }: { slug: string }) {
 
         <section className="result-section result-status" style={{ ['--ward-color' as string]: theme.color }}>
           <p className="result-section-kicker">OPEN DATA STATUS</p>
+          <Link className="result-status-detail-link" href={`/ward/${slug}/`}>
+            より詳しく見る
+          </Link>
           <h2>{ward.name}ちゃんのステータス</h2>
           <div className="ward-detail-radar">
             <Radar vector={ward.axes} color={theme.color} />
@@ -108,25 +111,20 @@ export function ResultPage({ slug }: { slug: string }) {
                 const matchSlug = CODE_TO_SLUG[m.ward.code];
                 return (
                   <li key={m.ward.code} style={{ ['--ward-color' as string]: theme.color }}>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={`/og/${matchSlug}.jpg`} alt={`${m.ward.name}ちゃんの診断結果画像`} width={1200} height={630} loading="lazy" />
-                    <div className="result-rank-copy">
-                      <span className="result-rank">相性 {i + 1}位</span>
-                      <span className="result-rank-name">{m.ward.name}ちゃん</span>
-                      <span className="result-rank-score">にてる度 {similarityPercent(m.distance)}%</span>
-                    </div>
+                    <Link className="result-rank-link" href={`/ward/${matchSlug}/`}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={`/og/${matchSlug}.jpg`} alt={`${m.ward.name}ちゃんの詳細を見る`} width={1200} height={630} loading="lazy" />
+                      <div className="result-rank-copy">
+                        <span className="result-rank">相性 {i + 1}位</span>
+                        <span className="result-rank-score">にてる度 {similarityPercent(m.distance)}%</span>
+                      </div>
+                    </Link>
                   </li>
                 );
               })}
             </ol>
           </>
         )}
-
-        <div className="result-final-action">
-          <Link className="diagnosis-option result-detail-link" href={`/ward/${slug}/`}>
-            {ward.name}ちゃんを詳しく見る
-          </Link>
-        </div>
       </div>
     </main>
   );
