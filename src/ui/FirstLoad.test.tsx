@@ -17,6 +17,12 @@ function mountOverlay() {
 
 beforeEach(() => {
   sessionStorage.clear();
+  vi.stubGlobal('matchMedia', (query: string) => ({
+    matches: false,
+    media: query,
+    addEventListener: () => {},
+    removeEventListener: () => {},
+  }));
 });
 
 afterEach(() => {
