@@ -1,4 +1,4 @@
-# design-sync notes — うちの区ちゃん診断図鑑
+# design-sync notes — うちの区ちゃん
 
 ## Repo shape
 - This is a Next.js **app**, not a packaged design system: no dist/, no Storybook. Sync runs in package shape with a hand-written entry `.design-sync/ds-entry.ts` (re-exports the 6 UI components from `src/ui/` plus `wardTheme`/`ssrImage`/`loadWards`/`DATA_SOURCES`). `cfg.entry` points at it; the converter bundles it directly.

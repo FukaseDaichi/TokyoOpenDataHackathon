@@ -7,7 +7,7 @@ export function ShareCard({ ward }: { ward: Ward }) {
   const theme = wardTheme(ward.code);
   return (
     <div className="share-card" data-testid="share-card" style={{ ['--ward-color' as string]: theme.color }}>
-      <p className="share-card-eyebrow">うちの区ちゃん診断図鑑</p>
+      <p className="share-card-eyebrow">うちの区ちゃん</p>
       <div className="share-card-main">
         {theme.slug && (
           // eslint-disable-next-line @next/next/no-img-element
@@ -19,13 +19,13 @@ export function ShareCard({ ward }: { ward: Ward }) {
           <Radar vector={ward.axes} color={theme.color} size={190} />
         </div>
       </div>
-      <p className="share-card-tag">#うちの区ちゃん診断図鑑</p>
+      <p className="share-card-tag">#うちの区ちゃん</p>
     </div>
   );
 }
 
 /** X（Twitter）シェアリンク。ユーザー自身のクリックで投稿画面を開くだけ。 */
 export function xShareUrl(ward: Ward, appUrl: string): string {
-  const text = `わたしに一番似ているのは「${ward.name}ちゃん」でした！ #うちの区ちゃん診断図鑑`;
+  const text = `わたしに一番似ているのは「${ward.name}ちゃん」でした！ #うちの区ちゃん`;
   return `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}&url=${encodeURIComponent(appUrl)}`;
 }

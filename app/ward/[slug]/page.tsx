@@ -12,7 +12,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const ward = HERO_WARDS.find((w) => w.id === SLUG_TO_CODE[slug])!;
   const site = process.env.NEXT_PUBLIC_SITE_URL;
   return {
-    title: `${ward.name}ちゃん図鑑 | うちの区ちゃん診断図鑑`,
+    title: `${ward.name}ちゃん図鑑 | うちの区ちゃん`,
     description: `${ward.name}のオープンデータ深堀り: ${ward.catch}`,
     ...(site && { metadataBase: new URL(site) }),
     openGraph: { images: [`/og/${slug}.png`], title: `${ward.name}ちゃん図鑑`, description: ward.catch },

@@ -1,4 +1,4 @@
-# うちの区ちゃん診断図鑑 — design conventions
+# うちの区ちゃん — design conventions
 
 Magical-picture-book aesthetic: a dark leather cover with parchment cards and gold ink. All UI copy is **Japanese**.
 

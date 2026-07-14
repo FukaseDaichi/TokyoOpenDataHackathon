@@ -3,10 +3,10 @@ import './globals.css';
 import './zukan.css';
 
 export const metadata: Metadata = {
-  title: 'うちの区ちゃん診断図鑑',
+  title: 'うちの区ちゃん',
   description:
     '東京23区をオープンデータで性格分類し擬人化。10問の診断で、あなたに一番似ている区ちゃんに出会える図鑑。',
-  applicationName: 'うちの区ちゃん診断図鑑',
+  applicationName: 'うちの区ちゃん',
   manifest: '/favicon/site.webmanifest',
   icons: {
     icon: [
@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     ],
   },
   appleWebApp: {
-    title: 'うちの区ちゃん診断図鑑',
+    title: 'うちの区ちゃん',
   },
 };
 

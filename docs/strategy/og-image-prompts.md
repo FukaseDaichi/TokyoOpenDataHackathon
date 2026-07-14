@@ -10,7 +10,7 @@ nazotypeから引き継ぐ原則:
 - 参照画像でキャラクターの同一性（顔・髪型・衣装・小物・パレット）を固定し、毎回明示する
 - ポーズは参照より大胆に。非対称・動きの途中・斜めのアクションを強制し、静的なステッカーポーズを禁止する
 - タイトル文字（`○○区ちゃん`）はモデルに画像内タイポグラフィとして描かせる
-- 右下に小さなセーフエリアを空け、サービスラベル「うちの区ちゃん診断図鑑」はローカル合成で載せる
+- 右下に小さなセーフエリアを空け、サービスラベル「うちの区ちゃん」はローカル合成で載せる
 - 背景は白抜きステッカー風を禁止し、奥行きと動きのあるシネマティックな設計にする
 - 余計な文字・ロゴ・ウォーターマーク・複数キャラを禁止する
 
@@ -233,8 +233,8 @@ Style: high-quality anime gacha-game splash art, vivid saturated colors, dramati
 Negative: no extra text, no logo, no watermark, no multiple characters, no plain white background, no empty gradient background, no tiny character, no redesigned outfit, no missing props, no wrong spelling.
 
 Character: Ota — a cheerful hard-working big sister who keeps planes flying and neighbors smiling, town-factory pride and sento warmth. Orange-brown short spiky hair with a wrench-shaped hairpin, big friendly grin, mechanic jumpsuit tied at the waist over a white tee, tool belt, a sento towel around her neck.
-Pose direction: ultra-wide ground-level shot, camera almost touching the runway asphalt looking up at her — she gives a huge thumbs-up as a passenger jet roars directly overhead filling the sky, jet wind blasting her clothes, bolts and small gears glinting in the air around her.
-Background: a passenger jet lifting off right overhead, orange sunset sky, control tower and small factory silhouettes; sunset sky gradient on the left carries the title.
+Pose direction: do NOT reuse the reference image's low-angle frontal standing pose with a thumbs-up and a jet passing overhead — invent a distinctly different, bolder action instead. High-angle crane shot diving diagonally down onto the airport apron: she rides standing on the rear deck of a speeding baggage tow tractor, body leaning hard into the curve in full side profile, one hand gripping the rail, the other thrusting a big wrench forward like a race flag toward the runway, sento towel and tied jumpsuit sleeves streaming horizontally behind her, bolts and small gears skittering off the cart in her wake.
+Background: a taxiing passenger jet fills the lower-right diagonal beside her, its fuselage mirroring the orange sunset, wet tarmac guide-lines and blue taxiway lights streaking with motion blur toward the vanishing point, control tower and small factory silhouettes tilted at the frame edge; the calm sunset sky in the upper-left stays clean for the title.
 Palette: warm orange, steel gray, sunset red.
 ```
 
@@ -480,6 +480,25 @@ Palette: vivid green, summer blue, sun white.
 
 ---
 
+## 24. メインページ（home）
+
+サービス全体のキービジュアル。区別カードと違い**参照画像なし・キャラクター単体なし**で生成する。参照なしで23人を描かせるとキャラ崩れするため、キャラクターは「逆光シルエット＋色のオーラ」に抽象化し、色パレットで23区の多様性を表現する。タイトルがサービス名そのものなので、右下のブランドラベル合成は不要（セーフエリア指定も外している）。
+
+出力は1200x630へリサイズ/クロップ後、`assets/og/home.png` に原本を置き、`public/og/home.png` へ配置する。あわせて `app/layout.tsx` の `metadata.openGraph.images` に `/og/home.png` を設定する（現状は未設定）。
+
+```text
+Create a polished anime-style OGP share card for X (Twitter), wide landscape composition designed for 1200x630. This is the hero key visual for a web service — there is NO character reference image and NO single main character.
+Render the exact Japanese title text 「うちの区ちゃん」 inside the image as very large integrated editorial typography, placed slightly left of center on two lines, bold and readable even at thumbnail size. Keep the spelling exactly as given and do not add any other text.
+Concept: a giant enchanted picture-book encyclopedia lies open at a low dramatic three-quarter angle in the lower half of the frame, and from its glowing pages 23 trading-card-shaped panels burst upward in a fanned spiral arc; each card carries only an abstract backlit girl silhouette with its own distinct color aura — gold, aqua, champagne, neon purple, deep green, scarlet, indigo, emerald, ash pink, sunset orange and more, 23 clearly different hues — never a readable face, never a detailed character.
+Between the pages and the cards, a stylized map of Tokyo's 23 wards rises from the book as a hologram of glowing outlines, each ward district lit in the same color as its card, sparkling data particles streaming upward along the card arc.
+Background: a twilight Tokyo skyline silhouette wrapping the horizon behind the book, deep navy-to-violet gradient sky with soft bokeh city lights, dramatic rim lighting on the book edges and card frames.
+Style: high-quality anime gacha-game splash art, vivid saturated colors, dramatic rim lighting, glowing particle effects, bokeh lights, detailed painterly finish.
+Negative: no extra text, no logo, no watermark, no readable character faces, no realistic map labels, no plain white background, no empty gradient background, no wrong spelling.
+Palette: deep navy, violet, prismatic 23-color card glow, warm book-light gold.
+```
+
+---
+
 ## 生成後チェックリスト（nazotypeスキル準拠）
 
 - 参照画像と同一キャラクターに見えるか（顔・髪・衣装・小物・パレット）
@@ -487,5 +506,5 @@ Palette: vivid green, summer blue, sun white.
 - 「○○区ちゃん」の綴りが正確で、サムネイルサイズでも読めるか
 - 余計な文字・ロゴ・ウォーターマークがないか
 - 背景が白抜き・単純グラデでなく、設計された奥行きがあるか
-- 右下セーフエリアが空いているか（ラベル「うちの区ちゃん診断図鑑」はローカル合成）
+- 右下セーフエリアが空いているか（ラベル「うちの区ちゃん」はローカル合成）
 - 最終出力を1200x630に整え、`public/og/{slug}.png` へ配置する
