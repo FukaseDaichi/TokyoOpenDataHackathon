@@ -33,8 +33,11 @@ export default function FirstLoad() {
     if (!el) return;
 
     const storage = safeSessionStorage();
+    // #first-loadはlayout.tsxのJSXとしてReactが管理しているノード。
+    // el.remove()で直接消すと以後のbody直下コミットがinsertBefore NotFoundErrorで落ちるため、
+    // DOMには残したままCSS(uk-fl-gone)で非表示にする。
     if (hasVisited(storage)) {
-      el.remove();
+      el.classList.add('uk-fl-hide', 'uk-fl-gone');
       return;
     }
 
@@ -45,7 +48,7 @@ export default function FirstLoad() {
       if (cancelled) return;
       markVisited(storage);
       el.classList.add('uk-fl-hide');
-      window.setTimeout(() => el.remove(), FADE_MS + 100);
+      window.setTimeout(() => el.classList.add('uk-fl-gone'), FADE_MS + 100);
     });
 
     return () => {

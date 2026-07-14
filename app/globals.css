@@ -44,6 +44,11 @@ html.uk-revisit #first-load {
   pointer-events: none;
 }
 
+/* フェード完了後の完全非表示。Reactが管理するノードのためDOMからは削除しない */
+#first-load.uk-fl-gone {
+  display: none;
+}
+
 .uk-fl-inner {
   text-align: center;
 }
