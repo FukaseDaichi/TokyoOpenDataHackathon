@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import raw from './ward-policies.json';
-import { loadWardProfile } from './policies';
+import { AXIS_KEYS } from '../domain/axes';
+import { loadWardProfile, pickPolicyForAxes, type WardPolicy } from './policies';
 
 const WARD_IDS = Array.from({ length: 23 }, (_, i) => `131${String(i + 1).padStart(2, '0')}`);
 
@@ -45,5 +46,44 @@ describe('ward-policies.json', () => {
 describe('loadWardProfile', () => {
   it('未収録の区は null を返す', () => {
     expect(loadWardProfile('13101')).toBeDefined(); // null か WardProfile（収録後はWardProfile）
+  });
+});
+
+describe('政策の軸タグ', () => {
+  it('axes タグは AXIS_KEYS の値のみ・重複なし', () => {
+    for (const p of Object.values(raw) as { policies?: { axes?: string[] }[] }[]) {
+      for (const policy of p.policies ?? []) {
+        if (!policy.axes) continue;
+        expect(new Set(policy.axes).size).toBe(policy.axes.length);
+        for (const axis of policy.axes) expect(AXIS_KEYS).toContain(axis);
+      }
+    }
+  });
+
+  it('全区に一致軸で引ける政策タグが少なくとも1件ある', () => {
+    for (const [code, p] of Object.entries(raw) as [string, { policies?: { axes?: string[] }[] }][]) {
+      const tagged = (p.policies ?? []).filter((policy) => (policy.axes ?? []).length > 0);
+      expect(tagged.length, code).toBeGreaterThan(0);
+    }
+  });
+});
+
+describe('pickPolicyForAxes', () => {
+  const policies: WardPolicy[] = [
+    { title: '防災のまち', summary: 's', source: 'src', url: 'https://example.com' },
+    { title: '子育てのまち', summary: 's', source: 'src', url: 'https://example.com', axes: ['family'] },
+    { title: 'にぎわいのまち', summary: 's', source: 'src', url: 'https://example.com', axes: ['liveliness'] },
+  ];
+
+  it('一致軸とタグが交差する最初の政策を返す', () => {
+    expect(pickPolicyForAxes(policies, ['liveliness', 'family'])?.title).toBe('子育てのまち');
+  });
+
+  it('交差する政策がなければ先頭を返す', () => {
+    expect(pickPolicyForAxes(policies, ['greenery', 'luxury'])?.title).toBe('防災のまち');
+  });
+
+  it('政策が空なら null を返す', () => {
+    expect(pickPolicyForAxes([], ['family', 'greenery'])).toBeNull();
   });
 });

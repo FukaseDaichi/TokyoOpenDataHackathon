@@ -480,6 +480,203 @@ html.uk-js .zukan-card-img.is-loaded {
   margin: 18px 0 12px;
 }
 
+/* ① あなたのタイプ */
+.result-type-description {
+  margin-top: 12px;
+  font-size: 15px;
+  line-height: 2;
+}
+
+.result-type-section .ward-detail-radar {
+  margin: 18px 0 6px;
+  display: flex;
+  justify-content: center;
+}
+
+.result-radar-legend {
+  display: flex;
+  justify-content: center;
+  gap: 22px;
+  font-size: 12px;
+  color: #7a5c2e;
+}
+
+.result-legend-ward::before,
+.result-legend-you::before {
+  content: '';
+  display: inline-block;
+  width: 22px;
+  height: 0;
+  margin-right: 6px;
+  vertical-align: middle;
+  border-top: 3px solid var(--ward-color, #b8923f);
+}
+
+.result-legend-you::before {
+  border-top: 3px dashed #4a3418;
+}
+
+/* ② なぜ相性がいいの？ 5軸比較 */
+.result-axis-compare-list {
+  list-style: none;
+  margin: 20px 0 4px;
+  padding: 0;
+  display: grid;
+  gap: 16px;
+}
+
+.result-axis-compare {
+  padding: 10px 12px 8px;
+  border-radius: 10px;
+}
+
+.result-axis-compare.is-matched {
+  background: rgba(184, 146, 63, 0.14);
+  outline: 1px solid rgba(184, 146, 63, 0.5);
+}
+
+.result-axis-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+}
+
+.result-axis-match-badge {
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: #b8923f;
+  color: #fffbf0;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+}
+
+.result-axis-track {
+  position: relative;
+  height: 8px;
+  margin: 10px 4px 4px;
+  border-radius: 999px;
+  background: rgba(122, 92, 46, 0.18);
+}
+
+.result-axis-marker {
+  position: absolute;
+  top: 50%;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.result-axis-marker.is-ward {
+  background: var(--ward-color, #b8923f);
+  border: 2px solid #fffbf0;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.3);
+}
+
+.result-axis-marker.is-you {
+  background: #fffbf0;
+  border: 2.5px dashed #4a3418;
+}
+
+.result-axis-ends {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 2px;
+  font-size: 10px;
+  color: #8a6c3c;
+}
+
+/* ③ 実はこんな街 */
+.result-town-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.result-town-card {
+  display: grid;
+  gap: 4px;
+  padding: 16px 18px;
+  border: 1.5px solid rgba(184, 146, 63, 0.6);
+  border-radius: 12px;
+  background: rgba(255, 251, 240, 0.65);
+}
+
+.result-town-card-label {
+  font-size: 12px;
+  color: #7a5c2e;
+  letter-spacing: 0.08em;
+}
+
+.result-town-card-value {
+  font-size: 24px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.result-town-card-rank {
+  justify-self: start;
+  padding: 2px 10px;
+  border-radius: 999px;
+  background: var(--ward-color, #b8923f);
+  color: #fffbf0;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+}
+
+.result-town-card-note {
+  font-size: 11px;
+  color: #8a6c3c;
+}
+
+.result-town-policy {
+  margin-top: 22px;
+  padding: 16px 18px;
+  border-left: 4px solid var(--ward-color, #b8923f);
+  background: rgba(255, 251, 240, 0.5);
+  border-radius: 0 10px 10px 0;
+}
+
+.result-town-policy-kicker {
+  font-size: 11px;
+  color: #8a6c3c;
+  letter-spacing: 0.12em;
+}
+
+.result-town-policy-title {
+  margin-top: 6px;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.6;
+}
+
+.result-town-policy-summary {
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.9;
+}
+
+.result-town-policy-source {
+  display: inline-block;
+  margin-top: 8px;
+  color: #7a5c2e;
+  font-size: 12px;
+}
+
+.result-town-more {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 18px;
+}
+
+.result-town-more .result-town-more-link {
+  position: static;
+}
+
 .result-stat-list {
   margin-top: 8px;
 }

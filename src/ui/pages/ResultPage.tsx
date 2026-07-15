@@ -2,16 +2,20 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { AXIS_KEYS, AXIS_LABELS } from '../../domain/axes';
+import { loadAffinityText } from '../../data/affinity';
+import { pickPolicyForAxes, loadWardProfile } from '../../data/policies';
 import { CODE_TO_SLUG, SLUG_TO_CODE } from '../../data/slugs';
 import { loadCharacterRationale } from '../../data/rationale';
 import { loadWards } from '../../data/wards';
 import { loadDiagnosisSession, type DiagnosisSession } from '../../lib/diagnosisSession';
 import { rankDiagnosisMatches, similarityPercent } from '../../lib/matching';
+import { personaType, selectMatchedAxes } from '../../lib/personaType';
 import { rankOf, ratioToMean } from '../../lib/rank';
 import { Radar } from '../Radar';
 import { xShareUrl } from '../ShareCard';
 import { StatBar } from '../StatBar';
-import { buildRadarStats } from '../wardStats';
+import { buildRadarStats, statLabelForAxis } from '../wardStats';
 import { wardTheme } from '../wardTheme';
 
 const WARDS = loadWards();
@@ -34,6 +38,20 @@ export function ResultPage({ slug }: { slug: string }) {
   const stats = buildRadarStats(ward.metrics!, allMetrics);
   const compatible = ranked?.filter((match) => match.ward.code !== ward.code).slice(0, 3) ?? [];
 
+  // 診断者向け: あなたのタイプ・一致軸・相性文・データカード・政策
+  const persona = userVector ? personaType(userVector) : null;
+  const matchedAxes = userVector ? selectMatchedAxes(userVector, ward.axes) : null;
+  const affinityText = matchedAxes ? loadAffinityText(ward.code, matchedAxes[0]) : null;
+  const matchedStats = matchedAxes
+    ? matchedAxes
+        .map((axis) => stats.find((s) => s.label === statLabelForAxis(axis, ward.axes)))
+        .filter((s): s is NonNullable<typeof s> => s !== undefined)
+    : [];
+  const profile = loadWardProfile(ward.code);
+  const policy = matchedAxes && profile ? pickPolicyForAxes(profile.policies, matchedAxes) : null;
+  /** [-1,1] → トラック上の位置% */
+  const trackPos = (v: number) => ((v + 1) / 2) * 100;
+
   return (
     <main className="book-section" style={{ minHeight: '100vh' }}>
       <div className="book-section-inner">
@@ -54,25 +72,104 @@ export function ResultPage({ slug }: { slug: string }) {
           <p className="result-character-line">{theme.catch}</p>
         </div>
 
-        <div className="result-primary-action">
-          {userVector ? (
-            <>
-              <p>この結果、誰かに見せたくなったら。</p>
-              <a className="result-x-share" href={xShareUrl(ward, shareUrl)} target="_blank" rel="noopener noreferrer">
-                <span aria-hidden="true">𝕏</span> Xで結果をシェアする
-              </a>
-            </>
-          ) : (
+        {!userVector && (
+          <div className="result-primary-action">
             <Link className="diagnosis-option result-share-link" href="/#diagnosis">
               あなたも診断する
             </Link>
-          )}
-        </div>
+          </div>
+        )}
+
+        {persona && userVector && (
+          <section className="result-section result-type-section">
+            <p className="result-section-kicker">YOUR TYPE</p>
+            <h2>あなたは「{persona.name}」</h2>
+            <p className="result-type-description">{persona.description}</p>
+            <div className="ward-detail-radar" style={{ ['--ward-color' as string]: theme.color }}>
+              <Radar vector={ward.axes} color={theme.color} overlay={userVector} />
+            </div>
+            <p className="result-radar-legend">
+              <span className="result-legend-ward" style={{ ['--ward-color' as string]: theme.color }}>
+                {ward.name}ちゃん
+              </span>
+              <span className="result-legend-you">あなた</span>
+            </p>
+          </section>
+        )}
+
+        {userVector && matchedAxes && (
+          <section className="result-section result-affinity-section">
+            <p className="result-section-kicker">WHY WE MATCH</p>
+            <h2>なぜ、{ward.name}ちゃんと相性がいいの？</h2>
+            <ul className="result-axis-compare-list">
+              {AXIS_KEYS.map((k) => {
+                // 選定軸でも実際の差が大きい軸に「一致」を名乗らせない
+                const matched = matchedAxes.includes(k) && Math.abs(userVector[k] - ward.axes[k]) <= 0.5;
+                return (
+                  <li key={k} className={matched ? 'result-axis-compare is-matched' : 'result-axis-compare'}>
+                    <span className="result-axis-name">
+                      {AXIS_LABELS[k].name}
+                      {matched && <span className="result-axis-match-badge">ここが一致！</span>}
+                    </span>
+                    <div className="result-axis-track" aria-hidden="true">
+                      <span className="result-axis-marker is-ward" style={{ left: `${trackPos(ward.axes[k])}%`, ['--ward-color' as string]: theme.color }} />
+                      <span className="result-axis-marker is-you" style={{ left: `${trackPos(userVector[k])}%` }} />
+                    </div>
+                    <span className="result-axis-ends" aria-hidden="true">
+                      <span>{AXIS_LABELS[k].low}</span>
+                      <span>{AXIS_LABELS[k].high}</span>
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+            {affinityText && (
+              <>
+                <span className="result-ai-badge">AIによる相性解説</span>
+                <p className="result-rationale">{affinityText}</p>
+              </>
+            )}
+          </section>
+        )}
+
+        {userVector && matchedAxes && (
+          <section className="result-section result-town-section" style={{ ['--ward-color' as string]: theme.color }}>
+            <p className="result-section-kicker">OPEN DATA HOOK</p>
+            <h2>実はこんな街、{ward.name}</h2>
+            {matchedStats.length > 0 && (
+              <div className="result-town-cards">
+                {matchedStats.map((stat) => (
+                  <div key={stat.label} className="result-town-card">
+                    <span className="result-town-card-label">{stat.label}</span>
+                    <span className="result-town-card-value">{stat.text}</span>
+                    <span className="result-town-card-rank">23区{rankOf(stat.vs, stat.v)}位</span>
+                    {stat.note && <span className="result-town-card-note">{stat.note}</span>}
+                  </div>
+                ))}
+              </div>
+            )}
+            {policy && (
+              <div className="result-town-policy">
+                <p className="result-town-policy-kicker">{ward.name}ちゃんはこんなことを頑張ってる</p>
+                <p className="result-town-policy-title">{policy.title}</p>
+                <p className="result-town-policy-summary">{policy.summary}</p>
+                <a className="result-town-policy-source" href={policy.url} target="_blank" rel="noopener noreferrer">
+                  出典: {policy.source}
+                </a>
+              </div>
+            )}
+            <div className="result-town-more">
+              <Link className="result-status-detail-link result-town-more-link" href={`/ward/${slug}/`}>
+                {ward.name}をもっと知る
+              </Link>
+            </div>
+          </section>
+        )}
 
         {rationale && (
           <section className="result-section result-rationale-section">
             <p className="result-section-kicker">AI CHARACTER DESIGN</p>
-            <h2>なぜ、このキャラクターになったの？</h2>
+            <h2>キャラクター設定理由</h2>
             <span className="result-ai-badge">AIによるキャラクター設定</span>
             <p className="result-rationale">{rationale}</p>
           </section>
@@ -101,6 +198,15 @@ export function ResultPage({ slug }: { slug: string }) {
           </div>
           <p className="stat-section-caption">バーの中央線＝23区平均。順位は値の大きい順。</p>
         </section>
+
+        {userVector && (
+          <div className="result-primary-action">
+            <p>この結果、誰かに見せたくなったら。</p>
+            <a className="result-x-share" href={xShareUrl(ward, shareUrl)} target="_blank" rel="noopener noreferrer">
+              <span aria-hidden="true">𝕏</span> Xで結果をシェアする
+            </a>
+          </div>
+        )}
 
         {compatible.length > 0 && (
           <>

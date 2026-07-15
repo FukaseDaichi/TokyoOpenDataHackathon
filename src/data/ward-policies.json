@@ -6,12 +6,14 @@
     "policies": [
       {
         "title": "自分らしく健やかに暮らし、笑顔で成長しあえるまち",
+        "axes": ["family"],
         "summary": "健康づくりや子育て・教育など、一人ひとりが自分らしく成長できる環境の充実をめざす取り組みです。",
         "source": "千代田区第4次基本構想",
         "url": "https://www.city.chiyoda.lg.jp/koho/kuse/shisaku/sogokekaku/dai4jikihonkoso.html"
       },
       {
         "title": "集い、つながり、活気とにぎわいのあるまち",
+        "axes": ["liveliness"],
         "summary": "地域のつながりや文化・産業の活力を高め、多くの人が集うにぎわいの創出をめざす取り組みです。",
         "source": "千代田区第4次基本構想",
         "url": "https://www.city.chiyoda.lg.jp/koho/kuse/shisaku/sogokekaku/dai4jikihonkoso.html"
@@ -36,12 +38,14 @@
       },
       {
         "title": "快適で安全な都市環境の整備",
+        "axes": ["greenery"],
         "summary": "脱炭素化や交通基盤、防災力の向上により、快適な都市環境を実現する視点です。",
         "source": "中央区基本計画2023",
         "url": "https://www.city.chuo.lg.jp/a0001/kusei/kousoukeikaku/kihonkeikaku/kihonkeikaku2023.html"
       },
       {
         "title": "個性とにぎわいが躍動するまち",
+        "axes": ["liveliness"],
         "summary": "産業の活性化と文化振興により、地域の活力とにぎわいを生み出す視点です。",
         "source": "中央区基本計画2023",
         "url": "https://www.city.chuo.lg.jp/a0001/kusei/kousoukeikaku/kihonkeikaku/kihonkeikaku2023.html"
@@ -54,18 +58,21 @@
     "policies": [
       {
         "title": "かがやくまち（街づくり・環境）",
+        "axes": ["greenery"],
         "summary": "都心の活力と安全・安心・快適な暮らしを支える、街づくりと環境保全の取り組みです。",
         "source": "港区基本計画（令和3年度～令和8年度）令和5年度改定版",
         "url": "https://www.city.minato.tokyo.jp/kikaku/kuse/shisaku/kihonkoso/kekaku.html"
       },
       {
         "title": "にぎわうまち（コミュニティ・産業）",
+        "axes": ["liveliness"],
         "summary": "地域コミュニティの活性化や、伝統と最先端技術が融合した産業の振興を進める取り組みです。",
         "source": "港区基本計画（令和3年度～令和8年度）令和5年度改定版",
         "url": "https://www.city.minato.tokyo.jp/kikaku/kuse/shisaku/kihonkoso/kekaku.html"
       },
       {
         "title": "はぐくむまち（福祉・保健・教育）",
+        "axes": ["family", "maturity"],
         "summary": "地域の支え合いや自分らしい自立した生活の支援など、福祉・保健・教育の充実をめざす取り組みです。",
         "source": "港区基本計画（令和3年度～令和8年度）令和5年度改定版",
         "url": "https://www.city.minato.tokyo.jp/kikaku/kuse/shisaku/kihonkoso/kekaku.html"
@@ -78,6 +85,7 @@
     "policies": [
       {
         "title": "暮らしやすさ1番の新宿",
+        "axes": ["maturity"],
         "summary": "健康寿命の延伸や地域包括ケアの推進など、暮らしやすさの向上をめざす取り組みです。",
         "source": "新宿区総合計画",
         "url": "https://www.city.shinjuku.lg.jp/kusei/file07_01_00014.html"
@@ -90,12 +98,14 @@
       },
       {
         "title": "賑わい都市・新宿の創造",
+        "axes": ["liveliness"],
         "summary": "多様な魅力を生かし、活気とにぎわいのあるまちの創造をめざす取り組みです。",
         "source": "新宿区総合計画",
         "url": "https://www.city.shinjuku.lg.jp/kusei/file07_01_00014.html"
       },
       {
         "title": "健全な区財政の確立",
+        "axes": ["luxury"],
         "summary": "持続可能な行財政運営により、健全な区財政を確立する取り組みです。",
         "source": "新宿区総合計画",
         "url": "https://www.city.shinjuku.lg.jp/kusei/file07_01_00014.html"
@@ -114,18 +124,21 @@
     "policies": [
       {
         "title": "子どもたちに輝く未来をつなぐ",
+        "axes": ["family"],
         "summary": "子育て・教育環境の充実により、子どもたちが未来へ輝ける社会づくりをめざす政策です。",
         "source": "「文の京」総合戦略",
         "url": "https://www.city.bunkyo.lg.jp/b001/p005542/index.html"
       },
       {
         "title": "健康で安心な生活基盤の整備",
+        "axes": ["maturity"],
         "summary": "健康づくりや福祉の充実により、誰もが安心して暮らせる生活基盤を整える政策です。",
         "source": "「文の京」総合戦略",
         "url": "https://www.city.bunkyo.lg.jp/b001/p005542/index.html"
       },
       {
         "title": "活力と魅力あふれるまちの創造",
+        "axes": ["liveliness"],
         "summary": "産業振興や文化・観光の推進により、活力と魅力あるまちづくりをめざす政策です。",
         "source": "「文の京」総合戦略",
         "url": "https://www.city.bunkyo.lg.jp/b001/p005542/index.html"
@@ -138,6 +151,7 @@
       },
       {
         "title": "環境の保全と快適で安全なまちづくり",
+        "axes": ["greenery"],
         "summary": "環境負荷の少ない、快適で安全・安心な都市基盤の整備を進める政策です。",
         "source": "「文の京」総合戦略",
         "url": "https://www.city.bunkyo.lg.jp/b001/p005542/index.html"
@@ -150,6 +164,7 @@
     "policies": [
       {
         "title": "あらゆる世代が生涯成長し輝くまち",
+        "axes": ["maturity"],
         "summary": "子どもから高齢者まで、すべての世代が学びや活動を通じて成長し、生涯にわたって力を発揮できるまちづくりを進める。",
         "source": "台東区行政計画（令和8～10年度）",
         "url": "https://www.city.taito.lg.jp/kusei/kunokeikaku/kihonkoso/gyoseikeikaku/gyoukei.html"
@@ -162,6 +177,7 @@
       },
       {
         "title": "活力にあふれ多彩な魅力が輝くまち",
+        "axes": ["liveliness"],
         "summary": "伝統と新しさが共存する多彩な地域資源を活かし、活力とにぎわいのあるまちの実現をめざす。",
         "source": "台東区行政計画（令和8～10年度）",
         "url": "https://www.city.taito.lg.jp/kusei/kunokeikaku/kihonkoso/gyoseikeikaku/gyoukei.html"
@@ -186,6 +202,7 @@
       },
       {
         "title": "あたたかいおせっかいがめぐる",
+        "axes": ["family"],
         "summary": "地域の人々が互いに気にかけ支え合う、あたたかなつながりが循環する地域社会をめざす。",
         "source": "墨田区基本計画（令和8年策定）",
         "url": "https://www.city.sumida.lg.jp/kuseijoho/sumida_kihon/kihonkeikaku/kihonkeikaku_r8/R8kihonkeikaku.html"
@@ -204,24 +221,28 @@
     "policies": [
       {
         "title": "水と緑豊かな地球環境にやさしいまち",
+        "axes": ["greenery"],
         "summary": "水辺や緑を大切にしながら、地球環境に配慮したまちづくりを進める。",
         "source": "江東区基本構想",
         "url": "https://www.city.koto.lg.jp/kuse/shisaku/koso/index.html"
       },
       {
         "title": "未来を担うこどもを育むまち",
+        "axes": ["family"],
         "summary": "地域社会が一体となって、子どもたちの学びや育ちを支え、未来を担う力を育んでいく。",
         "source": "江東区基本構想",
         "url": "https://www.city.koto.lg.jp/kuse/shisaku/koso/index.html"
       },
       {
         "title": "区民の力で築く元気に輝くまち",
+        "axes": ["liveliness"],
         "summary": "産業や文化の振興を通じて、区民の力で活気にあふれるまちづくりを進める。",
         "source": "江東区基本構想",
         "url": "https://www.city.koto.lg.jp/kuse/shisaku/koso/index.html"
       },
       {
         "title": "ともに支えあい健康に暮らせるまち",
+        "axes": ["maturity"],
         "summary": "誰もが支え合いながら、健康で生き生きと暮らせる地域社会の実現をめざす。",
         "source": "江東区基本構想",
         "url": "https://www.city.koto.lg.jp/kuse/shisaku/koso/index.html"
@@ -247,18 +268,21 @@
       },
       {
         "title": "水と親しむみどり豊かなまちづくり",
+        "axes": ["greenery"],
         "summary": "水辺や緑と親しめる環境を整え、うるおいのあるまちづくりを進める。",
         "source": "品川区長期基本計画（令和2年4月策定）",
         "url": "https://www.city.shinagawa.tokyo.jp/PC/kuseizyoho/kuseizyoho-siryo/kuseizyoho-siryo-zaisei/kuseizyoho-siryo-zaisei-plan/cho-keisakutei/index.html"
       },
       {
         "title": "子どもの笑顔があふれるまちの実現",
+        "axes": ["family"],
         "summary": "子育て環境の充実を図り、子どもたちの笑顔があふれるまちをめざす。",
         "source": "品川区長期基本計画（令和2年4月策定）",
         "url": "https://www.city.shinagawa.tokyo.jp/PC/kuseizyoho/kuseizyoho-siryo/kuseizyoho-siryo-zaisei/kuseizyoho-siryo-zaisei-plan/cho-keisakutei/index.html"
       },
       {
         "title": "高齢者が安心して暮らせる環境づくり",
+        "axes": ["maturity"],
         "summary": "高齢者が住み慣れた地域で安心して暮らし続けられる環境づくりを進める。",
         "source": "品川区長期基本計画（令和2年4月策定）",
         "url": "https://www.city.shinagawa.tokyo.jp/PC/kuseizyoho/kuseizyoho-siryo/kuseizyoho-siryo-zaisei/kuseizyoho-siryo-zaisei-plan/cho-keisakutei/index.html"
@@ -284,18 +308,21 @@
       },
       {
         "title": "人が集い活力あふれるまち",
+        "axes": ["liveliness"],
         "summary": "地域の産業や文化に人が集い、活力あふれるまちづくりをめざす。",
         "source": "目黒区基本構想（令和3年3月策定）",
         "url": "https://www.city.meguro.tokyo.jp/kikakukeiei/kusei/keikaku/kihonkoso_r3.html"
       },
       {
         "title": "健康で自分らしく暮らせるまち",
+        "axes": ["maturity"],
         "summary": "区民一人ひとりが健康で、自分らしい暮らしを続けられるまちづくりを進める。",
         "source": "目黒区基本構想（令和3年3月策定）",
         "url": "https://www.city.meguro.tokyo.jp/kikakukeiei/kusei/keikaku/kihonkoso_r3.html"
       },
       {
         "title": "快適で暮らしやすい持続可能なまち",
+        "axes": ["greenery"],
         "summary": "みどり豊かな住環境を守りながら、快適で持続可能なまちづくりを進める。",
         "source": "目黒区基本構想（令和3年3月策定）",
         "url": "https://www.city.meguro.tokyo.jp/kikakukeiei/kusei/keikaku/kihonkoso_r3.html"
@@ -315,6 +342,7 @@
     "policies": [
       {
         "title": "こどもが夢と希望を持てるまち",
+        "axes": ["family"],
         "summary": "こどもたちが夢と希望をもって健やかに育つことができるまちづくりを進めます。",
         "source": "大田区基本計画",
         "url": "https://www.city.ota.tokyo.jp/kuseijoho/ota_plan/kihonkeikaku/shin_kihonkeikaku/kihonkeikaku.html"
@@ -327,6 +355,7 @@
       },
       {
         "title": "環境と産業が支える持続的発展",
+        "axes": ["greenery", "liveliness"],
         "summary": "一人ひとりの環境意識が具体的な行動につながり、多様な産業がたえまなく成長することで持続的に発展するまちをめざします。",
         "source": "大田区基本計画",
         "url": "https://www.city.ota.tokyo.jp/kuseijoho/ota_plan/kihonkeikaku/shin_kihonkeikaku/kihonkeikaku.html"
@@ -352,12 +381,14 @@
       },
       {
         "title": "生命と健康を守る取り組み",
+        "axes": ["maturity"],
         "summary": "区民の生命と健康を守ることを計画全体を貫く理念のひとつとして位置づけています。",
         "source": "世田谷区基本計画（令和6年度～令和13年度）",
         "url": "https://www.city.setagaya.lg.jp/02005/11010.html"
       },
       {
         "title": "子ども・若者を中心に据えたまちづくり",
+        "axes": ["family"],
         "summary": "子どもや若者を中心に据えた施策を展開し、あらゆる世代が安心して住み続けられるまちを目指します。",
         "source": "世田谷区基本計画（令和6年度～令和13年度）",
         "url": "https://www.city.setagaya.lg.jp/02005/11010.html"
@@ -376,6 +407,7 @@
     "policies": [
       {
         "title": "子育て・教育・生涯学習",
+        "axes": ["family"],
         "summary": "すべての人が生涯を通じて学び、成長できる環境の実現をめざします。",
         "source": "渋谷区基本構想",
         "url": "https://www.city.shibuya.tokyo.jp/kusei/shisaku/koso/koso.html"
@@ -388,18 +420,21 @@
       },
       {
         "title": "健康・スポーツ",
+        "axes": ["maturity"],
         "summary": "運動を日常生活に取り入れ、健康寿命の延伸をめざします。",
         "source": "渋谷区基本構想",
         "url": "https://www.city.shibuya.tokyo.jp/kusei/shisaku/koso/koso.html"
       },
       {
         "title": "防災・安全・環境・エネルギー",
+        "axes": ["greenery"],
         "summary": "人のつながりと意識を高め、しなやかで持続可能な都市基盤を築きます。",
         "source": "渋谷区基本構想",
         "url": "https://www.city.shibuya.tokyo.jp/kusei/shisaku/koso/koso.html"
       },
       {
         "title": "産業振興",
+        "axes": ["liveliness"],
         "summary": "あらゆる規模のビジネスに挑戦の機会を提供するまちをめざします。",
         "source": "渋谷区基本構想",
         "url": "https://www.city.shibuya.tokyo.jp/kusei/shisaku/koso/koso.html"
@@ -412,18 +447,21 @@
     "policies": [
       {
         "title": "人と人がつながり活力を生むまち",
+        "axes": ["liveliness"],
         "summary": "多様な国籍や価値観を持つ人々が交流し、地域への参画を広げることで、まちの活力を高めます。",
         "source": "中野区基本構想（令和3年3月改定）",
         "url": "https://www.city.tokyo-nakano.lg.jp/kusei/kousou/kihonrinen/kihonkousou/kihonkoso-r3.html"
       },
       {
         "title": "こどもの育ちを地域全体で支えるまち",
+        "axes": ["family"],
         "summary": "こどもたちの命と権利を守り、質の高い教育を実現しながら、地域全体で子育てを支えるまちづくりを進めます。",
         "source": "中野区基本構想（令和3年3月改定）",
         "url": "https://www.city.tokyo-nakano.lg.jp/kusei/kousou/kihonrinen/kihonkousou/kihonkoso-r3.html"
       },
       {
         "title": "誰もが自分らしく生きられるまち",
+        "axes": ["maturity"],
         "summary": "生涯を通じて誰もが安心して、自分らしく暮らせる包括的な支援体制を築きます。",
         "source": "中野区基本構想（令和3年3月改定）",
         "url": "https://www.city.tokyo-nakano.lg.jp/kusei/kousou/kihonrinen/kihonkousou/kihonkoso-r3.html"
@@ -453,6 +491,7 @@
       },
       {
         "title": "次世代を育み引き継ぐまち",
+        "axes": ["family"],
         "summary": "こどもたちの健やかな成長を支え、持続可能な社会を次の世代へ引き継ぎます。",
         "source": "杉並区基本構想",
         "url": "https://www.city.suginami.tokyo.jp/s010/2105.html"
@@ -471,12 +510,14 @@
       },
       {
         "title": "子育てしやすく子どもが自分らしく育つまち",
+        "axes": ["family"],
         "summary": "子育て支援や教育環境の整備により、子ども・若者が自分らしく安心して成長できる社会をめざす取り組みです。",
         "source": "豊島区基本構想・基本計画",
         "url": "https://www.city.toshima.lg.jp/001/2503071304.html"
       },
       {
         "title": "生涯健康で地域と共に暮らせる福祉のまち",
+        "axes": ["maturity"],
         "summary": "健康寿命の延伸や地域包括ケアの推進により、誰もが生涯にわたり健康で暮らせる社会をめざす取り組みです。",
         "source": "豊島区基本構想・基本計画",
         "url": "https://www.city.toshima.lg.jp/001/2503071304.html"
@@ -489,6 +530,7 @@
       },
       {
         "title": "活気とにぎわいを生む産業と観光のまち",
+        "axes": ["liveliness"],
         "summary": "地域経済の活性化と観光資源の活用を進め、まちに活気とにぎわいを生み出す取り組みです。",
         "source": "豊島区基本構想・基本計画",
         "url": "https://www.city.toshima.lg.jp/001/2503071304.html"
@@ -501,18 +543,21 @@
     "policies": [
       {
         "title": "多様なつながりが織りなすにぎわいと活力のまち",
+        "axes": ["liveliness"],
         "summary": "多様な人々のつながりを生かし、にぎわいと活力にあふれる地域社会の実現をめざす取り組みです。",
         "source": "北区基本構想",
         "url": "https://www.city.kita.lg.jp/city-information/policy/1011843/1011844.html"
       },
       {
         "title": "世代を超えて輝き健やかに暮らせるまち",
+        "axes": ["maturity"],
         "summary": "世代を超えて互いに成長し合い、自分らしく輝きながら健やかに暮らせる地域をめざす取り組みです。",
         "source": "北区基本構想",
         "url": "https://www.city.kita.lg.jp/city-information/policy/1011843/1011844.html"
       },
       {
         "title": "安全・安心で人と自然が調和するまち",
+        "axes": ["greenery"],
         "summary": "安全・安心で快適に暮らし続けられる、人と自然が調和したまちづくりを進める取り組みです。",
         "source": "北区基本構想",
         "url": "https://www.city.kita.lg.jp/city-information/policy/1011843/1011844.html"
@@ -525,24 +570,28 @@
     "policies": [
       {
         "title": "生涯健康都市",
+        "axes": ["maturity"],
         "summary": "誰もが生涯を通じて健康で生き生きと暮らせるまちと、高齢者や障がい者が安心して暮らせる社会の形成をめざす取り組みです。",
         "source": "荒川区基本計画（平成29年度から平成38年度まで）",
         "url": "https://www.city.arakawa.tokyo.jp/a001/kousoukeikaku/kihonkeikaku/kihonkekaku_29-38.html"
       },
       {
         "title": "子育て教育都市",
+        "axes": ["family"],
         "summary": "子育てしやすい環境を整えるとともに、心豊かでたくましく生きる子どもの育成と生涯学習社会の形成をめざす取り組みです。",
         "source": "荒川区基本計画（平成29年度から平成38年度まで）",
         "url": "https://www.city.arakawa.tokyo.jp/a001/kousoukeikaku/kihonkeikaku/kihonkekaku_29-38.html"
       },
       {
         "title": "産業革新都市",
+        "axes": ["liveliness"],
         "summary": "活力ある地域経済を育み、人が集う魅力あるまちの形成を進める取り組みです。",
         "source": "荒川区基本計画（平成29年度から平成38年度まで）",
         "url": "https://www.city.arakawa.tokyo.jp/a001/kousoukeikaku/kihonkeikaku/kihonkekaku_29-38.html"
       },
       {
         "title": "環境先進都市",
+        "axes": ["greenery"],
         "summary": "地球環境の保全と良好な生活環境づくりに取り組み、環境にやさしいまちをめざす取り組みです。",
         "source": "荒川区基本計画（平成29年度から平成38年度まで）",
         "url": "https://www.city.arakawa.tokyo.jp/a001/kousoukeikaku/kihonkeikaku/kihonkekaku_29-38.html"
@@ -562,24 +611,28 @@
     "policies": [
       {
         "title": "子育て世代が住みたくなるまち",
+        "axes": ["family"],
         "summary": "子育て支援の充実などにより、子ども・若者や子育て世代から選ばれるまちをめざす取り組みです。",
         "source": "板橋区基本構想（令和7年10月14日議決）",
         "url": "https://www.city.itabashi.tokyo.jp/kusei/seisakukeiei/kihon/1060138.html"
       },
       {
         "title": "すべての人が健康で自分らしく輝けるまち",
+        "axes": ["maturity"],
         "summary": "健康寿命の延伸や多様な生き方の実現を支え、誰もが自分らしく健やかに暮らせる社会をめざす取り組みです。",
         "source": "板橋区基本構想（令和7年10月14日議決）",
         "url": "https://www.city.itabashi.tokyo.jp/kusei/seisakukeiei/kihon/1060138.html"
       },
       {
         "title": "産業の魅力を創造・発信するまち",
+        "axes": ["liveliness"],
         "summary": "地域特性を生かした産業の魅力を創造・発信し、にぎわいのあるまちづくりを進める取り組みです。",
         "source": "板橋区基本構想（令和7年10月14日議決）",
         "url": "https://www.city.itabashi.tokyo.jp/kusei/seisakukeiei/kihon/1060138.html"
       },
       {
         "title": "みどり豊かで人と地球にやさしいまち",
+        "axes": ["greenery"],
         "summary": "みどり豊かな環境を守り育てながら、人にも地球にもやさしいまちづくりを進める取り組みです。",
         "source": "板橋区基本構想（令和7年10月14日議決）",
         "url": "https://www.city.itabashi.tokyo.jp/kusei/seisakukeiei/kihon/1060138.html"
@@ -598,12 +651,14 @@
     "policies": [
       {
         "title": "子どもたちの笑顔輝くまち",
+        "axes": ["family"],
         "summary": "子育て支援や教育環境を充実させ、子どもたちが健やかに育ち笑顔で暮らせるまちづくりを進める。",
         "source": "練馬区総合計画",
         "url": "https://www.city.nerima.tokyo.jp/kusei/sougoukeikaku/index.html"
       },
       {
         "title": "高齢者が住みなれた地域で暮らせるまち",
+        "axes": ["maturity"],
         "summary": "高齢者が住み慣れた地域で安心して暮らし続けられるよう、生活支援や見守りの体制を整える。",
         "source": "練馬区総合計画",
         "url": "https://www.city.nerima.tokyo.jp/kusei/sougoukeikaku/index.html"
@@ -616,6 +671,7 @@
       },
       {
         "title": "安全・快適、みどりあふれるまち",
+        "axes": ["greenery"],
         "summary": "防災力の向上と快適な都市環境の整備を進め、みどり豊かなまちなみを次代に引き継ぐ。",
         "source": "練馬区総合計画",
         "url": "https://www.city.nerima.tokyo.jp/kusei/sougoukeikaku/index.html"
@@ -634,6 +690,7 @@
     "policies": [
       {
         "title": "多様性を認めあい挑戦する人",
+        "axes": ["family"],
         "summary": "一人ひとりの多様性を認め合い、夢や希望に挑戦する人を育む取り組みを進める。",
         "source": "足立区基本構想",
         "url": "https://www.city.adachi.tokyo.jp/sesaku/kihonkousoukeikaku.html"
@@ -646,12 +703,14 @@
       },
       {
         "title": "真に豊かな生活を実現できる魅力あるまち",
+        "axes": ["liveliness"],
         "summary": "災害対応力を高めながら地域の個性を活かし、活力とにぎわいにあふれるまちをつくる。",
         "source": "足立区基本構想",
         "url": "https://www.city.adachi.tokyo.jp/sesaku/kihonkousoukeikaku.html"
       },
       {
         "title": "成長を支える行財政運営",
+        "axes": ["luxury"],
         "summary": "様々な主体との協働・協創を促し、次世代に責任を持てる行財政運営を進める。",
         "source": "足立区基本構想",
         "url": "https://www.city.adachi.tokyo.jp/sesaku/kihonkousoukeikaku.html"
@@ -670,24 +729,28 @@
       },
       {
         "title": "誰もが成長し活躍できるまち",
+        "axes": ["family"],
         "summary": "子どもが元気に育ち、誰もが生涯にわたって学び成長し活躍できる環境を整える。",
         "source": "葛飾区基本構想",
         "url": "https://www.city.katsushika.lg.jp/information/1000084/1006012/1026642/1026643.html"
       },
       {
         "title": "人や自然にやさしい美しいまち",
+        "axes": ["greenery"],
         "summary": "誰もが快適に暮らせるよう、人にも自然にもやさしい美しい都市環境を育む。",
         "source": "葛飾区基本構想",
         "url": "https://www.city.katsushika.lg.jp/information/1000084/1006012/1026642/1026643.html"
       },
       {
         "title": "文化や産業が輝くにぎわいあるまち",
+        "axes": ["liveliness"],
         "summary": "葛飾らしい文化や産業の魅力を磨き、笑顔とにぎわいにあふれるまちをつくる。",
         "source": "葛飾区基本構想",
         "url": "https://www.city.katsushika.lg.jp/information/1000084/1006012/1026642/1026643.html"
       },
       {
         "title": "先進技術を活かした質の高い生活",
+        "axes": ["luxury"],
         "summary": "先進技術を積極的に活用し、洗練された質の高い生活を送れるまちを目指す。",
         "source": "葛飾区基本構想",
         "url": "https://www.city.katsushika.lg.jp/information/1000084/1006012/1026642/1026643.html"
@@ -706,18 +769,21 @@
       },
       {
         "title": "社会とともに生きる",
+        "axes": ["family"],
         "summary": "多様な立場の人々が力を合わせ、支え合いながら暮らせる社会づくりを進める。",
         "source": "江戸川区2100年共生社会ビジョン",
         "url": "https://www.city.edogawa.tokyo.jp/e001/kuseijoho/keikaku/kuseiunei/kyosei/vision2100/index.html"
       },
       {
         "title": "経済とともに生きる",
+        "axes": ["liveliness"],
         "summary": "地域の事業者を大切な区民として捉え、経済活動がまちに活力をもたらす姿を目指す。",
         "source": "江戸川区2100年共生社会ビジョン",
         "url": "https://www.city.edogawa.tokyo.jp/e001/kuseijoho/keikaku/kuseiunei/kyosei/vision2100/index.html"
       },
       {
         "title": "環境とともに生きる",
+        "axes": ["greenery"],
         "summary": "海抜ゼロメートル地帯という立地を踏まえ、誰一人取り残さない防災体制を築く。",
         "source": "江戸川区2100年共生社会ビジョン",
         "url": "https://www.city.edogawa.tokyo.jp/e001/kuseijoho/keikaku/kuseiunei/kyosei/vision2100/index.html"

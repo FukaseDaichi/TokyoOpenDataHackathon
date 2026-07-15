@@ -1,4 +1,4 @@
-import type { WardMetrics } from '../domain/axes';
+import type { AxisKey, AxisVector, WardMetrics } from '../domain/axes';
 import type { WardDetails } from '../data/details';
 
 export interface WardStatItem {
@@ -18,8 +18,27 @@ export function buildRadarStats(m: WardMetrics, all: WardMetrics[]): WardStatIte
     { label: '一人当たり公立公園面積', v: m.park_area_per_capita, vs: all.map((x) => x.park_area_per_capita), text: `${m.park_area_per_capita.toFixed(2)}㎡` },
     { label: '単身世帯率', v: m.single_household_rate, vs: all.map((x) => x.single_household_rate), text: `${m.single_household_rate.toFixed(1)}%` },
     { label: '子育て世帯率', v: m.family_household_rate, vs: all.map((x) => x.family_household_rate), text: `${m.family_household_rate.toFixed(1)}%` },
-    { label: '財政力指数', v: m.fiscal_strength_index, vs: all.map((x) => x.fiscal_strength_index), text: m.fiscal_strength_index.toFixed(2) },
+    { label: '財政力指数', v: m.fiscal_strength_index, vs: all.map((x) => x.fiscal_strength_index), text: m.fiscal_strength_index.toFixed(2), note: '区の税収の豊かさ。1を超えるほど自前の税収で行政サービスをまかなえる街' },
   ];
+}
+
+/**
+ * 診断軸に対応する基本指標のラベル。
+ * 世帯軸は区側の符号で子育て/単身を選ぶ（一致軸=ユーザーも同方向のため）。
+ */
+export function statLabelForAxis(axis: AxisKey, wardAxes: AxisVector): string {
+  switch (axis) {
+    case 'liveliness':
+      return '昼夜間人口比率';
+    case 'maturity':
+      return '高齢化率';
+    case 'greenery':
+      return '一人当たり公立公園面積';
+    case 'family':
+      return wardAxes.family >= 0 ? '子育て世帯率' : '単身世帯率';
+    case 'luxury':
+      return '財政力指数';
+  }
 }
 
 /** 区詳細ページで表示する、基本7指標と付帯する詳細指標。 */
