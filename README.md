@@ -31,9 +31,16 @@ npm test        # Vitest
 
 Cloudflare Pagesへ静的成果物を配信します。OGPの絶対URLを生成するため、本番ビルドでは公開サイトのルートURLを必ず指定します。
 
+GitHub ActionsはPull Requestでテストと本番相当ビルドを実行し、`main`へのpushで同じ品質ゲートを通過した`out/`を自動デプロイします。GitHubリポジトリのActions secretsに次の2つを登録してください。
+
+- `CLOUDFLARE_ACCOUNT_ID` — CloudflareのアカウントID
+- `CLOUDFLARE_API_TOKEN` — Account / Cloudflare Pages / Edit権限を持つAPIトークン
+
+Actions画面から`main`ブランチの「Test and deploy」を手動実行することもできます。ローカルから手動デプロイする場合は次を実行します。
+
 ```bash
 NEXT_PUBLIC_SITE_URL=https://uchinokuchan.pages.dev npm run build
-wrangler pages deploy out --project-name=uchinokuchan
+npx wrangler pages deploy out --project-name=uchinokuchan --branch=main
 ```
 
 ## データ・画像の更新

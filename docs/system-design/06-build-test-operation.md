@@ -2,7 +2,7 @@
 
 ## 1. 開発環境
 
-Node.js依存関係は `package-lock.json` を使って再現する。Python集計はPython 3を使い、`build_wards.py` と `build_details.py` が `openpyxl` を必要とする。`build_geo.py` はPython標準ライブラリだけを使う。画像生成はNode.js依存のSharpを使う。
+Node.js依存関係は `package-lock.json` を使って再現する。GitHub ActionsではNode.js 24と `npm ci` を使う。Python集計はPython 3を使い、`build_wards.py` と `build_details.py` が `openpyxl` を必要とする。`build_geo.py` はPython標準ライブラリだけを使う。画像生成はNode.js依存のSharpを使う。
 
 ```bash
 npm install
@@ -79,11 +79,28 @@ Cloudflare Pagesへ静的成果物を配信する。
 
 公開URLは末尾パスを含まないサイトルートを設定する。現在の公開URLは `https://uchinokuchan.pages.dev` である。
 
+`.github/workflows/deploy.yml` がCIと本番デプロイを担当する。
+
+| イベント | 動作 |
+|---|---|
+| `pull_request`（対象: `main`） | `npm ci`、`npm test`、本番URLを設定した `npm run build`。Cloudflareへはデプロイしない |
+| `push`（対象: `main`） | 上記の品質ゲート通過後、`out/`を本番Pagesへデプロイ |
+| `workflow_dispatch`（`main`から実行） | 上記と同じ本番デプロイを手動実行 |
+
+本番デプロイは `cloudflare/wrangler-action` とWrangler 4.111.0を使い、GitHub Deploymentsにも結果を記録する。同じrefの古い実行はキャンセルし、新しいコミットを優先する。GitHub Actionsには次のrepository secretが必要であり、値をコードやログへ出力しない。
+
+| Secret | 内容 |
+|---|---|
+| `CLOUDFLARE_ACCOUNT_ID` | Pagesプロジェクトを所有するCloudflareアカウントID |
+| `CLOUDFLARE_API_TOKEN` | Account / Cloudflare Pages / Edit権限を持つAPIトークン |
+
+Cloudflare Pagesプロジェクト名は `uchinokuchan`、production branchは `main` とする。workflowの `NEXT_PUBLIC_SITE_URL` は `https://uchinokuchan.pages.dev` に固定し、fork由来を含むPull RequestにはCloudflare secretを渡さない。
+
 Wrangler CLIから直接デプロイする場合は次を実行する。
 
 ```bash
 NEXT_PUBLIC_SITE_URL=https://uchinokuchan.pages.dev npm run build
-wrangler pages deploy out --project-name=uchinokuchan
+npx wrangler pages deploy out --project-name=uchinokuchan --branch=main
 ```
 
 ## 6. データ更新運用
