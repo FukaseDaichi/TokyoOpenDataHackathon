@@ -16,7 +16,7 @@ import { rankDiagnosisMatches, similarityPercent } from "../../lib/matching";
 import { personaType, selectMatchedAxes } from "../../lib/personaType";
 import { rankOf, ratioToMean } from "../../lib/rank";
 import { Radar } from "../Radar";
-import { xShareUrl } from "../ShareCard";
+import { xShareUrl } from "../share";
 import { StatBar } from "../StatBar";
 import { buildRadarStats, statLabelForAxis } from "../wardStats";
 import { wardTheme } from "../wardTheme";
