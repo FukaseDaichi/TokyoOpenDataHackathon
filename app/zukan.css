@@ -40,34 +40,27 @@
   color: #d8c8a4;
 }
 
-/* ---- 図鑑グリッド ---- */
+/* ---- 図鑑グリッド（プレミアムカード） ---- */
 
 .zukan-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(148px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
   gap: 18px;
 }
 
 .zukan-card {
   --ward-color: #b8923f;
   position: relative;
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-  padding: 10px 10px 14px;
-  background: linear-gradient(180deg, #f7ecd4 0%, #eeddb8 100%);
-  border: 2px solid #b8923f;
-  border-radius: 10px;
-  color: #4a3418;
+  display: block;
+  padding: 0;
+  overflow: hidden;
+  background: radial-gradient(circle at 50% 36%, #fff6e0 0%, #e5d0a4 100%);
+  border: 2.5px solid var(--ward-color);
+  border-radius: 12px;
+  color: #f4e8d0;
   cursor: pointer;
   text-align: center;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.45);
-}
-
-.zukan-card:hover {
-  transform: translateY(-6px);
-  box-shadow: 0 14px 30px rgba(0, 0, 0, 0.55);
 }
 
 .zukan-card:focus-visible {
@@ -75,28 +68,29 @@
   outline-offset: 3px;
 }
 
+/* メダリオンNo.（左上） */
 .zukan-card-no {
   position: absolute;
-  top: 14px;
-  left: 14px;
-  z-index: 1;
+  top: 8px;
+  left: 8px;
+  z-index: 2;
+  padding: 4px 10px;
+  border-radius: 999px;
+  border: 1.5px solid rgba(232, 197, 107, 0.85);
+  background: radial-gradient(circle at 50% 28%, #4a3418 0%, #17110c 100%);
+  color: #f0d693;
   font-size: 10px;
   letter-spacing: 0.14em;
-  padding: 2px 7px;
-  border-radius: 999px;
-  background: rgba(23, 17, 12, 0.72);
-  color: #f4e8d0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
 }
 
+/* フルブリード立ち絵 */
 .zukan-card-img {
   width: 100%;
   /* height属性(768)の presentational hint に勝たせ、aspect-ratioで高さを決める */
   height: auto;
   aspect-ratio: 2 / 3;
   object-fit: cover;
-  border-radius: 6px;
-  border: 1px solid rgba(184, 146, 63, 0.6);
-  background: radial-gradient(circle at 50% 36%, #fff6e0 0%, #e5d0a4 100%);
   display: block;
 }
 
@@ -123,28 +117,102 @@ html.uk-js .zukan-card-img.is-loaded {
   display: block;
 }
 
+/* シャイン（斜めに走る光沢。ホバー時 or is-shine付与時に1回再生） */
+.zukan-card-shine {
+  position: absolute;
+  top: -20%;
+  bottom: -20%;
+  left: 0;
+  width: 45%;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 244, 214, 0) 0%,
+    rgba(255, 244, 214, 0.45) 50%,
+    rgba(255, 244, 214, 0) 100%
+  );
+  transform: translateX(-140%) skewX(-18deg);
+}
+
+@keyframes zukanShine {
+  0% {
+    transform: translateX(-140%) skewX(-18deg);
+  }
+  100% {
+    transform: translateX(240%) skewX(-18deg);
+  }
+}
+
+.zukan-card.is-shine .zukan-card-shine {
+  animation: zukanShine 0.9s ease 0.15s both;
+}
+
+/* ネームプレート（下部グラデーション上の金文字） */
+.zukan-card-plate {
+  position: absolute;
+  inset: auto 0 0 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  padding: 36px 10px 12px;
+  background: linear-gradient(
+    180deg,
+    rgba(23, 17, 12, 0) 0%,
+    rgba(23, 17, 12, 0.62) 45%,
+    rgba(23, 17, 12, 0.88) 100%
+  );
+  pointer-events: none;
+}
+
 .zukan-card-name {
   font-size: 15px;
   letter-spacing: 0.14em;
   font-weight: 600;
+  color: #f4e0a8;
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.6);
 }
 
-.zukan-card-group {
+/* キャッチコピーはホバー環境でのみスライドイン表示 */
+.zukan-card-catch {
+  display: none;
   font-size: 11px;
-  color: #7a5c2e;
-  letter-spacing: 0.1em;
+  line-height: 1.6;
+  color: #f4e8d0;
 }
 
-.zukan-card-group::before {
-  content: '';
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--ward-color);
-  margin-right: 6px;
-  vertical-align: 1px;
-  border: 1px solid rgba(74, 52, 24, 0.4);
+/* ホバー環境のみの演出（タッチ環境のsticky hoverを避ける） */
+@media (hover: hover) {
+  .zukan-card {
+    transition: transform 0.25s ease, box-shadow 0.25s ease;
+  }
+
+  .zukan-card:hover {
+    transform: translateY(-6px);
+    box-shadow:
+      0 14px 30px rgba(0, 0, 0, 0.55),
+      0 0 20px -2px var(--ward-color);
+  }
+
+  .zukan-card:hover .zukan-card-shine {
+    animation: zukanShine 0.9s ease;
+  }
+
+  .zukan-card-catch {
+    display: block;
+    max-height: 0;
+    opacity: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+  }
+
+  .zukan-card:hover .zukan-card-catch,
+  .zukan-card:focus-visible .zukan-card-catch {
+    max-height: 4.8em;
+    opacity: 1;
+  }
 }
 
 /* ---- 個別詳細（羊皮紙の見開き） ---- */
@@ -1353,6 +1421,12 @@ html.uk-js .zukan-card-img.is-loaded {
   .zukan-card:hover {
     transition: none;
     transform: none;
+  }
+  .zukan-card-shine {
+    display: none;
+  }
+  .zukan-card-catch {
+    transition: none;
   }
 }
 
