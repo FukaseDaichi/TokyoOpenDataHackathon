@@ -161,7 +161,7 @@ export function ResultPage({ slug }: { slug: string }) {
         {persona && userVector && (
           <section className="result-section result-type-section">
             <p className="result-section-kicker">YOUR TYPE</p>
-            <h2>あなたは「{persona.name}」</h2>
+            <h2>あなたと{ward.name}ちゃんの重なり</h2>
             <p className="result-type-description">{persona.description}</p>
             <div
               className="ward-detail-radar"

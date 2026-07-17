@@ -66,10 +66,15 @@ describe("ResultPage", () => {
   it("shows persona type, match reasons, and town hooks with a saved diagnosis", () => {
     saveDiagnosis({ ...emptyVector(), luxury: 1 }, "13103");
     render(<ResultPage slug="minato" />);
-    // ① あなたのタイプ（luxuryのみ閾値超え → 華やか志向タイプ）
-    // ヒーローカードにも同じタイプ名が出るため、見出しに絞って一意にする
+    // ① タイプ名は結果カードに、説明文はYOUR TYPEセクションに出る
+    expect(screen.getByTestId("result-card")).toHaveTextContent(
+      /華やか志向タイプ/,
+    );
     expect(
-      screen.getByRole("heading", { name: /華やか志向タイプ/ }),
+      screen.getByText(/良いものや華やかさに心が動く/),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/あなたと港区ちゃんの重なり/),
     ).toBeInTheDocument();
     // ② なぜ相性がいいの？ 一致軸2つのハイライトとAI相性文（港×華やぎ）
     expect(
