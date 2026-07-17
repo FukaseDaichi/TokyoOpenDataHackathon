@@ -48,6 +48,13 @@
   gap: 18px;
 }
 
+@media (max-width: 480px) {
+  .zukan-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
 .zukan-card {
   --ward-color: #b8923f;
   position: relative;
