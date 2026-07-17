@@ -16,10 +16,10 @@ import { rankDiagnosisMatches, similarityPercent } from "../../lib/matching";
 import { personaType, selectMatchedAxes } from "../../lib/personaType";
 import { rankOf, ratioToMean } from "../../lib/rank";
 import { Radar } from "../Radar";
-import { xShareUrl } from "../ShareCard";
+import { xShareUrl } from "../share";
 import { StatBar } from "../StatBar";
 import { buildRadarStats, statLabelForAxis } from "../wardStats";
-import { wardTheme } from "../wardTheme";
+import { ssrImage, wardTheme } from "../wardTheme";
 
 const WARDS = loadWards();
 
@@ -64,11 +64,27 @@ export function ResultPage({ slug }: { slug: string }) {
     matchedAxes && profile
       ? pickPolicyForAxes(profile.policies, matchedAxes)
       : null;
+  // 自区（ランキング先頭）との距離から にてる度% を出す
+  const percent = ranked ? similarityPercent(ranked[0].distance) : null;
+  // バッジは選定軸のうち実差が小さい軸だけ（WHY WE MATCHの一致判定と同じ0.5閾値）
+  const heroBadges =
+    userVector && matchedAxes
+      ? matchedAxes.filter(
+          (k) => Math.abs(userVector[k] - ward.axes[k]) <= 0.5,
+        )
+      : [];
   /** [-1,1] → トラック上の位置% */
   const trackPos = (v: number) => ((v + 1) / 2) * 100;
+  const shareHref =
+    percent !== null && persona
+      ? xShareUrl(ward, shareUrl, { percent, personaName: persona.name })
+      : xShareUrl(ward, shareUrl);
 
   return (
-    <main className="book-section" style={{ minHeight: "100vh" }}>
+    <main
+      className={userVector ? "book-section has-share-bar" : "book-section"}
+      style={{ minHeight: "100vh" }}
+    >
       <div className="book-section-inner">
         <p className="book-section-eyebrow">SHINDAN RESULT</p>
         <h1 className="book-section-title">
@@ -77,36 +93,75 @@ export function ResultPage({ slug }: { slug: string }) {
             : `この人は${ward.name}ちゃんタイプ！`}
         </h1>
 
-        <div
-          className="result-hero"
-          style={{ ["--ward-color" as string]: theme.color }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            className="result-og-image"
-            src={`/og/${slug}.jpg`}
-            alt={`${ward.name}ちゃんの診断結果シェア画像`}
-            width={1200}
-            height={630}
-          />
-          <p className="result-character-line">{theme.catch}</p>
-        </div>
-
-        {!userVector && (
-          <div className="result-primary-action">
-            <Link
-              className="diagnosis-option result-share-link"
-              href="/#diagnosis"
+        {userVector && percent !== null ? (
+          <div
+            className="result-card"
+            data-testid="result-card"
+            style={{ ["--ward-color" as string]: theme.color }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              className="result-card-image"
+              src={ssrImage(slug, 896)}
+              alt={`${ward.name}ちゃん`}
+              width={896}
+              height={1344}
+            />
+            <p className="result-card-name">{ward.name}ちゃん</p>
+            <p className="result-card-percent">
+              <span>にてる度</span>
+              <strong>{percent}%</strong>
+            </p>
+            {persona && (
+              <p className="result-card-type">タイプは「{persona.name}」</p>
+            )}
+            {heroBadges.length > 0 && (
+              <ul className="result-card-badges">
+                {heroBadges.map((k) => (
+                  <li key={k}>{AXIS_LABELS[k].name}が一致</li>
+                ))}
+              </ul>
+            )}
+            <a
+              className="result-x-share result-card-share"
+              href={shareHref}
+              target="_blank"
+              rel="noopener noreferrer"
             >
-              あなたも診断する
-            </Link>
+              <span aria-hidden="true">𝕏</span> で結果をシェアする
+            </a>
           </div>
+        ) : (
+          <>
+            <div
+              className="result-hero"
+              style={{ ["--ward-color" as string]: theme.color }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className="result-og-image"
+                src={`/og/${slug}.jpg`}
+                alt={`${ward.name}ちゃんの診断結果シェア画像`}
+                width={1200}
+                height={630}
+              />
+              <p className="result-character-line">{theme.catch}</p>
+            </div>
+            <div className="result-primary-action">
+              <Link
+                className="diagnosis-option result-share-link"
+                href="/#diagnosis"
+              >
+                あなたも診断する
+              </Link>
+            </div>
+          </>
         )}
 
         {persona && userVector && (
           <section className="result-section result-type-section">
             <p className="result-section-kicker">YOUR TYPE</p>
-            <h2>あなたは「{persona.name}」</h2>
+            <h2>あなたと{ward.name}ちゃんの重なり</h2>
             <p className="result-type-description">{persona.description}</p>
             <div
               className="ward-detail-radar"
@@ -276,20 +331,6 @@ export function ResultPage({ slug }: { slug: string }) {
           </p>
         </section>
 
-        {userVector && (
-          <div className="result-primary-action">
-            <p>この結果、誰かに見せたくなったら。</p>
-            <a
-              className="result-x-share"
-              href={xShareUrl(ward, shareUrl)}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span aria-hidden="true">𝕏</span> で結果をシェアする
-            </a>
-          </div>
-        )}
-
         {compatible.length > 0 && (
           <>
             <h2 className="result-ranking-title">
@@ -330,6 +371,18 @@ export function ResultPage({ slug }: { slug: string }) {
           </>
         )}
       </div>
+      {userVector && (
+        <div className="result-share-bar">
+          <a
+            className="result-x-share result-share-bar-button"
+            href={shareHref}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span aria-hidden="true">𝕏</span> で結果をシェアする
+          </a>
+        </div>
+      )}
     </main>
   );
 }

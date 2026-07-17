@@ -97,9 +97,9 @@ URLには区slugだけが含まれ、回答や5軸ベクトルは含まれない
 | `WardMap3D` / `WardMap2D` | 行政区域データによる区位置の描画 |
 | `Radar` | 5軸ベクトルのSVGレーダー可視化（モーダル・結果・区詳細で共用） |
 | `StatBar` | 指標1行の平均比バー表示（項目選定はモーダルと区詳細ページで分離） |
-| `xShareUrl`（`ShareCard.tsx`） | X Web Intent URL生成 |
+| `xShareText` / `xShareUrl` / `xWeightedLength`（`share.ts`） | X投稿文面生成・Web Intent URL生成・加重文字数計算 |
 
-`src/ui/WardDetail.tsx` と `ShareCard.tsx` の `ShareCard` コンポーネントは現行ルートから参照されていない。`ResultPage` が利用するのは `ShareCard.tsx` の `xShareUrl()` だけである。未使用コードとしての扱いは [07-risks-and-concerns.md](07-risks-and-concerns.md) に記載する。
+`src/ui/WardDetail.tsx` と `ShareCard.tsx` の `ShareCard` コンポーネントは現行ルートから参照されていない。`ResultPage` が直接利用するのは `src/ui/share.ts` の `xShareUrl()` だけである（`xShareText()` は `xShareUrl()` から内部的に呼ばれる）。未使用コードとしての扱いは [07-risks-and-concerns.md](07-risks-and-concerns.md) に記載する。
 
 ## 7. エラー時の挙動
 

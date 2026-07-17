@@ -26,10 +26,10 @@ describe("ResultPage", () => {
     saveDiagnosis({ ...emptyVector(), luxury: 1 }, "13103");
     render(<ResultPage slug="minato" />);
     expect(screen.getByText(/相性ランキング/)).toBeInTheDocument();
-    expect(screen.getByText(/で結果をシェアする/)).toBeInTheDocument();
+    // ヒーローはOGP横長画像ではなくキャラ立ち絵カード
     expect(
-      screen.getByRole("img", { name: "港区ちゃんの診断結果シェア画像" }),
-    ).toHaveAttribute("src", "/og/minato.jpg");
+      screen.getByRole("img", { name: "港区ちゃん" }),
+    ).toHaveAttribute("src", "/characters/ssr/minato-w896.webp");
     expect(screen.getByText("キャラクター設定理由")).toBeInTheDocument();
     expect(
       screen.getAllByText(/1を超えるほど自前の税収/).length,
@@ -47,11 +47,35 @@ describe("ResultPage", () => {
       screen.getByRole("link", { name: "より詳しく見る" }),
     ).toHaveAttribute("href", "/ward/minato/");
   });
+  it("shows similarity percent, type name, and match badges in the hero card", () => {
+    saveDiagnosis({ ...emptyVector(), luxury: 1 }, "13103");
+    render(<ResultPage slug="minato" />);
+    const card = screen.getByTestId("result-card");
+    expect(card).toHaveTextContent(/にてる度\d+%/);
+    expect(card).toHaveTextContent(/華やか志向タイプ/);
+    expect(card).toHaveTextContent(/が一致/);
+  });
+  it("keeps the OGP hero and diagnosis CTA for visitors", () => {
+    render(<ResultPage slug="minato" />);
+    expect(screen.queryByTestId("result-card")).not.toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: "港区ちゃんの診断結果シェア画像" }),
+    ).toHaveAttribute("src", "/og/minato.jpg");
+    expect(screen.getByText(/あなたも診断する/)).toBeInTheDocument();
+  });
   it("shows persona type, match reasons, and town hooks with a saved diagnosis", () => {
     saveDiagnosis({ ...emptyVector(), luxury: 1 }, "13103");
     render(<ResultPage slug="minato" />);
-    // ① あなたのタイプ（luxuryのみ閾値超え → 華やか志向タイプ）
-    expect(screen.getByText(/華やか志向タイプ/)).toBeInTheDocument();
+    // ① タイプ名は結果カードに、説明文はYOUR TYPEセクションに出る
+    expect(screen.getByTestId("result-card")).toHaveTextContent(
+      /華やか志向タイプ/,
+    );
+    expect(
+      screen.getByText(/良いものや華やかさに心が動く/),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/あなたと港区ちゃんの重なり/),
+    ).toBeInTheDocument();
     // ② なぜ相性がいいの？ 一致軸2つのハイライトとAI相性文（港×華やぎ）
     expect(
       screen.getByText(/なぜ、港区ちゃんと相性がいいの/),
@@ -88,5 +112,27 @@ describe("ResultPage", () => {
     render(<ResultPage slug="minato" />);
     expect(screen.queryByText(/相性ランキング/)).not.toBeInTheDocument();
     expect(screen.getByText(/あなたも診断する/)).toBeInTheDocument();
+  });
+  it("shows share CTA twice (card + sticky bar) with personalized text for owners", () => {
+    saveDiagnosis({ ...emptyVector(), luxury: 1 }, "13103");
+    render(<ResultPage slug="minato" />);
+    const shareLinks = screen.getAllByRole("link", {
+      name: /で結果をシェアする/,
+    });
+    expect(shareLinks).toHaveLength(2);
+    for (const link of shareLinks) {
+      const url = new URL(link.getAttribute("href")!);
+      const text = url.searchParams.get("text")!;
+      expect(text).toContain("にてる度");
+      expect(text).toContain("タイプは「華やか志向タイプ」");
+      expect(text).toContain("#うちの区ちゃん");
+      expect(text).toContain("#都知事杯オープンデータハッカソン");
+    }
+  });
+  it("hides share CTA for visitors", () => {
+    render(<ResultPage slug="minato" />);
+    expect(
+      screen.queryByRole("link", { name: /で結果をシェアする/ }),
+    ).not.toBeInTheDocument();
   });
 });
