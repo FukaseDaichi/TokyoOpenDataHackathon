@@ -595,6 +595,7 @@ html.uk-js .zukan-card-img.is-loaded {
   justify-content: center;
   padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
   background: rgba(5, 5, 5, 0.72);
+  -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   z-index: 40;
 }
