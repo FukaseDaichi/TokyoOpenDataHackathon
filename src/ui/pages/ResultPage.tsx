@@ -19,7 +19,7 @@ import { Radar } from "../Radar";
 import { xShareUrl } from "../share";
 import { StatBar } from "../StatBar";
 import { buildRadarStats, statLabelForAxis } from "../wardStats";
-import { wardTheme } from "../wardTheme";
+import { ssrImage, wardTheme } from "../wardTheme";
 
 const WARDS = loadWards();
 
@@ -64,6 +64,15 @@ export function ResultPage({ slug }: { slug: string }) {
     matchedAxes && profile
       ? pickPolicyForAxes(profile.policies, matchedAxes)
       : null;
+  // 自区（ランキング先頭）との距離から にてる度% を出す
+  const percent = ranked ? similarityPercent(ranked[0].distance) : null;
+  // バッジは選定軸のうち実差が小さい軸だけ（WHY WE MATCHの一致判定と同じ0.5閾値）
+  const heroBadges =
+    userVector && matchedAxes
+      ? matchedAxes.filter(
+          (k) => Math.abs(userVector[k] - ward.axes[k]) <= 0.5,
+        )
+      : [];
   /** [-1,1] → トラック上の位置% */
   const trackPos = (v: number) => ((v + 1) / 2) * 100;
 
@@ -77,30 +86,61 @@ export function ResultPage({ slug }: { slug: string }) {
             : `この人は${ward.name}ちゃんタイプ！`}
         </h1>
 
-        <div
-          className="result-hero"
-          style={{ ["--ward-color" as string]: theme.color }}
-        >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            className="result-og-image"
-            src={`/og/${slug}.jpg`}
-            alt={`${ward.name}ちゃんの診断結果シェア画像`}
-            width={1200}
-            height={630}
-          />
-          <p className="result-character-line">{theme.catch}</p>
-        </div>
-
-        {!userVector && (
-          <div className="result-primary-action">
-            <Link
-              className="diagnosis-option result-share-link"
-              href="/#diagnosis"
-            >
-              あなたも診断する
-            </Link>
+        {userVector && percent !== null ? (
+          <div
+            className="result-card"
+            data-testid="result-card"
+            style={{ ["--ward-color" as string]: theme.color }}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              className="result-card-image"
+              src={ssrImage(slug, 896)}
+              alt={`${ward.name}ちゃん`}
+              width={896}
+              height={1344}
+            />
+            <p className="result-card-name">{ward.name}ちゃん</p>
+            <p className="result-card-percent">
+              <span>にてる度</span>
+              <strong>{percent}%</strong>
+            </p>
+            {persona && (
+              <p className="result-card-type">タイプは「{persona.name}」</p>
+            )}
+            {heroBadges.length > 0 && (
+              <ul className="result-card-badges">
+                {heroBadges.map((k) => (
+                  <li key={k}>{AXIS_LABELS[k].name}が一致</li>
+                ))}
+              </ul>
+            )}
           </div>
+        ) : (
+          <>
+            <div
+              className="result-hero"
+              style={{ ["--ward-color" as string]: theme.color }}
+            >
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                className="result-og-image"
+                src={`/og/${slug}.jpg`}
+                alt={`${ward.name}ちゃんの診断結果シェア画像`}
+                width={1200}
+                height={630}
+              />
+              <p className="result-character-line">{theme.catch}</p>
+            </div>
+            <div className="result-primary-action">
+              <Link
+                className="diagnosis-option result-share-link"
+                href="/#diagnosis"
+              >
+                あなたも診断する
+              </Link>
+            </div>
+          </>
         )}
 
         {persona && userVector && (
