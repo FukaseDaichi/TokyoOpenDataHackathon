@@ -1,5 +1,5 @@
 import '@testing-library/jest-dom';
-import { describe, it, expect, vi } from 'vitest';
+import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { Zukan, zukanNo } from './Zukan';
 
@@ -47,5 +47,73 @@ describe('Zukan', () => {
     screen.getByRole('button', { name: '新宿区の詳細を見る' }).click();
     expect(onSelect).toHaveBeenCalledTimes(1);
     expect(onSelect.mock.calls[0][0].name).toBe('新宿区');
+  });
+});
+
+describe('Zukan タッチ環境のスクロールシャイン', () => {
+  class MockIntersectionObserver {
+    static instances: MockIntersectionObserver[] = [];
+    callback: IntersectionObserverCallback;
+    observed: Element[] = [];
+    constructor(cb: IntersectionObserverCallback) {
+      this.callback = cb;
+      MockIntersectionObserver.instances.push(this);
+    }
+    observe(el: Element) {
+      this.observed.push(el);
+    }
+    unobserve(el: Element) {
+      this.observed = this.observed.filter((e) => e !== el);
+    }
+    disconnect() {
+      this.observed = [];
+    }
+  }
+
+  const stubMedia = (opts: { hoverNone: boolean; reduced: boolean }) => {
+    vi.stubGlobal('matchMedia', (query: string) => ({
+      matches: query.includes('hover: none') ? opts.hoverNone : opts.reduced,
+      media: query,
+      addEventListener: () => {},
+      removeEventListener: () => {},
+    }));
+  };
+
+  beforeEach(() => {
+    MockIntersectionObserver.instances = [];
+    vi.stubGlobal('IntersectionObserver', MockIntersectionObserver);
+  });
+  afterEach(() => {
+    vi.unstubAllGlobals();
+  });
+
+  it('ホバー不可環境では画面に入ったカードに is-shine を1回だけ付ける', () => {
+    stubMedia({ hoverNone: true, reduced: false });
+    const { container } = render(<Zukan onSelect={() => {}} />);
+
+    const io = MockIntersectionObserver.instances[0];
+    expect(io).toBeDefined();
+    expect(io.observed).toHaveLength(23);
+
+    const card = container.querySelector('.zukan-card')!;
+    io.callback(
+      [{ target: card, isIntersecting: true } as unknown as IntersectionObserverEntry],
+      io as unknown as IntersectionObserver
+    );
+    expect(card.classList.contains('is-shine')).toBe(true);
+    // 付与後はunobserveされ再発火しない
+    expect(io.observed).toHaveLength(22);
+  });
+
+  it('ホバー可能環境ではObserverを起動しない', () => {
+    stubMedia({ hoverNone: false, reduced: false });
+    render(<Zukan onSelect={() => {}} />);
+    expect(MockIntersectionObserver.instances).toHaveLength(0);
+  });
+
+  it('reduced motion環境ではObserverを起動しない', () => {
+    stubMedia({ hoverNone: true, reduced: true });
+    render(<Zukan onSelect={() => {}} />);
+    expect(MockIntersectionObserver.instances).toHaveLength(0);
   });
 });
