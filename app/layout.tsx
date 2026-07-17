@@ -6,7 +6,7 @@ import './zukan.css';
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
 
 export const metadata: Metadata = {
-  title: 'うちの区ちゃん',
+  title: 'うちの区ちゃん | 東京23区 性格診断・擬人化図鑑',
   description:
     '東京23区をオープンデータで性格分類し擬人化。10問の診断で、あなたに一番似ている区ちゃんに出会える図鑑。',
   applicationName: 'うちの区ちゃん',

@@ -13,6 +13,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: `${ward.name}ちゃんタイプ | うちの区ちゃん`,
     description: `診断結果: あなたは${ward.name}ちゃんタイプ。${ward.catch}`,
+    alternates: { canonical: `/result/${slug}/` },
     // layoutのopenGraphは継承されず丸ごと置き換わるため、siteName等もここで指定する
     openGraph: {
       type: 'website',

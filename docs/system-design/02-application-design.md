@@ -9,8 +9,16 @@
 | `/` | `app/page.tsx` | 静的 | ヒーロー、診断、図鑑、区モーダル |
 | `/result/{slug}/` | `app/result/[slug]/page.tsx` | 23区分のSSG | 診断結果または共有着地、OGPメタデータ |
 | `/ward/{slug}/` | `app/ward/[slug]/page.tsx` | 23区分のSSG | 区の詳細指標、順位、同系統リンク、OGPメタデータ |
+| `/sitemap.xml` | `app/sitemap.ts` | 静的 | 全47URL（トップ+区詳細23+結果23）のsitemap |
+| `/robots.txt` | `app/robots.ts` | 静的 | 全許可 + Sitemap参照 |
 
 区コードとslugの対応は `src/data/slugs.ts` が `src/hero/wards.ts` から組み立てる。各動的ページも同じ対応表を静的パラメータに使う。
+
+SEOメタデータの方針:
+
+- 全ページに `alternates.canonical` を設定する（トップ `/`、区詳細 `/ward/{slug}/`、結果 `/result/{slug}/`）。絶対URL化は `app/layout.tsx` の `metadataBase`（`NEXT_PUBLIC_SITE_URL`）に依存する。
+- sitemapのURL列挙は純ロジック `src/lib/seo.ts` の `buildSitemapEntries()` が担い、URL末尾は `trailingSlash: true` と一致させる。
+- `app/sitemap.ts` と `app/robots.ts` は `NEXT_PUBLIC_SITE_URL` 未設定時に本番URL `https://uchinokuchan.pages.dev` へフォールバックする（OGP・canonicalと異なり相対URLが許されないため）。
 
 ## 2. クライアント境界
 
