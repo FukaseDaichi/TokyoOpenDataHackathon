@@ -108,4 +108,26 @@ describe("ResultPage", () => {
     expect(screen.queryByText(/相性ランキング/)).not.toBeInTheDocument();
     expect(screen.getByText(/あなたも診断する/)).toBeInTheDocument();
   });
+  it("shows share CTA twice (card + sticky bar) with personalized text for owners", () => {
+    saveDiagnosis({ ...emptyVector(), luxury: 1 }, "13103");
+    render(<ResultPage slug="minato" />);
+    const shareLinks = screen.getAllByRole("link", {
+      name: /で結果をシェアする/,
+    });
+    expect(shareLinks).toHaveLength(2);
+    for (const link of shareLinks) {
+      const url = new URL(link.getAttribute("href")!);
+      const text = url.searchParams.get("text")!;
+      expect(text).toContain("にてる度");
+      expect(text).toContain("タイプは「華やか志向タイプ」");
+      expect(text).toContain("#うちの区ちゃん");
+      expect(text).toContain("#都知事杯オープンデータハッカソン");
+    }
+  });
+  it("hides share CTA for visitors", () => {
+    render(<ResultPage slug="minato" />);
+    expect(
+      screen.queryByRole("link", { name: /で結果をシェアする/ }),
+    ).not.toBeInTheDocument();
+  });
 });

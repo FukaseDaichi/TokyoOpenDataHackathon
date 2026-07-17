@@ -75,9 +75,16 @@ export function ResultPage({ slug }: { slug: string }) {
       : [];
   /** [-1,1] → トラック上の位置% */
   const trackPos = (v: number) => ((v + 1) / 2) * 100;
+  const shareHref =
+    percent !== null && persona
+      ? xShareUrl(ward, shareUrl, { percent, personaName: persona.name })
+      : xShareUrl(ward, shareUrl);
 
   return (
-    <main className="book-section" style={{ minHeight: "100vh" }}>
+    <main
+      className={userVector ? "book-section has-share-bar" : "book-section"}
+      style={{ minHeight: "100vh" }}
+    >
       <div className="book-section-inner">
         <p className="book-section-eyebrow">SHINDAN RESULT</p>
         <h1 className="book-section-title">
@@ -115,6 +122,14 @@ export function ResultPage({ slug }: { slug: string }) {
                 ))}
               </ul>
             )}
+            <a
+              className="result-x-share result-card-share"
+              href={shareHref}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <span aria-hidden="true">𝕏</span> で結果をシェアする
+            </a>
           </div>
         ) : (
           <>
@@ -316,20 +331,6 @@ export function ResultPage({ slug }: { slug: string }) {
           </p>
         </section>
 
-        {userVector && (
-          <div className="result-primary-action">
-            <p>この結果、誰かに見せたくなったら。</p>
-            <a
-              className="result-x-share"
-              href={xShareUrl(ward, shareUrl)}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <span aria-hidden="true">𝕏</span> で結果をシェアする
-            </a>
-          </div>
-        )}
-
         {compatible.length > 0 && (
           <>
             <h2 className="result-ranking-title">
@@ -370,6 +371,18 @@ export function ResultPage({ slug }: { slug: string }) {
           </>
         )}
       </div>
+      {userVector && (
+        <div className="result-share-bar">
+          <a
+            className="result-x-share result-share-bar-button"
+            href={shareHref}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <span aria-hidden="true">𝕏</span> で結果をシェアする
+          </a>
+        </div>
+      )}
     </main>
   );
 }

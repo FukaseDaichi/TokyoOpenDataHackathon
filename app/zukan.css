@@ -582,6 +582,34 @@ html.uk-js .zukan-card-img.is-loaded {
   outline-offset: 3px;
 }
 
+.result-card-share {
+  margin-top: 16px;
+  min-width: 0;
+  width: 100%;
+}
+
+.result-share-bar {
+  position: fixed;
+  inset: auto 0 0 0;
+  display: flex;
+  justify-content: center;
+  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+  background: rgba(5, 5, 5, 0.72);
+  backdrop-filter: blur(8px);
+  z-index: 40;
+}
+
+.result-share-bar-button {
+  min-width: min(340px, 100%);
+  padding: 12px 24px;
+  box-shadow: none;
+  border-color: rgba(255, 255, 255, 0.35);
+}
+
+.has-share-bar {
+  padding-bottom: 110px;
+}
+
 .result-section {
   width: min(760px, 100%);
   margin: 52px auto 0;
