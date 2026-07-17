@@ -480,10 +480,13 @@ html.uk-js .zukan-card-img.is-loaded {
 
 .result-card-image {
   display: block;
-  width: min(240px, 62%);
+  width: 100%;
   height: auto;
-  margin: 0 auto;
-  filter: drop-shadow(0 10px 24px rgba(0, 0, 0, 0.25));
+  aspect-ratio: 1200 / 630;
+  object-fit: cover;
+  border: 2px solid var(--ward-color);
+  border-radius: 12px;
+  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
 }
 
 .result-card-name {

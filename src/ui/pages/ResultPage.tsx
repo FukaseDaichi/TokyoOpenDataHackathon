@@ -19,7 +19,7 @@ import { Radar } from "../Radar";
 import { xShareUrl } from "../share";
 import { StatBar } from "../StatBar";
 import { buildRadarStats, statLabelForAxis } from "../wardStats";
-import { ssrImage, wardTheme } from "../wardTheme";
+import { wardTheme } from "../wardTheme";
 
 const WARDS = loadWards();
 
@@ -102,10 +102,10 @@ export function ResultPage({ slug }: { slug: string }) {
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img
               className="result-card-image"
-              src={ssrImage(slug, 896)}
-              alt={`${ward.name}ちゃん`}
-              width={896}
-              height={1344}
+              src={`/og/${slug}.jpg`}
+              alt={`${ward.name}ちゃんの診断結果シェア画像`}
+              width={1200}
+              height={630}
             />
             <p className="result-card-name">{ward.name}ちゃん</p>
             <p className="result-card-percent">

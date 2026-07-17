@@ -26,10 +26,10 @@ describe("ResultPage", () => {
     saveDiagnosis({ ...emptyVector(), luxury: 1 }, "13103");
     render(<ResultPage slug="minato" />);
     expect(screen.getByText(/相性ランキング/)).toBeInTheDocument();
-    // ヒーローはOGP横長画像ではなくキャラ立ち絵カード
+    // ヒーローカードの画像は横長OGP画像
     expect(
-      screen.getByRole("img", { name: "港区ちゃん" }),
-    ).toHaveAttribute("src", "/characters/ssr/minato-w896.webp");
+      screen.getByRole("img", { name: "港区ちゃんの診断結果シェア画像" }),
+    ).toHaveAttribute("src", "/og/minato.jpg");
     expect(screen.getByText("キャラクター設定理由")).toBeInTheDocument();
     expect(
       screen.getAllByText(/1を超えるほど自前の税収/).length,
