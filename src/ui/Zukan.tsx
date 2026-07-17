@@ -41,8 +41,11 @@ export function Zukan({ onSelect }: { onSelect: (w: Ward) => void }) {
             ) : (
               <span className="zukan-card-img zukan-card-placeholder" aria-hidden="true" />
             )}
-            <span className="zukan-card-name">{w.name}</span>
-            <span className="zukan-card-group">{w.group}</span>
+            <span className="zukan-card-shine" aria-hidden="true" />
+            <span className="zukan-card-plate">
+              <span className="zukan-card-name">{w.name}</span>
+              {theme.catch ? <span className="zukan-card-catch">{theme.catch}</span> : null}
+            </span>
           </button>
         );
       })}
