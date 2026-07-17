@@ -5,7 +5,7 @@
    ============================================================ */
 
 .book-section {
-  background: #17110c;
+  background: var(--w-bg, #17110c);
   color: #f4e8d0;
   padding: 96px 20px 120px;
 }
@@ -18,7 +18,7 @@
 .book-section-eyebrow {
   font-size: 12px;
   letter-spacing: 0.42em;
-  color: #b8923f;
+  color: var(--w-accent-dark, #b8923f);
   text-align: center;
   margin-bottom: 14px;
 }
@@ -347,7 +347,7 @@ html.uk-js .zukan-card-img.is-loaded {
 .fellow-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; margin-top: 12px; }
 .fellow-card { display: block; text-decoration: none; text-align: center; padding: 8px; background: linear-gradient(180deg, #f7ecd4, #eeddb8); border: 2px solid #b8923f; border-radius: 8px; color: #4a3418; font-size: 13px; letter-spacing: 0.1em; }
 .fellow-card img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 4px; margin-bottom: 6px; }
-.ward-page-back { display: inline-block; color: #b8923f; text-decoration: none; letter-spacing: 0.14em; font-size: 13px; margin-bottom: 20px; }
+.ward-page-back { display: inline-block; color: var(--w-accent-dark, #b8923f); text-decoration: none; letter-spacing: 0.14em; font-size: 13px; margin-bottom: 20px; }
 
 /* ---- 診断フロー ---- */
 
@@ -1620,11 +1620,11 @@ html.uk-js .zukan-card-img.is-loaded {
   grid-template-columns: minmax(240px, 340px) 1fr;
   gap: 28px;
   align-items: start;
-  background: linear-gradient(180deg, #f7ecd4 0%, #eeddb8 100%);
-  border: 3px solid #b8923f;
+  background: var(--w-card, #f7ecd4);
+  border: 3px solid var(--w-accent, #b8923f);
   border-radius: 14px;
   padding: 28px;
-  color: #4a3418;
+  color: var(--w-ink, #4a3418);
   text-align: left;
 }
 
