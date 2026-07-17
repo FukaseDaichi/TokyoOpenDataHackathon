@@ -17,7 +17,7 @@ for (const file of files) {
     const out = path.join(OUT_DIR, `${slug}-w${width}.webp`);
     await sharp(path.join(SRC_DIR, file))
       .resize({ width, withoutEnlargement: true })
-      .webp({ quality: 80 })
+      .webp({ quality: 86 })
       .toFile(out);
     console.log(`${out}`);
   }

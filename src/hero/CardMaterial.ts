@@ -48,6 +48,9 @@ const fragmentShader = /* glsl */ `
     col = mix(col, uFogColor, fogF);
     float alpha = base.a * (1.0 - fogF * 0.35);
     gl_FragColor = vec4(col, alpha);
+    // ShaderMaterialは出力色空間変換が自動挿入されないため明示する。
+    // これが無いとリニア値がそのまま画面に出て原画より暗く沈む。
+    #include <colorspace_fragment>
   }
 `;
 
@@ -75,5 +78,7 @@ export function createCardMaterial(map: THREE.Texture, tint: string, fogColor: s
     vertexShader,
     fragmentShader,
     transparent: true,
+    // カードは原画の色を忠実に出す（ACES等のトーンマッピングで沈ませない）
+    toneMapped: false,
   });
 }

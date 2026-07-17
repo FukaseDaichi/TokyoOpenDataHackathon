@@ -103,7 +103,7 @@ export function createPlaceholderTexture(card: HeroCard): THREE.CanvasTexture {
 
   const tex = new THREE.CanvasTexture(canvas);
   tex.colorSpace = THREE.SRGBColorSpace;
-  tex.anisotropy = 4;
+  tex.anisotropy = 8;
   return tex;
 }
 
@@ -147,7 +147,7 @@ export function createTextureStore(cards: HeroCard[], textureWidth: 512 | 896): 
               return;
             }
             tex.colorSpace = THREE.SRGBColorSpace;
-            tex.anisotropy = 4;
+            tex.anisotropy = 8;
             const old = textures.get(card.id);
             textures.set(card.id, tex);
             old?.dispose();

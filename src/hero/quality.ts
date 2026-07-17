@@ -15,7 +15,7 @@ export interface QualitySettings {
 }
 
 export const QUALITY_SETTINGS: Record<Exclude<QualityTier, 'fallback'>, QualitySettings> = {
-  high: { dprMax: 1.5, goldDust: 600, paperBits: 42, textureWidth: 896, maxCorridorBand: 5, mouseTilt: true },
+  high: { dprMax: 2, goldDust: 600, paperBits: 42, textureWidth: 896, maxCorridorBand: 5, mouseTilt: true },
   low: { dprMax: 1.2, goldDust: 180, paperBits: 16, textureWidth: 512, maxCorridorBand: 4, mouseTilt: false },
 };
 
