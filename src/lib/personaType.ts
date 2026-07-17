@@ -74,3 +74,8 @@ export function selectMatchedAxes(user: AxisVector, ward: AxisVector): [AxisKey,
   const picked = [...qualified, ...rest].slice(0, 2);
   return [picked[0], picked[1]];
 }
+
+/** 一致軸のハッシュタグ用ラベル。ユーザー側の極の呼び名を一致軸の順に返す */
+export function matchedAxisTags(user: AxisVector, matched: AxisKey[]): string[] {
+  return matched.map((k) => pole(k, user[k]).label);
+}

@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { emptyVector, type AxisVector } from '../domain/axes';
-import { personaType, selectMatchedAxes } from './personaType';
+import { personaType, selectMatchedAxes, matchedAxisTags } from './personaType';
 
 function vec(partial: Partial<AxisVector>): AxisVector {
   return { ...emptyVector(), ...partial };
@@ -77,5 +77,15 @@ describe('selectMatchedAxes', () => {
     expect(result).toHaveLength(2);
     // 差最小は family=0 / luxury=0（同値はAXIS_KEYS順）
     expect(result).toEqual(['family', 'luxury']);
+  });
+});
+
+describe('matchedAxisTags', () => {
+  it('ユーザー側の極のラベルを一致軸の順に返す', () => {
+    const user = { ...emptyVector(), luxury: 1, liveliness: -0.6 };
+    expect(matchedAxisTags(user, ['luxury', 'liveliness'])).toEqual(['華やか志向', 'のんびり派']);
+  });
+  it('値0の軸は高い側のラベルになる', () => {
+    expect(matchedAxisTags(emptyVector(), ['greenery'])).toEqual(['みどり派']);
   });
 });
