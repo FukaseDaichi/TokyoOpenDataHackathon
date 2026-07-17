@@ -40,3 +40,20 @@ export function similarityPercent(distance: number): number {
   const maxD = Math.sqrt(5 * 4); // 各軸差 ±2 の理論最大
   return Math.round(Math.max(0, 1 - distance / maxD) * 100);
 }
+
+/** 相性ランキング表示用の%。生の%の最大が結果の%以上になる場合だけ、
+    最大が「結果%−1」となるよう全体を比例スケーリングし、
+    表示が常に 結果 > 相性1位 ≥ 2位 ≥ 3位 の単調な並びになることを保証する。
+    校正済み割り当てには影響しない（distances は距離昇順前提） */
+export function compatibilityPercents(
+  resultDistance: number,
+  compatibleDistances: number[],
+): number[] {
+  const raw = compatibleDistances.map(similarityPercent);
+  if (raw.length === 0) return raw;
+  const resultPercent = similarityPercent(resultDistance);
+  const maxRaw = Math.max(...raw);
+  if (maxRaw < resultPercent || maxRaw === 0) return raw;
+  const cap = Math.max(resultPercent - 1, 0);
+  return raw.map((p) => Math.floor((p * cap) / maxRaw));
+}
