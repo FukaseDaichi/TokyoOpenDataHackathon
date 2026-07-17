@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
 import { describe, it, expect, beforeEach, vi } from "vitest";
-import { render, screen } from "@testing-library/react";
+import { render, screen, within } from "@testing-library/react";
 import { ResultPage } from "./ResultPage";
 import { saveDiagnosis } from "../../lib/diagnosisSession";
 import { emptyVector } from "../../domain/axes";
@@ -15,68 +15,59 @@ vi.mock("next/link", () => ({
 
 describe("ResultPage", () => {
   beforeEach(() => sessionStorage.clear());
-  it("shows visitor view (CTA, no ranking) without a saved diagnosis", () => {
-    render(<ResultPage slug="minato" />);
-    // h1タイトル・ward名・リンク文言のすべてに「港区ちゃん」が含まれるため複数マッチする
+
+  it("shows visitor view (CTA, no ranking, no result card) without a saved diagnosis", () => {
+    const { container } = render(<ResultPage slug="minato" />);
     expect(screen.getAllByText(/港区ちゃん/).length).toBeGreaterThan(0);
     expect(screen.getByText(/あなたも診断する/)).toBeInTheDocument();
     expect(screen.queryByText(/相性ランキング/)).not.toBeInTheDocument();
-  });
-  it("shows owner view (ranking + share) with a saved diagnosis", () => {
-    saveDiagnosis({ ...emptyVector(), luxury: 1 }, "13103");
-    render(<ResultPage slug="minato" />);
-    expect(screen.getByText(/相性ランキング/)).toBeInTheDocument();
-    // ヒーローカードの画像は横長OGP画像
-    expect(
-      screen.getByRole("img", { name: "港区ちゃんの診断結果シェア画像" }),
-    ).toHaveAttribute("src", "/og/minato.jpg");
-    expect(screen.getByText("キャラクター設定理由")).toBeInTheDocument();
-    expect(
-      screen.getAllByText(/1を超えるほど自前の税収/).length,
-    ).toBeGreaterThan(0);
-    expect(screen.getByText("昼夜間人口比率")).toBeInTheDocument();
-    const rankLinks = screen.getAllByRole("img", {
-      name: /ちゃんの詳細を見る/,
-    });
-    expect(rankLinks).toHaveLength(3);
-    expect(rankLinks[0].closest("a")).toHaveAttribute(
-      "href",
-      expect.stringMatching(/^\/ward\/.+\/$/),
-    );
-    expect(
-      screen.getByRole("link", { name: "より詳しく見る" }),
-    ).toHaveAttribute("href", "/ward/minato/");
-  });
-  it("shows similarity percent, type name, and match badges in the hero card", () => {
-    saveDiagnosis({ ...emptyVector(), luxury: 1 }, "13103");
-    render(<ResultPage slug="minato" />);
-    const card = screen.getByTestId("result-card");
-    expect(card).toHaveTextContent(/にてる度\d+%/);
-    expect(card).toHaveTextContent(/華やか志向タイプ/);
-    expect(card).toHaveTextContent(/が一致/);
-  });
-  it("keeps the OGP hero and diagnosis CTA for visitors", () => {
-    render(<ResultPage slug="minato" />);
     expect(screen.queryByTestId("result-card")).not.toBeInTheDocument();
     expect(
       screen.getByRole("img", { name: "港区ちゃんの診断結果シェア画像" }),
     ).toHaveAttribute("src", "/og/minato.jpg");
-    expect(screen.getByText(/あなたも診断する/)).toBeInTheDocument();
+    // 訪問者にも「もっと詳しく」アコーディオン（性格・ステータス）は見える
+    expect(container.querySelectorAll("details.result-accordion")).toHaveLength(2);
+    expect(screen.queryByText(/タイプの特徴/)).not.toBeInTheDocument();
+    expect(
+      screen.queryByRole("link", { name: /で結果をシェアする/ }),
+    ).not.toBeInTheDocument();
   });
-  it("shows persona type, match reasons, and town hooks with a saved diagnosis", () => {
+
+  it("shows the result card with overlay name+percent, catch, tags and actions", () => {
     saveDiagnosis({ ...emptyVector(), luxury: 1 }, "13103");
     render(<ResultPage slug="minato" />);
-    // ① タイプ名は結果カードに、説明文はYOUR TYPEセクションに出る
-    expect(screen.getByTestId("result-card")).toHaveTextContent(
-      /華やか志向タイプ/,
-    );
+    const card = screen.getByTestId("result-card");
+    // 画像上のオーバーレイに区名とにてる度
+    const overlay = card.querySelector(".result-card-overlay")!;
+    expect(overlay).toHaveTextContent("港区ちゃん");
+    expect(overlay).toHaveTextContent(/にてる度\d+%/);
+    // キャッチコピーとハッシュタグ（一致軸2本の極ラベル）
+    expect(card).toHaveTextContent(/財政力1\.15の絶対王者/);
+    expect(card.querySelectorAll(".result-card-tags span")).toHaveLength(2);
+    expect(card).toHaveTextContent(/#華やか志向/);
+    // カード内のシェアと詳細導線
     expect(
-      screen.getByText(/良いものや華やかさに心が動く/),
+      within(card as HTMLElement).getByRole("link", { name: /で結果をシェアする/ }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/あなたと港区ちゃんの重なり/),
-    ).toBeInTheDocument();
-    // ② なぜ相性がいいの？ 一致軸2つのハイライトとAI相性文（港×華やぎ）
+      within(card as HTMLElement).getByRole("link", { name: "詳しく見る" }),
+    ).toHaveAttribute("href", "/ward/minato/");
+  });
+
+  it("shows traits and persona summary in the type section", () => {
+    saveDiagnosis({ ...emptyVector(), luxury: 1 }, "13103");
+    render(<ResultPage slug="minato" />);
+    const heading = screen.getByText("港区ちゃんタイプの特徴");
+    const section = heading.closest("section")!;
+    expect(section.querySelectorAll(".result-trait-list li")).toHaveLength(3);
+    expect(screen.getByText(/タイプは「華やか志向タイプ」/)).toBeInTheDocument();
+  });
+
+  it("renders exactly one radar and only matched-axis tracks", () => {
+    saveDiagnosis({ ...emptyVector(), luxury: 1 }, "13103");
+    const { container } = render(<ResultPage slug="minato" />);
+    expect(container.querySelectorAll(".ward-detail-radar")).toHaveLength(1);
+    expect(container.querySelectorAll(".result-axis-compare")).toHaveLength(2);
     expect(
       screen.getByText(/なぜ、港区ちゃんと相性がいいの/),
     ).toBeInTheDocument();
@@ -84,12 +75,8 @@ describe("ResultPage", () => {
     expect(
       screen.getByText(/華やかさで応えてくれる度合いなら/),
     ).toBeInTheDocument();
-    // ③ 実はこんな街: 一致軸（華やぎ→財政力指数1位 / 世帯→単身世帯率10位）のカードと政策
-    expect(screen.getByText(/実はこんな街/)).toBeInTheDocument();
-    expect(screen.getByText("23区1位")).toBeInTheDocument();
-    expect(screen.getByText("23区10位")).toBeInTheDocument();
-    expect(screen.getByText(/はぐくむまち/)).toBeInTheDocument();
   });
+
   it("badges only axes that are actually close (matched axis with a wide gap gets no badge)", () => {
     // 新宿: family差0（一致）だがliveliness差0.86（遠い）→ バッジは1つだけ
     saveDiagnosis(
@@ -99,27 +86,59 @@ describe("ResultPage", () => {
     render(<ResultPage slug="shinjuku" />);
     expect(screen.getAllByText("ここが一致！")).toHaveLength(1);
   });
-  it("hides persona type and match sections for visitors", () => {
-    render(<ResultPage slug="minato" />);
+
+  it("puts detail content into three accordions for owners", () => {
+    saveDiagnosis({ ...emptyVector(), luxury: 1 }, "13103");
+    const { container } = render(<ResultPage slug="minato" />);
+    expect(container.querySelectorAll("details.result-accordion")).toHaveLength(3);
+    expect(screen.getByText("性格を詳しく見る")).toBeInTheDocument();
+    expect(screen.getByText(/実はこんな街、港区/)).toBeInTheDocument();
+    expect(screen.getByText("港区ちゃんのステータスを見る")).toBeInTheDocument();
+    // 中身（閉じていてもDOMには存在する）
+    expect(screen.getByText("昼夜間人口比率")).toBeInTheDocument();
+    expect(screen.getByText("23区1位")).toBeInTheDocument();
+    expect(screen.getByText(/はぐくむまち/)).toBeInTheDocument();
     expect(
-      screen.queryByText(/あなたのタイプ|YOUR TYPE/),
-    ).not.toBeInTheDocument();
-    expect(screen.queryByText(/相性がいいの/)).not.toBeInTheDocument();
-    expect(screen.queryByText(/実はこんな街/)).not.toBeInTheDocument();
+      screen.getAllByText(/1を超えるほど自前の税収/).length,
+    ).toBeGreaterThan(0);
+    expect(
+      screen.getByRole("link", { name: "より詳しく見る" }),
+    ).toHaveAttribute("href", "/ward/minato/");
   });
-  it("shows visitor view when the saved result belongs to a different ward", () => {
-    saveDiagnosis({ ...emptyVector(), luxury: 1 }, "13101");
+
+  it("keeps compatibility percents strictly below the result percent", () => {
+    // 港区が距離最小になりにくい正反対のベクトルでも、表示上の逆転が起きない
+    saveDiagnosis({ ...emptyVector(), liveliness: -1, luxury: -1 }, "13103");
     render(<ResultPage slug="minato" />);
-    expect(screen.queryByText(/相性ランキング/)).not.toBeInTheDocument();
-    expect(screen.getByText(/あなたも診断する/)).toBeInTheDocument();
+    const strong = screen
+      .getByTestId("result-card")
+      .querySelector(".result-card-overlay-percent strong")!;
+    const cardPercent = Number(strong.textContent!.replace("%", ""));
+    const rankPercents = screen
+      .getAllByText(/にてる度 \d+%/)
+      .map((el) => Number(el.textContent!.match(/(\d+)%/)![1]));
+    expect(rankPercents).toHaveLength(3);
+    for (const p of rankPercents) expect(p).toBeLessThan(cardPercent);
   });
-  it("shows share CTA twice (card + sticky bar) with personalized text for owners", () => {
+
+  it("shows ranking cards with ward OGP images", () => {
     saveDiagnosis({ ...emptyVector(), luxury: 1 }, "13103");
     render(<ResultPage slug="minato" />);
-    const shareLinks = screen.getAllByRole("link", {
-      name: /で結果をシェアする/,
-    });
-    expect(shareLinks).toHaveLength(2);
+    expect(screen.getByText(/相性ランキング/)).toBeInTheDocument();
+    const rankLinks = screen.getAllByRole("img", { name: /ちゃんの詳細を見る/ });
+    expect(rankLinks).toHaveLength(3);
+    expect(rankLinks[0].closest("a")).toHaveAttribute(
+      "href",
+      expect.stringMatching(/^\/ward\/.+\/$/),
+    );
+  });
+
+  it("shows share CTA three times (card + final CTA + mobile bar) with personalized text", () => {
+    saveDiagnosis({ ...emptyVector(), luxury: 1 }, "13103");
+    render(<ResultPage slug="minato" />);
+    expect(screen.getByText(/この結果、誰かに似ていませんか/)).toBeInTheDocument();
+    const shareLinks = screen.getAllByRole("link", { name: /で結果をシェアする/ });
+    expect(shareLinks).toHaveLength(3);
     for (const link of shareLinks) {
       const url = new URL(link.getAttribute("href")!);
       const text = url.searchParams.get("text")!;
@@ -129,10 +148,11 @@ describe("ResultPage", () => {
       expect(text).toContain("#都知事杯オープンデータハッカソン");
     }
   });
-  it("hides share CTA for visitors", () => {
+
+  it("shows visitor view when the saved result belongs to a different ward", () => {
+    saveDiagnosis({ ...emptyVector(), luxury: 1 }, "13101");
     render(<ResultPage slug="minato" />);
-    expect(
-      screen.queryByRole("link", { name: /で結果をシェアする/ }),
-    ).not.toBeInTheDocument();
+    expect(screen.queryByText(/相性ランキング/)).not.toBeInTheDocument();
+    expect(screen.getByText(/あなたも診断する/)).toBeInTheDocument();
   });
 });

@@ -465,17 +465,22 @@ html.uk-js .zukan-card-img.is-loaded {
   letter-spacing: 0.1em;
 }
 
+/* ① 結果カード: 画像オーバーレイ型・PCで最大820px */
 .result-card {
-  --ward-color: #b8923f;
-  width: min(420px, 100%);
+  width: min(820px, 100%);
   margin: 26px auto 0;
-  padding: clamp(18px, 5vw, 26px);
-  border: 3px solid var(--ward-color);
+  padding: clamp(12px, 2.2vw, 18px);
   border-radius: 18px;
-  background: linear-gradient(180deg, #f7ecd4 0%, #eeddb8 100%);
-  color: #4a3418;
+  background: var(--w-card, #f7ecd4);
+  color: var(--w-ink, #4a3418);
   text-align: center;
   box-shadow: 0 18px 50px rgba(0, 0, 0, 0.42);
+}
+
+.result-card-visual {
+  position: relative;
+  border-radius: 12px;
+  overflow: hidden;
 }
 
 .result-card-image {
@@ -484,61 +489,75 @@ html.uk-js .zukan-card-img.is-loaded {
   height: auto;
   aspect-ratio: 1200 / 630;
   object-fit: cover;
-  border: 2px solid var(--ward-color);
-  border-radius: 12px;
-  box-shadow: 0 10px 24px rgba(0, 0, 0, 0.25);
 }
 
-.result-card-name {
-  margin-top: 10px;
-  font-size: clamp(22px, 6vw, 28px);
+.result-card-overlay {
+  position: absolute;
+  inset: auto 0 0 0;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 12px;
+  margin: 0;
+  padding: clamp(26px, 5vw, 44px) clamp(14px, 3vw, 24px) clamp(10px, 2vw, 16px);
+  background: linear-gradient(180deg, rgba(10, 6, 2, 0) 0%, rgba(10, 6, 2, 0.82) 82%);
+  color: #fff;
+}
+
+.result-card-overlay-name {
+  font-size: clamp(16px, 3vw, 24px);
   font-weight: 700;
   letter-spacing: 0.08em;
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
 }
 
-.result-card-percent {
-  margin-top: 4px;
-  line-height: 1.1;
+.result-card-overlay-percent {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  white-space: nowrap;
 }
 
-.result-card-percent span {
-  display: block;
-  font-size: 12px;
-  letter-spacing: 0.24em;
-  color: #8a6c3c;
+.result-card-overlay-percent span {
+  font-size: clamp(10px, 1.8vw, 13px);
+  letter-spacing: 0.22em;
+  opacity: 0.85;
 }
 
-.result-card-percent strong {
-  font-size: clamp(44px, 13vw, 60px);
+.result-card-overlay-percent strong {
+  font-size: clamp(36px, 7vw, 58px);
   font-weight: 800;
-  color: var(--ward-color);
+  line-height: 1;
+  color: var(--w-accent-dark, #e8c56b);
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.55);
 }
 
-.result-card-type {
-  margin-top: 8px;
-  font-size: clamp(15px, 4vw, 18px);
+.result-card-lead {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: center;
+  gap: 6px 14px;
+  margin-top: 14px;
+  font-size: clamp(13px, 2vw, 15px);
+  line-height: 1.8;
+}
+
+.result-card-tags {
+  display: inline-flex;
+  gap: 10px;
+  font-size: 13px;
   font-weight: 700;
-  letter-spacing: 0.06em;
+  letter-spacing: 0.04em;
+  color: var(--w-accent, #8a6c3c);
 }
 
-.result-card-badges {
+.result-card-actions {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 8px;
-  margin-top: 12px;
-  padding: 0;
-  list-style: none;
-}
-
-.result-card-badges li {
-  padding: 5px 12px;
-  border: 1.5px solid var(--ward-color);
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 700;
-  color: #4a3418;
-  background: rgba(255, 255, 255, 0.55);
+  gap: 12px;
+  margin-top: 16px;
 }
 
 .result-primary-action {
@@ -556,80 +575,92 @@ html.uk-js .zukan-card-img.is-loaded {
   letter-spacing: 0.1em;
 }
 
-.result-x-share {
+/* シェアはページ内で最も目立つボタン（区色） */
+.result-share-button {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
-  min-width: min(340px, 100%);
-  padding: 15px 24px;
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  min-width: min(300px, 100%);
+  padding: 15px 28px;
   border-radius: 999px;
-  background: #050505;
-  color: #fff;
+  background: var(--w-accent, #b8923f);
+  color: var(--w-accent-text, #fffbf0);
   font-size: 16px;
   font-weight: 700;
   letter-spacing: 0.08em;
   text-decoration: none;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.38);
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.34);
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.result-x-share:hover {
+.result-share-button:hover {
   transform: translateY(-2px);
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.46);
 }
 
-.result-x-share:focus-visible {
-  outline: 3px solid #e8c56b;
+.result-share-button:focus-visible {
+  outline: 3px solid var(--w-accent-dark, #e8c56b);
   outline-offset: 3px;
 }
 
-.result-card-share {
-  margin-top: 16px;
-  min-width: 0;
-  width: 100%;
-}
-
-.result-share-bar {
-  position: fixed;
-  inset: auto 0 0 0;
-  display: flex;
+.result-detail-button {
+  display: inline-flex;
+  align-items: center;
   justify-content: center;
-  padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
-  background: rgba(5, 5, 5, 0.72);
-  -webkit-backdrop-filter: blur(8px);
-  backdrop-filter: blur(8px);
-  z-index: 40;
+  padding: 13px 26px;
+  border: 2px solid var(--w-accent, #b8923f);
+  border-radius: 999px;
+  color: var(--w-ink, #4a3418);
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-decoration: none;
 }
 
-.result-share-bar-button {
-  min-width: min(340px, 100%);
-  padding: 12px 24px;
-  box-shadow: none;
-  border-color: rgba(255, 255, 255, 0.35);
+/* 追従シェアバーはモバイル幅のみ */
+.result-share-bar {
+  display: none;
 }
 
-.has-share-bar {
-  padding-bottom: 110px;
+@media (max-width: 640px) {
+  .result-share-bar {
+    position: fixed;
+    inset: auto 0 0 0;
+    display: flex;
+    justify-content: center;
+    padding: 10px 16px calc(10px + env(safe-area-inset-bottom));
+    background: rgba(5, 5, 5, 0.72);
+    -webkit-backdrop-filter: blur(8px);
+    backdrop-filter: blur(8px);
+    z-index: 40;
+  }
+
+  .result-share-bar-button {
+    min-width: min(340px, 100%);
+    padding: 12px 24px;
+    box-shadow: none;
+  }
+
+  .has-share-bar {
+    padding-bottom: 110px;
+  }
 }
 
 .result-section {
   width: min(760px, 100%);
-  margin: 52px auto 0;
-  padding: clamp(22px, 4vw, 36px);
-  border: 2px solid rgba(184, 146, 63, 0.8);
+  margin: 64px auto 0;
+  padding: clamp(20px, 3.4vw, 30px);
   border-radius: 14px;
-  background: linear-gradient(180deg, #f7ecd4 0%, #eeddb8 100%);
-  color: #4a3418;
+  background: var(--w-card, #f7ecd4);
+  color: var(--w-ink, #4a3418);
   text-align: left;
-  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.22);
 }
 
 .result-section-kicker {
   margin-bottom: 7px;
-  color: #8a6c3c;
-  font-size: 10px;
+  color: var(--w-accent, #8a6c3c);
+  font-size: 9px;
   letter-spacing: 0.28em;
 }
 
@@ -637,6 +668,96 @@ html.uk-js .zukan-card-img.is-loaded {
   font-size: clamp(20px, 3.2vw, 28px);
   line-height: 1.5;
   letter-spacing: 0.1em;
+}
+
+/* ③ WHYセクションのレーダー（旧 .result-type-section .ward-detail-radar の代替） */
+.result-affinity-section .ward-detail-radar {
+  margin: 18px 0 6px;
+  display: flex;
+  justify-content: center;
+}
+
+/* ② タイプ特徴3行 */
+.result-trait-list {
+  list-style: none;
+  margin: 16px 0 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.result-trait-list li {
+  position: relative;
+  padding-left: 22px;
+  font-size: 15px;
+  line-height: 1.9;
+}
+
+.result-trait-list li::before {
+  content: '◆';
+  position: absolute;
+  left: 0;
+  top: 0.45em;
+  font-size: 12px;
+  color: var(--w-accent, #b8923f);
+}
+
+/* ④ 詳細アコーディオン */
+.result-accordion {
+  border-top: 1px solid rgba(74, 52, 24, 0.18);
+}
+
+.result-accordion:last-of-type {
+  border-bottom: 1px solid rgba(74, 52, 24, 0.18);
+}
+
+.result-accordion summary {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 16px 4px;
+  cursor: pointer;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  list-style: none;
+}
+
+.result-accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.result-accordion summary::before {
+  content: '＋';
+  font-weight: 800;
+  color: var(--w-accent, #b8923f);
+}
+
+.result-accordion[open] summary::before {
+  content: '−';
+}
+
+.result-accordion-body {
+  padding: 0 4px 20px;
+}
+
+.result-accordion .result-status-detail-link {
+  position: static;
+  display: inline-block;
+  margin-top: 14px;
+}
+
+/* ⑥ 最後のシェアCTA */
+.result-final-cta {
+  margin: 72px auto 0;
+  text-align: center;
+}
+
+.result-final-cta p {
+  margin-bottom: 16px;
+  color: #d8c8a4;
+  font-size: 14px;
+  letter-spacing: 0.12em;
 }
 
 .result-ai-badge {
@@ -656,21 +777,11 @@ html.uk-js .zukan-card-img.is-loaded {
   line-height: 2.1;
 }
 
-.result-status .ward-detail-radar {
-  margin: 18px 0 12px;
-}
-
 /* ① あなたのタイプ */
 .result-type-description {
   margin-top: 12px;
   font-size: 15px;
   line-height: 2;
-}
-
-.result-type-section .ward-detail-radar {
-  margin: 18px 0 6px;
-  display: flex;
-  justify-content: center;
 }
 
 .result-radar-legend {
@@ -865,7 +976,7 @@ html.uk-js .zukan-card-img.is-loaded {
   text-align: center;
   font-size: 13px;
   letter-spacing: 0.32em;
-  color: #b8923f;
+  color: var(--w-accent-dark, #b8923f);
   margin: 52px 0 20px;
 }
 
@@ -942,8 +1053,19 @@ html.uk-js .zukan-card-img.is-loaded {
   white-space: nowrap;
 }
 
-.result-status {
-  position: relative;
+@media (max-width: 640px) {
+  .result-ranking {
+    display: flex;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    padding: 0 4px 10px;
+  }
+
+  .result-ranking li {
+    flex: 0 0 76%;
+    scroll-snap-align: start;
+  }
 }
 
 .result-status-detail-link {
@@ -1514,10 +1636,6 @@ html.uk-js .zukan-card-img.is-loaded {
   .ward-detail-portrait {
     max-width: 240px;
     margin: 0 auto;
-  }
-  .result-ranking {
-    grid-template-columns: 1fr;
-    max-width: 420px;
   }
   .result-section {
     padding: 22px 18px;
