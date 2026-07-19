@@ -23,7 +23,7 @@
 ### 2. スクロール挙動（読んでいる間は消える）
 
 - 表示ルール: **ページ上端付近（scrollY ≤ 120px）では常に表示。それより下では、上スクロールで表示・下スクロールで隠す**。初期表示時は見えている（共有で来た人がすぐ導線に気づける）。
-- 判定は純ロジック `src/lib/bookHeader.ts` の `headerVisibility(prevY, currentY, visible): boolean` として切り出し、Vitestを先に書く（AGENTS.mdの純ロジック方針）。8px未満の微小スクロールでは状態を変えないヒステリシスを入れる。
+- 判定は純ロジック `src/lib/bookHeader.ts` の `nextHeaderState(state: {anchorY, visible}, y)` reducerとして切り出し、Vitestを先に書く（AGENTS.mdの純ロジック方針）。8px未満の微小スクロールでは状態を変えないヒステリシスを入れる。
 - スクロール監視は `passive: true` ＋ rAFスロットルで `BookHeader` 内に実装。
 - 出入りは `transform: translateY(-100%) ↔ 0` の0.25s ease。`prefers-reduced-motion: reduce` ではtransitionなしの即時切替。
 - キーボード操作対応: ヘッダー内リンクへフォーカスが入ったら（`:focus-within` 相当）、隠れていても強制表示する。
@@ -45,7 +45,7 @@
   - `src/lib/bookHeader.test.ts`: 上端付近で常にtrue、下スクロールでfalse、上スクロールでtrue、8px未満の移動で状態維持
   - ResultPage / WardPage: ヘッダーのリンク3つ（`/`・`/#diagnosis`・`/#zukan`）が正しいhrefで表示されること
   - WardPage: 「← 図鑑にもどる」が削除されていること（既存テストが参照していれば更新する）
-  - App（TOP）: ヘッダーが出ないこと
+  - App（TOP）にヘッダーを置かないことは配置箇所（ResultPage/WardPageのみ）とブラウザ目視で担保（HeroがR3F依存でjsdomレンダリング不可のため自動テストは作らない）
 - `npm test` と本番相当 `NEXT_PUBLIC_SITE_URL=... npm run build`
 - ブラウザ目視: デスクトップ・モバイル幅（375px）での表示、下/上スクロールでの出入り、追従シェアバー・モーダルとの重なり、❦の字形
 
