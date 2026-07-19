@@ -29,7 +29,7 @@ describe('Zukan', () => {
     expect(card.querySelector('.zukan-card-plate .zukan-card-name')).toHaveTextContent('千代田区');
     // キャッチコピーはホバー環境でCSS表示する前提でDOMには常に置く
     expect(card.querySelector('.zukan-card-catch')).toHaveTextContent(
-      '昼だけ人口20倍、夜は静寂を愛す二面性エリート'
+      '昼は人口約13.6倍、夜は静寂を愛す二面性エリート'
     );
     // シャイン用の装飾要素（全カード分）
     expect(container.querySelectorAll('.zukan-card-shine')).toHaveLength(23);
