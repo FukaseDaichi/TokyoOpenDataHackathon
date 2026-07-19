@@ -1,5 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { buildSitemapEntries } from './seo';
+import {
+  buildBreadcrumbJsonLd,
+  buildSitemapEntries,
+  buildWebSiteJsonLd,
+  resolveSiteOrigin,
+  serializeJsonLd,
+} from './seo';
 
 describe('buildSitemapEntries', () => {
   const base = 'https://example.com';
@@ -34,5 +40,66 @@ describe('buildSitemapEntries', () => {
     expect(byUrl.get('https://example.com/')?.priority).toBe(1);
     expect(byUrl.get('https://example.com/ward/shibuya/')?.priority).toBe(0.8);
     expect(byUrl.get('https://example.com/result/shibuya/')?.priority).toBe(0.5);
+  });
+});
+
+describe('resolveSiteOrigin', () => {
+  it('環境変数の値の末尾スラッシュを除去して返す', () => {
+    expect(resolveSiteOrigin('https://example.com/')).toBe('https://example.com');
+  });
+
+  it('未設定なら本番URLへフォールバックする', () => {
+    expect(resolveSiteOrigin(undefined)).toBe('https://uchinokuchan.pages.dev');
+    expect(resolveSiteOrigin('')).toBe('https://uchinokuchan.pages.dev');
+  });
+});
+
+describe('buildWebSiteJsonLd', () => {
+  it('WebSiteスキーマをサイト名・URL・日本語指定つきで返す', () => {
+    const jsonLd = buildWebSiteJsonLd('https://example.com');
+    expect(jsonLd).toMatchObject({
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'うちの区ちゃん',
+      url: 'https://example.com/',
+      inLanguage: 'ja',
+    });
+    expect(typeof jsonLd.description).toBe('string');
+  });
+});
+
+describe('buildBreadcrumbJsonLd', () => {
+  it('パンくずをposition昇順・絶対URLのListItemで返す', () => {
+    const jsonLd = buildBreadcrumbJsonLd('https://example.com', [
+      { name: 'うちの区ちゃん', path: '/' },
+      { name: '渋谷区ちゃん図鑑', path: '/ward/shibuya/' },
+    ]);
+    expect(jsonLd).toEqual({
+      '@context': 'https://schema.org',
+      '@type': 'BreadcrumbList',
+      itemListElement: [
+        {
+          '@type': 'ListItem',
+          position: 1,
+          name: 'うちの区ちゃん',
+          item: 'https://example.com/',
+        },
+        {
+          '@type': 'ListItem',
+          position: 2,
+          name: '渋谷区ちゃん図鑑',
+          item: 'https://example.com/ward/shibuya/',
+        },
+      ],
+    });
+  });
+});
+
+describe('serializeJsonLd', () => {
+  it('script終了タグとして解釈されないよう < をエスケープする', () => {
+    const out = serializeJsonLd({ name: '</script><b>' });
+    expect(out).not.toContain('</script>');
+    expect(out).toContain('\\u003c');
+    expect(JSON.parse(out)).toEqual({ name: '</script><b>' });
   });
 });

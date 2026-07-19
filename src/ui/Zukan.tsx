@@ -54,7 +54,7 @@ export function Zukan({ onSelect }: { onSelect: (w: Ward) => void }) {
               <img
                 className="zukan-card-img"
                 src={ssrImage(theme.slug)}
-                alt=""
+                alt={`${w.name}ちゃんの立ち絵イラスト`}
                 loading="lazy"
                 width={512}
                 height={768}

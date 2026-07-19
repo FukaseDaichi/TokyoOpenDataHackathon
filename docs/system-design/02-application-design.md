@@ -17,8 +17,9 @@
 SEOメタデータの方針:
 
 - 全ページに `alternates.canonical` を設定する（トップ `/`、区詳細 `/ward/{slug}/`、結果 `/result/{slug}/`）。絶対URL化は `app/layout.tsx` の `metadataBase`（`NEXT_PUBLIC_SITE_URL`）に依存する。
-- sitemapのURL列挙は純ロジック `src/lib/seo.ts` の `buildSitemapEntries()` が担い、URL末尾は `trailingSlash: true` と一致させる。
-- `app/sitemap.ts` と `app/robots.ts` は `NEXT_PUBLIC_SITE_URL` 未設定時に本番URL `https://uchinokuchan.pages.dev` へフォールバックする（OGP・canonicalと異なり相対URLが許されないため）。
+- sitemapのURL列挙・JSON-LD組み立て・`</script>` 対策の直列化は純ロジック `src/lib/seo.ts`（`buildSitemapEntries()` / `buildWebSiteJsonLd()` / `buildBreadcrumbJsonLd()` / `serializeJsonLd()`）が担い、URL末尾は `trailingSlash: true` と一致させる。
+- JSON-LD構造化データは各ページのサーバーコンポーネントが `<script type="application/ld+json">` で埋め込む。トップは `WebSite`、区詳細と結果ページは `BreadcrumbList`（うちの区ちゃん → 当該ページ）。
+- 絶対URLが必須のsitemap・robots・JSON-LDは `resolveSiteOrigin()` を通し、`NEXT_PUBLIC_SITE_URL` 未設定時に本番URL `https://uchinokuchan.pages.dev` へフォールバックする（OGP・canonicalは従来どおり `metadataBase` 依存）。
 
 ## 2. クライアント境界
 

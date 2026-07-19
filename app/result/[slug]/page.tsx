@@ -1,7 +1,10 @@
 import type { Metadata } from 'next';
 import { ALL_SLUGS, SLUG_TO_CODE } from '@/data/slugs';
 import { WARDS as HERO_WARDS } from '@/hero/wards';
+import { buildBreadcrumbJsonLd, resolveSiteOrigin, serializeJsonLd } from '@/lib/seo';
 import { ResultPage } from '@/ui/pages/ResultPage';
+
+const SITE_ORIGIN = resolveSiteOrigin(process.env.NEXT_PUBLIC_SITE_URL);
 
 export function generateStaticParams() {
   return ALL_SLUGS.map((slug) => ({ slug }));
@@ -29,5 +32,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function Page({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  return <ResultPage slug={slug} />;
+  const ward = HERO_WARDS.find((w) => w.id === SLUG_TO_CODE[slug])!;
+  const breadcrumb = buildBreadcrumbJsonLd(SITE_ORIGIN, [
+    { name: 'うちの区ちゃん', path: '/' },
+    { name: `${ward.name}ちゃんタイプ`, path: `/result/${slug}/` },
+  ]);
+  return (
+    <>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: serializeJsonLd(breadcrumb) }} />
+      <ResultPage slug={slug} />
+    </>
+  );
 }
