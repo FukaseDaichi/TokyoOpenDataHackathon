@@ -85,16 +85,157 @@ export default function HeroOverlay({ hud, onCtaClick }: Props) {
           38% { background-position: -90% 0; }
           100% { background-position: -90% 0; }
         }
+        /* 診断CTA: 黒×シャンパンゴールド二重枠の静かな高級感。
+           色・影・速度はCSS変数でまとめて調整できる */
+        .hero-cta-wrap {
+          margin-top: 30px;
+          animation: ctaEnter 0.7s ease-out 0.15s both;
+        }
+        @keyframes ctaEnter {
+          from { opacity: 0; transform: translateY(16px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
         .hero-cta {
-          animation: heroCtaPulse 2.4s ease-in-out infinite;
+          --cta-bg-top: rgba(33, 23, 13, 0.68);
+          --cta-bg-bottom: rgba(17, 13, 8, 0.86);
+          --cta-gold: #d7ad58;
+          --cta-gold-bright: #f5d98d;
+          --cta-gold-dark: #8d682a;
+          --cta-text: #efd28a;
+          --cta-glow: rgba(215, 173, 88, 0.25);
+          --cta-shadow: rgba(0, 0, 0, 0.45);
+          --cta-pulse-duration: 3.6s;
+          --cta-sheen-duration: 6.4s;
+          position: relative;
+          display: inline-flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          gap: 6px;
+          width: min(86vw, 600px);
+          min-height: 88px;
+          padding: clamp(14px, 2.6vw, 20px) clamp(18px, 4vw, 44px);
+          border: 1px solid rgba(215, 173, 88, 0.6);
+          border-radius: 16px;
+          background: linear-gradient(180deg, var(--cta-bg-top) 0%, var(--cta-bg-bottom) 100%);
+          color: var(--cta-text);
+          font-family: "Hiragino Mincho ProN", "Yu Mincho", "Noto Serif JP", serif;
+          line-height: 1.2;
+          cursor: pointer;
+          box-shadow: 0 10px 26px var(--cta-shadow);
+          transition: transform 0.25s ease, border-color 0.25s ease, filter 0.25s ease, box-shadow 0.25s ease;
+        }
+        .hero-cta::before {
+          content: "";
+          position: absolute;
+          inset: -1px;
+          border-radius: inherit;
+          box-shadow: 0 0 18px var(--cta-glow), 0 0 44px rgba(215, 173, 88, 0.12);
+          animation: ctaGlow var(--cta-pulse-duration) ease-in-out infinite;
+          pointer-events: none;
+        }
+        @keyframes ctaGlow {
+          0%, 100% { opacity: 0.5; }
+          50% { opacity: 1; }
+        }
+        .hero-cta-frame {
+          position: absolute;
+          inset: 4px;
+          border: 1px solid rgba(215, 173, 88, 0.32);
+          border-radius: 12px;
+          pointer-events: none;
+        }
+        .hero-cta-sheen {
+          position: absolute;
+          inset: 1px;
+          border-radius: 15px;
+          overflow: hidden;
+          pointer-events: none;
+        }
+        .hero-cta-sheen::before {
+          content: "";
+          position: absolute;
+          top: -40%;
+          bottom: -40%;
+          left: 0;
+          width: 30%;
+          background: linear-gradient(105deg, transparent 0%, rgba(245, 217, 141, 0.14) 44%, rgba(245, 217, 141, 0.32) 50%, rgba(245, 217, 141, 0.14) 56%, transparent 100%);
+          transform: translateX(-180%) skewX(-12deg);
+          animation: ctaSheen var(--cta-sheen-duration) linear infinite;
+        }
+        @keyframes ctaSheen {
+          0% { transform: translateX(-180%) skewX(-12deg); }
+          26% { transform: translateX(480%) skewX(-12deg); }
+          100% { transform: translateX(480%) skewX(-12deg); }
+        }
+        .hero-cta-sheen::after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: radial-gradient(ellipse at center, rgba(245, 217, 141, 0.32) 0%, transparent 62%);
+          opacity: 0;
         }
         .hero-cta:hover {
-          transform: scale(1.04);
+          transform: scale(1.02);
+          border-color: rgba(245, 217, 141, 0.85);
+          filter: brightness(1.07);
+          box-shadow: 0 14px 32px rgba(0, 0, 0, 0.55);
         }
-        @keyframes heroCtaPulse {
-          0%, 100% { box-shadow: 0 4px 24px rgba(232, 197, 107, 0.45), 0 2px 6px rgba(0, 0, 0, 0.5); }
-          50% { box-shadow: 0 6px 40px rgba(255, 222, 148, 0.8), 0 2px 6px rgba(0, 0, 0, 0.5); }
+        .hero-cta:active {
+          transform: scale(0.98);
         }
+        .hero-cta:active .hero-cta-sheen::after {
+          animation: ctaBurst 0.4s ease-out;
+        }
+        @keyframes ctaBurst {
+          0% { opacity: 0.85; transform: scale(0.25); }
+          100% { opacity: 0; transform: scale(1.5); }
+        }
+        .hero-cta:focus-visible {
+          outline: 2px solid var(--cta-gold-bright);
+          outline-offset: 4px;
+        }
+        .hero-cta-main {
+          font-size: clamp(18px, 2.8vw, 24px);
+          font-weight: 600;
+          letter-spacing: 0.26em;
+          padding-left: 0.26em;
+          white-space: nowrap;
+          text-shadow: 0 1px 6px rgba(0, 0, 0, 0.6);
+        }
+        .hero-cta-sub {
+          display: inline-flex;
+          align-items: center;
+          gap: clamp(8px, 1.6vw, 14px);
+          font-size: clamp(11px, 1.6vw, 13px);
+          letter-spacing: 0.22em;
+          padding-left: 0.22em;
+          color: rgba(239, 210, 138, 0.78);
+          white-space: nowrap;
+        }
+        .hero-cta-line {
+          width: clamp(24px, 7vw, 56px);
+          height: 1px;
+          background: linear-gradient(90deg, transparent, rgba(215, 173, 88, 0.65));
+        }
+        .hero-cta-line-r {
+          background: linear-gradient(90deg, rgba(215, 173, 88, 0.65), transparent);
+        }
+        .hero-cta-gem {
+          width: 5px;
+          height: 5px;
+          flex: none;
+          background: var(--cta-gold);
+          transform: rotate(45deg);
+          box-shadow: 0 0 6px rgba(215, 173, 88, 0.5);
+        }
+        .hero-cta-gem-edge {
+          position: absolute;
+          top: 50%;
+          margin-top: -2.5px;
+        }
+        .hero-cta-gem-edge.is-left { left: -2.5px; }
+        .hero-cta-gem-edge.is-right { right: -2.5px; }
         .hero-chevrons span {
           display: block;
           line-height: 0.55;
@@ -107,7 +248,10 @@ export default function HeroOverlay({ hud, onCtaClick }: Props) {
           30% { opacity: 1; transform: translateY(3px); }
         }
         @media (prefers-reduced-motion: reduce) {
-          .hero-shimmer, .hero-cta, .hero-chevrons span { animation: none; }
+          .hero-shimmer, .hero-chevrons span { animation: none; }
+          .hero-cta-wrap { animation: none; }
+          .hero-cta::before, .hero-cta-sheen::before { animation: none; }
+          .hero-cta { transition: none; }
         }
       `}</style>
 
@@ -194,27 +338,28 @@ export default function HeroOverlay({ hud, onCtaClick }: Props) {
           <span style={{ whiteSpace: "nowrap" }}>東京23区個性診断図鑑</span>
         </p>
         {/* いきなり診断したい人のためのプライマリCTA。演出開始と共にtitleへ連動して消える */}
-        <button
-          ref={ctaRef}
-          className="hero-cta"
-          onClick={onCtaClick}
-          style={{
-            pointerEvents: "auto",
-            marginTop: 28,
-            background: "linear-gradient(180deg, #e8c56b 0%, #c9a24a 100%)",
-            color: "#2a1c08",
-            border: "none",
-            borderRadius: 999,
-            padding: "15px 38px",
-            fontSize: "clamp(15px, 2.2vw, 18px)",
-            fontWeight: 700,
-            letterSpacing: "0.06em",
-            cursor: "pointer",
-            transition: "transform 0.2s ease",
-          }}
-        >
-          いますぐ診断する（約1分）
-        </button>
+        <div className="hero-cta-wrap">
+          <button
+            ref={ctaRef}
+            className="hero-cta"
+            onClick={onCtaClick}
+            aria-label="今すぐ診断する（約1分）"
+            style={{ pointerEvents: "auto" }}
+          >
+            <span className="hero-cta-frame" aria-hidden />
+            <span className="hero-cta-sheen" aria-hidden />
+            <span className="hero-cta-gem hero-cta-gem-edge is-left" aria-hidden />
+            <span className="hero-cta-gem hero-cta-gem-edge is-right" aria-hidden />
+            <span className="hero-cta-main">今すぐ診断する</span>
+            <span className="hero-cta-sub">
+              <span className="hero-cta-line" aria-hidden />
+              <span className="hero-cta-gem" aria-hidden />
+              （約1分）
+              <span className="hero-cta-gem" aria-hidden />
+              <span className="hero-cta-line hero-cta-line-r" aria-hidden />
+            </span>
+          </button>
+        </div>
       </div>
 
       {/* スクロールヒント */}
