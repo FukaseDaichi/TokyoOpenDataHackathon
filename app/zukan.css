@@ -347,7 +347,6 @@ html.uk-js .zukan-card-img.is-loaded {
 .fellow-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px; margin-top: 12px; }
 .fellow-card { display: block; text-decoration: none; text-align: center; padding: 8px; background: linear-gradient(180deg, #f7ecd4, #eeddb8); border: 2px solid #b8923f; border-radius: 8px; color: #4a3418; font-size: 13px; letter-spacing: 0.1em; }
 .fellow-card img { width: 100%; aspect-ratio: 2 / 3; object-fit: cover; border-radius: 4px; margin-bottom: 6px; }
-.ward-page-back { display: inline-block; color: var(--w-accent-dark, #b8923f); text-decoration: none; letter-spacing: 0.14em; font-size: 13px; margin-bottom: 20px; }
 
 /* ---- 診断フロー ---- */
 
