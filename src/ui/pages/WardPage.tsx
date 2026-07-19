@@ -69,7 +69,7 @@ export function WardPage({ slug }: { slug: string }) {
             <div className="ward-page-portrait">
               {theme.slug && (
                 // eslint-disable-next-line @next/next/no-img-element
-                <img src={ssrImage(theme.slug, 896)} alt={`${ward.name}ちゃんのイラスト`} width={896} height={1344} />
+                <img src={ssrImage(theme.slug, 896)} alt={`${ward.name}ちゃんのイラスト`} width={896} height={1344} fetchPriority="high" />
               )}
             </div>
             <div className="ward-page-ident">

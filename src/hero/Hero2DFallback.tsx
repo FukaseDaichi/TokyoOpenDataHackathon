@@ -70,6 +70,7 @@ export default function Hero2DFallback({ onSelectWard, onCtaClick }: Props) {
             srcSet="/title-w720.webp 720w, /title-w1440.webp 1440w"
             sizes="(max-width: 720px) 86vw, 560px"
             alt="うちの区ちゃん"
+            fetchPriority="high"
             width={1470}
             height={376}
             style={{

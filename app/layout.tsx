@@ -23,9 +23,9 @@ export const metadata: Metadata = {
   twitter: { card: 'summary_large_image' },
   manifest: '/favicon/site.webmanifest',
   icons: {
+    // favicon.svg はベクターでなくbase64 PNG埋め込みの2.5MBファイルだったため除外した（ico/pngで十分）
     icon: [
       { url: '/favicon/favicon.ico', sizes: '48x48' },
-      { url: '/favicon/favicon.svg', type: 'image/svg+xml' },
       { url: '/favicon/favicon-96x96.png', sizes: '96x96', type: 'image/png' },
     ],
     shortcut: '/favicon/favicon.ico',

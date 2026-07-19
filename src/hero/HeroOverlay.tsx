@@ -91,6 +91,7 @@ export default function HeroOverlay({ hud, onCtaClick }: Props) {
             srcSet="/title-w720.webp 720w, /title-w1440.webp 1440w"
             sizes="(max-width: 720px) 88vw, 640px"
             alt="うちの区ちゃん"
+            fetchPriority="high"
             width={1470}
             height={376}
             style={{
