@@ -1,48 +1,39 @@
-# 全画面「TOPに戻る」導線（蔵書票＋奥付） 設計
+# 全画面「TOPに戻る」導線（箔押しミニヘッダー） 設計
 
-日付: 2026-07-20 / 対象: `src/ui/`, `app/zukan.css`
+日付: 2026-07-20 / 対象: `src/ui/`, `src/lib/`, `app/zukan.css`
 
 ## 課題
 
 1. 結果ページ（`/result/[slug]/`）にTOP・図鑑へ戻る導線がない。共有リンクで来た閲覧者は「あなたも診断する」以外に行き先がない。
-2. 区詳細ページは上部の「← 図鑑にもどる」のみで、読み終えたページ末尾に導線がない。
-3. 絵本の世界観を保つため、固定ヘッダーや常時表示のフローティングUIは置かない（栞リボン案・ミニヘッダー案と比較検討し、固定UIなしの蔵書票＋奥付案を採用。ユーザー確認済み）。
+2. 区詳細ページは上部の「← 図鑑にもどる」のみで、長いページのスクロール途中や読了後に戻る手段がない。
+3. 絵本の世界観を保ちつつ、TOP・図鑑・診断という複数の行き先へ常にアクセスできるナビゲーションが必要（栞リボン案・蔵書票＋奥付案と比較検討し、箔押しミニヘッダー案を採用。ユーザー確認済み）。
 
 ## 決定事項
 
-### 1. 蔵書票（ページ先頭）
+### 1. ビジュアル（革表紙に金箔の細帯）
 
-- 新規 `src/ui/BookNav.tsx` に `ExLibris` コンポーネントを実装。Next `Link` で `href="/"`。
-- 表示: 中央揃え「❦ うちの区ちゃん」。12px・字間0.3em・基調色 `var(--w-accent-dark, #b8923f)`（周囲の既存リンクと同じ区連動アクセント）。
-- `aria-label="トップページにもどる"`。上下paddingでタップ領域を44px相当確保。hover/focusで `#f0d693` に明るく。`:focus-visible` は金アウトライン。
-- 配置:
-  - ResultPage: `book-section-inner` の先頭（eyebrow「SHINDAN RESULT」の上）。
-  - WardPage: `book-section-inner` の先頭に中央配置。既存の「← 図鑑にもどる」リンクはその下に現状のまま残す。
+- 新規 `src/ui/BookHeader.tsx`。`position: fixed; top: 0` の全幅バー、高さ48px（モバイル44px）。
+- 背景は革表紙トーン `rgba(23, 17, 12, 0.92)` ＋ `backdrop-filter: blur(8px)`（追従シェアバーと同じ手法）。下辺に金の細罫 `1px solid rgba(202, 162, 79, 0.55)`。
+- 左: ロゴタイプ「❦ うちの区ちゃん」。金 `#e8c56b`・13px・字間0.28em・明朝（bodyフォント継承）。Next `Link` で `href="/"`、`aria-label="トップページにもどる"`。hover/focusで `#f0d693`。
+- 右: テキストリンク2つ「診断」→ `/#diagnosis`、「図鑑」→ `/#zukan`。`#caa24f`・12px・字間0.18em・間隔18px。hover/focusで `#f0d693`。
+- 区色（`--ward-color`）には連動させない。ヘッダーは「ページの持ち物ではなく本の持ち物」なので全ページ共通の金×革で統一する。
+- `z-index: 30`（追従シェアバー40・モーダル50・初回ロード1000より下）。
+- ❦（U+2766 FLEURON)は明朝系フォントで字形確認する。tofuになる環境があれば `SectionIcon` 方式のインラインSVG装飾に差し替える。
 
-### 2. 奥付ナビ（ページ末尾）
+### 2. スクロール挙動（読んでいる間は消える）
 
-- 同ファイルに `ColophonNav` コンポーネントを実装。`<nav aria-label="ページの奥付">`。
-- 構成: 金の破線罫（`1px dashed rgba(184,146,63,0.55)`）＋中央に ❦ 飾り＋リンク3つ:
-  - 「表紙にもどる」→ `/`
-  - 「図鑑をひらく」→ `/#zukan`
-  - 診断リンク → `/#diagnosis`。ラベルはprop `diagnosisLabel` で切替:
-    - ResultPage 診断者: 「もういちど診断する」
-    - ResultPage 共有閲覧者: 「あなたも診断する」
-    - WardPage: 「診断をやってみる」
-- スタイル: 12〜13px・`#e8c56b`・字間0.14em。中央揃えの `flex-wrap` 行、リンク間は「・」区切りではなくgapで分離（折返し時に区切り記号が行頭に残るのを避ける）。各リンクに `padding: 10px 12px` でタップ領域確保。hoverで下線＋ `#f0d693`。
-- 配置:
-  - ResultPage: 最終シェアCTA（`result-final-cta`）の後、`book-section-inner` 末尾。モバイルの追従シェアバーとの重なりは既存の `.has-share-bar { padding-bottom: 110px }` で回避済み（追加対応不要）。
-  - WardPage: 「出典」セクションの後、`ward-page-main` 末尾。
+- 表示ルール: **ページ上端付近（scrollY ≤ 120px）では常に表示。それより下では、上スクロールで表示・下スクロールで隠す**。初期表示時は見えている（共有で来た人がすぐ導線に気づける）。
+- 判定は純ロジック `src/lib/bookHeader.ts` の `headerVisibility(prevY, currentY, visible): boolean` として切り出し、Vitestを先に書く（AGENTS.mdの純ロジック方針）。8px未満の微小スクロールでは状態を変えないヒステリシスを入れる。
+- スクロール監視は `passive: true` ＋ rAFスロットルで `BookHeader` 内に実装。
+- 出入りは `transform: translateY(-100%) ↔ 0` の0.25s ease。`prefers-reduced-motion: reduce` ではtransitionなしの即時切替。
+- キーボード操作対応: ヘッダー内リンクへフォーカスが入ったら（`:focus-within` 相当）、隠れていても強制表示する。
+- コンテンツオフセットは不要（`book-section` の上padding 96pxがあるため、48pxのバーが重なっても本文を覆わない）。
 
 ### 3. 適用範囲
 
-- `/result/[slug]/`（診断者・共有閲覧者の両方）と `/ward/[slug]/` に適用。
-- TOP（`/`）は戻り先自身のため置かない。`WardModal` は×クローズがあるため置かない。
-
-### 4. 世界観・アニメーション
-
-- 固定表示なし・アニメーションなしの静的リンク（`prefers-reduced-motion` 対応が新たに必要になる動きは追加しない）。
-- ❦（U+2766 FLEURON）は明朝系フォントで字形確認する。tofu（豆腐）になる環境があれば `SectionIcon` 方式のインラインSVG装飾に差し替える。
+- `/result/[slug]/`（診断者・共有閲覧者の両方）と `/ward/[slug]/` の `main` 先頭に配置。
+- TOP（`/`）には置かない（戻り先自身であり、450vhの3Dヒーロー演出に固定バーを被せない）。`WardModal` にも置かない（×クローズあり）。
+- 区詳細ページ既存の「← 図鑑にもどる」リンクは現状のまま残す（本文文脈の導線として自然なため）。
 
 ## 新規アセット
 
@@ -50,13 +41,13 @@
 
 ## テスト・検証
 
-- Vitest（RTL）:
-  - ResultPage: 蔵書票リンク（`href="/"`）表示、奥付3リンクのhref、診断者/共有閲覧者でのラベル切替（もういちど診断する/あなたも診断する）
-  - WardPage: 蔵書票と奥付の表示、既存「← 図鑑にもどる」の維持
-  - App（TOP）: 蔵書票・奥付が出ないこと
+- Vitest:
+  - `src/lib/bookHeader.test.ts`: 上端付近で常にtrue、下スクロールでfalse、上スクロールでtrue、8px未満の移動で状態維持
+  - ResultPage / WardPage: ヘッダーのリンク3つ（`/`・`/#diagnosis`・`/#zukan`）が正しいhrefで表示されること
+  - App（TOP）: ヘッダーが出ないこと
 - `npm test` と本番相当 `NEXT_PUBLIC_SITE_URL=... npm run build`
-- ブラウザ目視: デスクトップ・モバイル幅（375px）で奥付の折返しとシェアバー非干渉、❦の字形
+- ブラウザ目視: デスクトップ・モバイル幅（375px）での表示、下/上スクロールでの出入り、追従シェアバー・モーダルとの重なり、❦の字形
 
 ## ドキュメント
 
-- `docs/system-design/05-frontend-rendering-design.md` のナビゲーション/導線の節に蔵書票・奥付を追記する。
+- `docs/system-design/05-frontend-rendering-design.md` のナビゲーション/導線の節にミニヘッダーを追記する。
