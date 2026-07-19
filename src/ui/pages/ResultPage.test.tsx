@@ -1,6 +1,6 @@
 import "@testing-library/jest-dom";
-import { describe, it, expect, beforeEach, vi } from "vitest";
-import { render, screen, within } from "@testing-library/react";
+import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
+import { render, screen, within, cleanup } from "@testing-library/react";
 import { ResultPage } from "./ResultPage";
 import { saveDiagnosis } from "../../lib/diagnosisSession";
 import { emptyVector } from "../../domain/axes";
@@ -13,8 +13,19 @@ vi.mock("next/link", () => ({
   ),
 }));
 
+// prefersReducedMotion をテストから切り替える（jsdomにmatchMediaが無いためモック必須。
+// 既存テストは即時に最終値が表示される reduced=true を既定とする）
+const { reducedState } = vi.hoisted(() => ({ reducedState: { value: true } }));
+vi.mock("../../hero/quality", () => ({
+  prefersReducedMotion: () => reducedState.value,
+}));
+
 describe("ResultPage", () => {
-  beforeEach(() => sessionStorage.clear());
+  beforeEach(() => {
+    sessionStorage.clear();
+    reducedState.value = true;
+  });
+  afterEach(() => cleanup());
 
   it("shows visitor view (CTA, no ranking, no result card) without a saved diagnosis", () => {
     const { container } = render(<ResultPage slug="minato" />);
@@ -154,5 +165,44 @@ describe("ResultPage", () => {
     render(<ResultPage slug="minato" />);
     expect(screen.queryByText(/相性ランキング/)).not.toBeInTheDocument();
     expect(screen.getByText(/あなたも診断する/)).toBeInTheDocument();
+  });
+
+  it("shows the final percent immediately (no count-up) when prefers-reduced-motion is on", () => {
+    reducedState.value = true;
+    saveDiagnosis({ ...emptyVector(), luxury: 1 }, "13103");
+    render(<ResultPage slug="minato" />);
+    const strong = screen
+      .getByTestId("result-card")
+      .querySelector(".result-card-overlay-percent strong")!;
+    expect(strong.textContent).toMatch(/^\d+%$/);
+    expect(strong.textContent).not.toBe("0%");
+  });
+
+  it("kicks off a count-up rAF loop (cleaned up on unmount) when motion is enabled", () => {
+    reducedState.value = false;
+    const rafSpy = vi.spyOn(window, "requestAnimationFrame");
+    const cafSpy = vi.spyOn(window, "cancelAnimationFrame");
+    saveDiagnosis({ ...emptyVector(), luxury: 1 }, "13103");
+    const { unmount } = render(<ResultPage slug="minato" />);
+    expect(rafSpy).toHaveBeenCalled();
+    unmount();
+    expect(cafSpy).toHaveBeenCalled();
+    rafSpy.mockRestore();
+    cafSpy.mockRestore();
+  });
+
+  it("renders the confetti burst only for the diagnosis-origin result card", () => {
+    saveDiagnosis({ ...emptyVector(), luxury: 1 }, "13103");
+    render(<ResultPage slug="minato" />);
+    const confetti = screen.getByTestId("result-confetti");
+    expect(confetti).toHaveAttribute("aria-hidden", "true");
+    expect(
+      confetti.querySelectorAll(".result-confetti-piece"),
+    ).toHaveLength(20);
+  });
+
+  it("does not render confetti for a direct share-link visit (no saved diagnosis)", () => {
+    render(<ResultPage slug="minato" />);
+    expect(screen.queryByTestId("result-confetti")).not.toBeInTheDocument();
   });
 });

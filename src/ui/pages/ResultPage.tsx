@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { AXIS_LABELS } from "../../domain/axes";
 import { loadAffinityText } from "../../data/affinity";
@@ -9,6 +9,7 @@ import { CODE_TO_SLUG, SLUG_TO_CODE } from "../../data/slugs";
 import { loadCharacterRationale } from "../../data/rationale";
 import { loadWardTraits } from "../../data/traits";
 import { loadWards } from "../../data/wards";
+import { prefersReducedMotion } from "../../hero/quality";
 import {
   loadDiagnosisSession,
   type DiagnosisSession,
@@ -32,6 +33,39 @@ import { buildRadarStats, statLabelForAxis } from "../wardStats";
 import { wardTheme } from "../wardTheme";
 
 const WARDS = loadWards();
+
+/** 金の紙吹雪パーティクル20個分のインデックス（JS乱数不要・決定的でよい） */
+const CONFETTI_PARTICLES = Array.from({ length: 20 }, (_, i) => i);
+
+/**
+ * 「にてる度」%を0から実値までrAFでイージング表示する。
+ * prefers-reduced-motion時はカウントアップせず最初から実値を表示する。
+ */
+function useCountUp(target: number | null, reduced: boolean): number {
+  const [value, setValue] = useState(() =>
+    reduced || target === null ? (target ?? 0) : 0,
+  );
+  useEffect(() => {
+    if (target === null) return;
+    if (reduced) {
+      setValue(target);
+      return;
+    }
+    setValue(0);
+    const duration = 900;
+    const startTime = performance.now();
+    let rafId = requestAnimationFrame(function tick(now) {
+      const t = Math.min(1, (now - startTime) / duration);
+      const eased = 1 - Math.pow(1 - t, 3);
+      setValue(Math.round(eased * target));
+      if (t < 1) {
+        rafId = requestAnimationFrame(tick);
+      }
+    });
+    return () => cancelAnimationFrame(rafId);
+  }, [target, reduced]);
+  return value;
+}
 
 export function ResultPage({ slug }: { slug: string }) {
   const ward = WARDS.find((w) => w.code === SLUG_TO_CODE[slug])!;
@@ -78,6 +112,9 @@ export function ResultPage({ slug }: { slug: string }) {
       : null;
   // 自区（ランキング先頭）との距離から にてる度% を出す
   const percent = ranked ? similarityPercent(ranked[0].distance) : null;
+  // ②カウントアップ表示用（シェア文面には最終値の percent をそのまま渡す）
+  const reducedMotionRef = useRef(prefersReducedMotion());
+  const displayedPercent = useCountUp(percent, reducedMotionRef.current);
   // 相性側の表示%は結果の%を超えない（compatibilityPercents が相対スケーリング）
   const compatPercents = ranked
     ? compatibilityPercents(
@@ -129,7 +166,7 @@ export function ResultPage({ slug }: { slug: string }) {
                 </span>
                 <span className="result-card-overlay-percent">
                   <span>にてる度</span>
-                  <strong>{percent}%</strong>
+                  <strong>{displayedPercent}%</strong>
                 </span>
               </p>
             </div>
@@ -156,6 +193,20 @@ export function ResultPage({ slug }: { slug: string }) {
               <Link className="result-detail-button" href={`/ward/${slug}/`}>
                 詳しく見る
               </Link>
+            </div>
+            {/* ③ 金の紙吹雪: 診断経由の初回描画のみ、ループなしで一度だけ舞う */}
+            <div
+              className="result-confetti"
+              aria-hidden="true"
+              data-testid="result-confetti"
+            >
+              {CONFETTI_PARTICLES.map((i) => (
+                <span
+                  key={i}
+                  className="result-confetti-piece"
+                  style={{ ["--i" as string]: i }}
+                />
+              ))}
             </div>
           </div>
         ) : (
