@@ -33,6 +33,10 @@ node scripts/build-title.mjs
 
 OGPの原本はスクリプトで合成しない。AIで作成した原本を `assets/og/{slug}.png` に置き、`npm run build:og` で1200×630のJPEGへ加工して `public/og/{slug}.jpg` に配置する（[05-frontend-rendering-design.md](05-frontend-rendering-design.md) を参照）。
 
+### チャンク分割の方針
+
+`next.config.ts` のwebpack設定で、`three` と `@react-three/*` を共有asyncチャンク `three-vendor` へ強制分離している。分離しない場合、`HeroCanvas`（トップ）と `WardMap3D`（区詳細）の動的importチャンクそれぞれにthree.js本体が約384KBずつ複製され、トップ→区詳細の主要動線で二重ダウンロードになるためである。トレードオフとして各ページ単体の初回JSは複製時の自ページ分より大きくなる（チャンクは両者のunion）が、2ページ目以降はキャッシュが効く。
+
 ## 3. テスト構成
 
 Vitestは `src/**/*.test.{ts,tsx}` をjsdom環境で実行する。
