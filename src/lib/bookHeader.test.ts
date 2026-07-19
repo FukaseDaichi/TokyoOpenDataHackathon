@@ -26,4 +26,14 @@ describe('bookHeader', () => {
     s = nextHeaderState(s, 512);
     expect(s).toEqual({ anchorY: 512, visible: false });
   });
+  it('ヒステリシスちょうど（±8px）の移動は反映される', () => {
+    expect(nextHeaderState({ anchorY: 500, visible: true }, 500 + HEADER_HYSTERESIS)).toEqual({
+      anchorY: 500 + HEADER_HYSTERESIS,
+      visible: false,
+    });
+    expect(nextHeaderState({ anchorY: 500, visible: false }, 500 - HEADER_HYSTERESIS)).toEqual({
+      anchorY: 500 - HEADER_HYSTERESIS,
+      visible: true,
+    });
+  });
 });

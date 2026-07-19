@@ -9,8 +9,10 @@ export function BookHeader() {
   const [visible, setVisible] = useState(true);
   const stateRef = useRef<HeaderScrollState>({ anchorY: 0, visible: true });
   const ticking = useRef(false);
+  const rafId = useRef(0);
 
   useEffect(() => {
+    // スクロール復元でmount時にscrollY≠0の場合があるため実位置で再シードする
     stateRef.current = { anchorY: window.scrollY, visible: true };
     const apply = () => {
       ticking.current = false;
@@ -21,10 +23,13 @@ export function BookHeader() {
     const onScroll = () => {
       if (ticking.current) return;
       ticking.current = true;
-      requestAnimationFrame(apply);
+      rafId.current = requestAnimationFrame(apply);
     };
     window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
+    return () => {
+      window.removeEventListener("scroll", onScroll);
+      cancelAnimationFrame(rafId.current);
+    };
   }, []);
 
   return (
