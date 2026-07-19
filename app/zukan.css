@@ -958,16 +958,6 @@ html.uk-js .zukan-card-img.is-loaded {
   font-size: 12px;
 }
 
-.result-town-more {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: 18px;
-}
-
-.result-town-more .result-town-more-link {
-  position: static;
-}
-
 .result-stat-list {
   margin-top: 8px;
 }
@@ -1639,10 +1629,6 @@ html.uk-js .zukan-card-img.is-loaded {
   }
   .result-section {
     padding: 22px 18px;
-  }
-  .result-status .radar {
-    width: min(240px, 100%);
-    height: auto;
   }
 }
 

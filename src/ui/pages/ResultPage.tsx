@@ -146,6 +146,7 @@ export function ResultPage({ slug }: { slug: string }) {
             <div className="result-card-actions">
               <a
                 className="result-share-button"
+                aria-label="Xで結果をシェアする"
                 href={shareHref}
                 target="_blank"
                 rel="noopener noreferrer"
@@ -399,6 +400,7 @@ export function ResultPage({ slug }: { slug: string }) {
             <p>この結果、誰かに似ていませんか？</p>
             <a
               className="result-share-button"
+              aria-label="Xで結果をシェアする"
               href={shareHref}
               target="_blank"
               rel="noopener noreferrer"
@@ -412,6 +414,7 @@ export function ResultPage({ slug }: { slug: string }) {
         <div className="result-share-bar">
           <a
             className="result-share-button result-share-bar-button"
+            aria-label="Xで結果をシェアする"
             href={shareHref}
             target="_blank"
             rel="noopener noreferrer"
