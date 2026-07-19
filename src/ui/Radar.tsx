@@ -80,7 +80,7 @@ export function Radar({ vector, color = '#b8923f', size = 240, overlay, showLabe
           return (
             <text
               key={`tick${ti}`}
-              x={c - 9}
+              x={c - 15}
               y={y + 3}
               fontSize={8}
               textAnchor="end"
@@ -169,8 +169,11 @@ export function Radar({ vector, color = '#b8923f', size = 240, overlay, showLabe
         const v = vector[k];
         const [x, y] = pt(i, v);
         const a = angle(i);
-        const bx = x + 16 * Math.cos(a);
-        const by = y + 16 * Math.sin(a);
+        // 高スコアでは外側に出すと軸ラベルと重なるため、リングを超える場合は内側へ置く
+        const vertexRadius = ((v + 1) / 2) * r;
+        const badgeOffset = vertexRadius + 16 > r - 2 ? -16 : 16;
+        const bx = x + badgeOffset * Math.cos(a);
+        const by = y + badgeOffset * Math.sin(a);
         return (
           <g key={`dot${k}`}>
             <circle
