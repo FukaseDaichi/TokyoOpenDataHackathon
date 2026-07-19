@@ -1,12 +1,12 @@
 // テクスチャ管理層。
 // - 全23枚は即座に「絵本風プレースホルダー」(Canvas 2D生成)で表示を開始し、
-//   実画像13枚を優先度順（クローズアップ→近景→遠景）に非同期ロードして差し替える。
+//   実画像23枚を優先度順（クローズアップ→近景→遠景）に非同期ロードして差し替える。
 // - 原寸PNGは使わず、Web向けに縮小した webp（512/896幅）のみを読む。
 // - クライアント専用（Heroはdynamic import + ssr:falseで読み込む）。
 import * as THREE from 'three';
 import type { HeroCard } from './manifest';
 
-/** 未生成の区に表示する、区名入りの絵本風プレースホルダー */
+/** 実画像の読み込み前または読み込み失敗時に表示する、区名入りの絵本風プレースホルダー */
 export function createPlaceholderTexture(card: HeroCard): THREE.CanvasTexture {
   const W = 512;
   const H = 768;

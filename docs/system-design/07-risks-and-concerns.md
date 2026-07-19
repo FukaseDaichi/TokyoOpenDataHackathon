@@ -31,7 +31,7 @@
 
 ## 現在確認できている品質状態
 
-- `npm test`: 28ファイル・123テストが成功。ただし上記のCanvas警告がstderrへ出る。
+- `npm test`: 35ファイル・200テストが成功。ただし上記のCanvas警告がstderrへ出る。
 - `NEXT_PUBLIC_SITE_URL=https://example.pages.dev npm run build`: 静的エクスポート成功。
 - `NEXT_PUBLIC_SITE_URL` 未設定時: ビルドは成功する設計で、`next.config.ts` の独自警告とNext.jsの `metadataBase` フォールバック警告が出る。
 - `data/processed/wards.json` と `src/data/ward-metrics.json`、`data/processed/ward-details.json` と `src/data/ward-details.json`、`data/processed/ward-geo.json` と `src/data/ward-geo.json` はバイト単位で一致する。

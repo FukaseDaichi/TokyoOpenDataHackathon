@@ -54,6 +54,10 @@
 
 `src/data/ward-affinity.json` は5軸×23区=115本の相性文をアプリへ同梱する。キー構造は `{ 区コード: { 軸キー: 文 } }` で、全23区×5軸を必須とする。各文は2〜3文で、その軸で診断者と区が近い前提で書き、方向は区側の軸値の符号に合わせる（例: 新宿の世帯軸は低いため、おひとりさま向けの文になる）。区の実データの数値と23区順位を盛り込み、トーンは中立・前向きとする。ローダー `src/data/affinity.ts` の `loadAffinityText(code, axis)` は未知の組に `null` を返す。数値は執筆時点の `src/data/ward-metrics.json` のスナップショットであり、データ更新時は本文との整合を確認する。
 
+### 区タイプ特徴（AI執筆・コード同梱）
+
+`src/data/ward-traits.json` は、結果ページの「{区名}ちゃんタイプの特徴」に使う短文を区コードごとに3行ずつ同梱する。内容は `src/hero/wards.ts` のキャッチコピーと5軸の傾きに合わせ、中立・前向きな表現にする。各行はカード内に収めるため30字以内とし、ローダー `src/data/traits.ts` の `loadWardTraits(code)` は未知コードに空配列を返す。キャッチコピーまたは区ベクトルを変更した場合は本文との整合を確認する。
+
 ### 区プロフィール（手動キュレーション）
 
 `src/data/ward-policies.json` は集計パイプラインを経ない手編集データで、区コードをキーに次を持つ。
@@ -86,6 +90,8 @@
 | `src/data/diagnosis-assignments.json` | アプリ同梱の診断割り当て | `npm run build:diagnosis` で再生成 |
 | `src/data/ward-policies.json` | アプリ同梱データ | `data/processed` に対応物はなく直接手編集する |
 | `src/data/rationale.ts` | アプリ同梱データ（AI執筆テキスト） | `docs/strategy/ward-character-profiles.md` を根拠に手編集する |
+| `src/data/ward-affinity.json` | アプリ同梱データ（AI執筆相性文） | 基本指標・順位・5軸方向との整合を確認して手編集する |
+| `src/data/ward-traits.json` | アプリ同梱データ（AI執筆タイプ特徴） | キャッチコピー・5軸方向との整合を確認して手編集する |
 | `public/emblems/*.svg` | アプリ同梱データ | 手動取得・配置（生成処理とファイル別の来歴台帳なし） |
 
 `data/processed` と `src/data` の同期は現在自動化されていない。アプリ動作の正は `src/data`、集計結果の正は `data/processed` であるため、データ更新時は必ず同一内容にそろえる。
@@ -110,12 +116,14 @@ flowchart LR
   DetailsBundle --> DetailLoader["loadWardDetails()"]
   GeoBundle --> GeoLoader["loadWardGeo()"]
   PoliciesJson --> ProfileLoader["loadWardProfile()"]
+  Editorial["rationale.ts / ward-affinity.json / ward-traits.json\n（AI執筆・手編集）"] --> EditorialLoaders["loadCharacterRationale() / loadAffinityText() / loadWardTraits()"]
   Loader --> Normalize["5軸正規化 + k-means"]
   Normalize --> UI["診断・図鑑・詳細"]
   DiagnosisBundle --> UI
   DetailLoader --> UI
   GeoLoader --> UI
   ProfileLoader --> UI
+  EditorialLoaders --> UI
 ```
 
 ### エンコーディング
@@ -140,7 +148,7 @@ npm test
 npm run build
 ```
 
-`build_geo.py` は `data/raw/N03-21_13_city.topojson` の更新が前提であり、基本5軸・区詳細のraw更新とは独立して再実行できる。`build:diagnosis` は質問、基本5軸、区順序のいずれかを変更した場合に必ず実行する。`src/data/ward-policies.json` と `public/emblems/*.svg` は生成コマンドを持たないため、この手順の対象外（手動キュレーションの更新運用は本ページ末尾を参照）。
+`build_geo.py` は `data/raw/N03-21_13_city.topojson` の更新が前提であり、基本5軸・区詳細のraw更新とは独立して再実行できる。`build:diagnosis` は質問、基本5軸、区順序のいずれかを変更した場合に必ず実行する。`src/data/ward-policies.json`、`rationale.ts`、`ward-affinity.json`、`ward-traits.json`、`public/emblems/*.svg` は生成コマンドを持たないため、この手順では再生成されない。変更条件と手動更新方法は本ページ末尾を参照する。
 
 更新後は次も確認する。
 
@@ -161,13 +169,14 @@ git diff -- data/processed src/data
 - 区コードは `13101` から `13123`、並び順はJIS区コード順とする。
 - `build_geo.py` はWARD_IDS 23区分の欠損があればassertで停止し、生成物サイズが120KBを超えてもassertで停止する（簡略化率を上げて再生成する）。
 
-Vitestは、基本データと詳細データの23区件数、基本指標の存在、正規化範囲、代表値、slugの双方向対応、ジオデータ23区分の座標・面積の妥当性、診断割り当ての再生成一致・全区1〜10%・距離順位5位以内を検証する。`ward-policies.json` については、存在するキーが正しい区コードであること、政策の文字数上限・出典URL形式、軸タグが `AXIS_KEYS` の値のみで全区に1件以上あること、花・木・鳥の配列が空文字と重複を含まないことを検証するが、23区完備はテスト条件にしていない。`ward-affinity.json` は23区×5軸の完備と各文の最低文字数を検証する。
+Vitestは、基本データと詳細データの23区件数、基本指標の存在、正規化範囲、代表値、slugの双方向対応、ジオデータ23区分の座標・面積の妥当性、診断割り当ての再生成一致・全区1〜10%・距離順位5位以内を検証する。`ward-policies.json` については、存在するキーが正しい区コードであること、政策の文字数上限・出典URL形式、軸タグが `AXIS_KEYS` の値のみで全区に1件以上あること、花・木・鳥の配列が空文字と重複を含まないことを検証するが、23区完備はテスト条件にしていない。AI執筆データは、`rationale.ts` の23区完備・最低文字数・代表的な根拠語、`ward-affinity.json` の23区×5軸完備・最低文字数、`ward-traits.json` の23区×3行完備・空文字なし・各30字以内を検証する。
 
-## 7. 手動キュレーションデータの更新運用
+## 7. 手動キュレーション・AI執筆データの更新運用
 
-`src/data/ward-policies.json`（区の花・木・鳥、政策）と `public/emblems/*.svg`（区章）は集計パイプラインを持たない手編集データであり、次を目安に見直す。
+`src/data/ward-policies.json`（区の花・木・鳥、政策）と `public/emblems/*.svg`（区章）は集計パイプラインを持たない手編集データである。`src/data/rationale.ts`、`ward-affinity.json`、`ward-traits.json` も生成コマンドを持たないAI執筆済みの同梱データであり、次を目安に見直す。
 
-- 更新頻度: 区の基本構想・総合計画の改定は数年単位のため、年1回程度の棚卸しで十分とする。
+- 政策・区章の更新頻度: 区の基本構想・総合計画の改定は数年単位のため、年1回程度を目安に棚卸しする。
+- AI執筆文: 基本指標・23区順位・5軸・キャッチコピーを変更した場合は、該当区の設定理由、5軸別相性文、タイプ特徴を同じ変更で見直す。数値や方向が旧スナップショットのまま残らないことを確認する。
 - 出典: `policies[].source` / `url` は必ず一次情報（区公式サイト等）を指し、`https://` のURLを持つ。花・木・鳥も区公式サイトで照合し、調査記録を `docs/research/` に残す。
 - 中立性: `title` ≤30字・`summary` ≤120字の制約は、キュレーション文を簡潔かつ主観の混入しにくい長さに収めるためのガード。区の表現は中立・前向きにする全体方針（AGENTS.md）に従う。
 - 区章: 採用時に配布元ページと自治体章の扱いを確認する。取得URL、取得日、作者、ライセンス根拠を別途記録し、根拠が不明な画像は使わない。画像取得に失敗しても区詳細ページの他の内容に影響しないよう、`<img onError>` で非表示にする実装（`src/ui/pages/WardPage.tsx`）を維持する。
