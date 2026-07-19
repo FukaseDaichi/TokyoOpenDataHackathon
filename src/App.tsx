@@ -52,6 +52,13 @@ export default function App() {
           )}
           {phase.name === 'quiz' && (
             <Diagnosis
+              onAnswersFixed={(answers) => {
+                // フィナーレ演出の裏で結果ページとOGPを先読みし、遷移時のローディングを隠す
+                const result = bestDiagnosisMatch(answers, WARDS);
+                const slug = CODE_TO_SLUG[result.code];
+                router.prefetch(`/result/${slug}/`);
+                new Image().src = `/og/${slug}.jpg`;
+              }}
               onComplete={(userVector, answers) => {
                 const result = bestDiagnosisMatch(answers, WARDS);
                 saveDiagnosis(userVector, result.code);
