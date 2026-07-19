@@ -20,7 +20,10 @@ export const QUALITY_SETTINGS: Record<Exclude<QualityTier, 'fallback'>, QualityS
 };
 
 export function prefersReducedMotion(): boolean {
-  return typeof window !== 'undefined' && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (typeof window === 'undefined') return false;
+  // matchMedia非対応環境は静的表示（ward-modal-staticと同じ方針）にフォールバックする
+  if (typeof window.matchMedia !== 'function') return true;
+  return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 }
 
 export function detectQuality(): QualityTier {

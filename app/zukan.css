@@ -410,6 +410,7 @@ html.uk-js .zukan-card-img.is-loaded {
 }
 
 .diagnosis-option {
+  position: relative;
   background: linear-gradient(180deg, #f7ecd4 0%, #eeddb8 100%);
   border: 2px solid #b8923f;
   border-radius: 12px;
@@ -466,10 +467,6 @@ html.uk-js .zukan-card-img.is-loaded {
   60% { opacity: 1; }
   100% { transform: scale(1) rotate(0deg); opacity: 1; }
 }
-.diagnosis-option {
-  position: relative;
-}
-
 /* 3D舞台とページ層 */
 .diagnosis-stage {
   position: relative;

@@ -37,7 +37,7 @@ describe('Diagnosis（絵本ページめくり）', () => {
       fireEvent.click(firstOption()); // 常に先頭の選択肢
       // 封蝋中は選択肢がdisabled
       screen.getAllByRole('button').forEach((b) => expect(b).toBeDisabled());
-      advance(reducedState.value ? REDUCED_STAMP_MS : FLOW_TIMINGS.stampMs);
+      advance(FLOW_TIMINGS.stampMs);
       if (i < 9) advance(FLOW_TIMINGS.turnMs); // 10問目はターンせずフィナーレへ
     }
 
@@ -82,6 +82,23 @@ describe('Diagnosis（絵本ページめくり）', () => {
     }
     // フィナーレ表示中（finaleMs未経過）にクリック
     fireEvent.click(screen.getByRole('button', { name: '結果へ進む' }));
+    expect(onComplete).toHaveBeenCalledTimes(1);
+    expect(onComplete.mock.calls[0][1]).toEqual(new Array(10).fill(0));
+  });
+
+  it('フィナーレはマウント時にフォーカスされ、Enterで即スキップしonComplete', () => {
+    const onComplete = vi.fn();
+    render(<Diagnosis onComplete={onComplete} />);
+    advance(FLOW_TIMINGS.coverMs);
+    for (let i = 0; i < 10; i++) {
+      fireEvent.click(firstOption());
+      advance(FLOW_TIMINGS.stampMs);
+      if (i < 9) advance(FLOW_TIMINGS.turnMs);
+    }
+    const finale = screen.getByRole('button', { name: '結果へ進む' });
+    // フィナーレ表示中（finaleMs未経過）にフォーカスが当たっている
+    expect(finale).toHaveFocus();
+    fireEvent.keyDown(finale, { key: 'Enter' });
     expect(onComplete).toHaveBeenCalledTimes(1);
     expect(onComplete.mock.calls[0][1]).toEqual(new Array(10).fill(0));
   });

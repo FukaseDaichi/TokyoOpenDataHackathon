@@ -226,8 +226,16 @@ function QuestionPageBody({
 // フィナーレ: 装飾ページがパラパラめくれ、最後に「あなたに一番似ているのは…」。
 // クリック / Enter / Space でスキップ（即done）。
 function Finale({ onSkip }: { onSkip: () => void }) {
+  // マウント時にフォーカスを当て、Enter/Spaceが即座にスキップへ届くようにする
+  // （asking時の質問見出しフォーカスと同じパターン）
+  const finaleRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    finaleRef.current?.focus({ preventScroll: true });
+  }, []);
+
   return (
     <div
+      ref={finaleRef}
       className="diagnosis-finale"
       role="button"
       tabIndex={0}
