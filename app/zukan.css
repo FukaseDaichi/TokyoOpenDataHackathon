@@ -516,6 +516,9 @@ html.uk-js .zukan-card-img.is-loaded {
   border-radius: 20px;
   box-shadow: 0 30px 70px rgba(0, 0, 0, 0.45), 0 0 0 1px rgba(184, 146, 63, 0.25);
   padding: 34px 30px 30px;
+  /* 羊皮紙上の基本文字色（墨）。.book-section由来のクリームを上書きし、
+     子要素（diagnosis-questionなど）へ継承させる */
+  color: #4a3418;
 }
 
 /* 右端の残ページ厚み（線の本数が残問数で減る） */
@@ -542,7 +545,8 @@ html.uk-js .zukan-card-img.is-loaded {
   margin-top: 26px;
   font-size: 13px;
   letter-spacing: 0.35em;
-  color: #b8923f;
+  /* 羊皮紙上では金(#b8923f)はコントラスト不足(約2.2:1)のため濃金を使う */
+  color: #7a5c2e;
   font-variant-numeric: tabular-nums;
 }
 
@@ -667,7 +671,9 @@ html.uk-js .zukan-card-img.is-loaded {
 .diagnosis-finale-skip {
   font-size: 12px;
   letter-spacing: 0.3em;
-  color: rgba(184, 146, 63, 0.75);
+  /* 暗背景(.book-section)上。半透明金(旧rgba(184,146,63,.75)は実効約4.1:1で
+     AA未達のため不透明の金にする */
+  color: #b8923f;
 }
 
 /* ---- 結果 ---- */
