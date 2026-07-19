@@ -26,6 +26,7 @@ import {
 } from "../../lib/personaType";
 import { rankOf, ratioToMean } from "../../lib/rank";
 import { paletteVars, wardPalette } from "../../lib/wardPalette";
+import { BookHeader } from "../BookHeader";
 import { Radar } from "../Radar";
 import { xShareUrl } from "../share";
 import { StatBar } from "../StatBar";
@@ -140,6 +141,7 @@ export function ResultPage({ slug }: { slug: string }) {
         ...paletteVars(palette),
       }}
     >
+      <BookHeader />
       <div className="book-section-inner">
         <p className="book-section-eyebrow">SHINDAN RESULT</p>
         <h1 className="book-section-title">

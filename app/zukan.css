@@ -2218,3 +2218,84 @@ html.uk-js .zukan-card-img.is-loaded {
     margin-left: 0;
   }
 }
+
+/* ---- 箔押しミニヘッダー（サブページ共通・区色非連動） ---- */
+
+.book-header {
+  position: fixed;
+  inset: 0 0 auto 0;
+  z-index: 30;
+  background: rgba(23, 17, 12, 0.92);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid rgba(202, 162, 79, 0.55);
+  transform: translateY(0);
+  transition: transform 0.25s ease;
+}
+
+.book-header.is-hidden {
+  transform: translateY(-100%);
+}
+
+/* キーボードでリンクへ到達したら隠れていても出す */
+.book-header:focus-within {
+  transform: translateY(0);
+}
+
+.book-header-nav {
+  max-width: 1080px;
+  margin: 0 auto;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+}
+
+.book-header-title {
+  color: #e8c56b;
+  text-decoration: none;
+  font-size: 13px;
+  letter-spacing: 0.28em;
+  padding: 14px 4px;
+  white-space: nowrap;
+}
+
+.book-header-links {
+  display: flex;
+  gap: 18px;
+}
+
+.book-header-links a {
+  color: #caa24f;
+  text-decoration: none;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  padding: 15px 4px;
+  white-space: nowrap;
+}
+
+.book-header-title:hover,
+.book-header-title:focus-visible,
+.book-header-links a:hover,
+.book-header-links a:focus-visible {
+  color: #f0d693;
+}
+
+.book-header a:focus-visible {
+  outline: 2px solid #e8c56b;
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .book-header-nav {
+    height: 44px;
+    padding: 0 16px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .book-header {
+    transition: none;
+  }
+}
