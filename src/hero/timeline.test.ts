@@ -175,6 +175,66 @@ describe('final scene framing (every card fully inside the viewport)', () => {
   });
 });
 
+describe('peek cards (t=0 first-view teaser)', () => {
+  const peekCards = HERO_CARDS.filter((c) => c.peek !== null);
+
+  it('has exactly two peek cards on opposite sides', () => {
+    expect(peekCards).toHaveLength(2);
+    expect(peekCards.map((c) => c.peek!.side).sort()).toEqual([-1, 1]);
+  });
+
+  it('floats peek cards near the screen edges in front of the camera at t=0', () => {
+    for (const aspect of [16 / 9, 375 / 812]) {
+      const cam = cameraPose(0, aspect);
+      for (const card of peekCards) {
+        const p = cardPose(card, 0, aspect);
+        expect(p.peek).toBe(1);
+        // カメラ前方の近距離（回廊の定位置ではない）
+        const dz = cam.pos[2] - p.pos[2];
+        expect(dz).toBeGreaterThan(2.5);
+        expect(dz).toBeLessThan(9);
+        // 左右の画面端: NDCのxが端寄り（中央を塞がない）で符号が side と一致
+        const ndc = projectToNdc(p.pos, cam, aspect);
+        expect(Math.sign(ndc.x), `${card.name} aspect=${aspect}`).toBe(card.peek!.side);
+        expect(Math.abs(ndc.x), `${card.name} aspect=${aspect}`).toBeGreaterThan(0.45);
+        // カードの内側の縁は必ず画面内（完全に見切れない）
+        const inner = projectToNdc(
+          [p.pos[0] - card.peek!.side * p.scale, p.pos[1], p.pos[2]],
+          cam,
+          aspect,
+        );
+        expect(Math.abs(inner.x), `${card.name} inner aspect=${aspect}`).toBeLessThan(0.97);
+      }
+    }
+  });
+
+  it('boosts sheen while peeking', () => {
+    for (const card of peekCards) {
+      expect(cardPose(card, 0).sheen).toBeGreaterThan(0.4);
+    }
+  });
+
+  it('matches normal corridor behavior once scrolling passes the blend window', () => {
+    for (const card of peekCards) {
+      const plain = { ...card, peek: null };
+      for (const t of [0.1, 0.3, card.closeupAt!, 1]) {
+        const withPeek = cardPose(card, t, 16 / 9);
+        expect(withPeek.peek).toBe(0);
+        expect(withPeek).toEqual(cardPose(plain, t, 16 / 9));
+      }
+    }
+  });
+
+  it('leaves non-peek cards untouched at t=0', () => {
+    for (const card of HERO_CARDS.filter((c) => c.peek === null)) {
+      const p = cardPose(card, 0);
+      expect(p.peek).toBe(0);
+      expect(p.pos[0]).toBeCloseTo(card.corridor.x, 5);
+      expect(p.pos[2]).toBeCloseTo(card.corridor.z, 5);
+    }
+  });
+});
+
 describe('floatOffset', () => {
   it('is a pure function of time and phase (no hidden state)', () => {
     const card = HERO_CARDS[0];

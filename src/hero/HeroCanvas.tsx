@@ -166,6 +166,17 @@ function SceneInner({ progressRef, hud, tier, onSelectWard }: SceneProps) {
     }
     camera.lookAt(cam.look[0], cam.look[1], cam.look[2]);
 
+    // 開幕は霧を絞って回廊を闇に沈め、チラ見せの2枚だけを浮かび上がらせる。
+    // （開幕の暗さをDOMビネットでなくシーン内で作ることで、画面端のpeekカードが隠れない）
+    const fogOpen = 1 - phases.vignette;
+    const fogNear = 7 + (30 - 7) * fogOpen;
+    const fogFar = 20 + (90 - 20) * fogOpen;
+    const sceneFog = state.scene.fog as THREE.Fog | null;
+    if (sceneFog) {
+      sceneFog.near = fogNear;
+      sceneFog.far = fogFar;
+    }
+
     // 集結後は浮遊をほぼ止める（地面に立つカードが滑って見えないように）
     const floatFactor = 1 - phases.gather * 0.9;
 
@@ -190,14 +201,17 @@ function SceneInner({ progressRef, hud, tier, onSelectWard }: SceneProps) {
       group.rotation.set(tiltX, pose.rotY + tiltY, pose.rotZ);
       group.scale.setScalar(pose.scale);
 
-      // 可視制御: 通過済み・遠すぎ・低ティアの最遠バンドは描かない（集結では全員登場）
+      // 可視制御: 通過済み・遠すぎ・低ティアの最遠バンドは描かない
+      // （集結では全員登場、t=0のチラ見せ中はバンドカットより優先）
       const inGather = phases.gather > 0.05;
       const behind = dz < -5;
       const tooFar = dz > 92;
       const bandCut = card.depthBand > settings.maxCorridorBand;
-      group.visible = inGather || (!behind && !tooFar && !bandCut);
+      group.visible = inGather || pose.peek > 0.01 || (!behind && !tooFar && !bandCut);
 
       const mat = materials[i];
+      mat.uniforms.uFogNear.value = fogNear;
+      mat.uniforms.uFogFar.value = fogFar;
       mat.uniforms.uSheen.value = pose.sheen;
       mat.uniforms.uSweep.value = -0.25 + 1.5 * ((time * 0.18 + card.floatPhase * 0.15) % 1);
 

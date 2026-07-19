@@ -34,6 +34,8 @@ export interface HeroCard extends WardInfo {
   /** Scene3: クローズアップのスクロール時刻（実画像がある区のみ） */
   closeupAt: number | null;
   closeupSide: -1 | 1;
+  /** t=0のファーストビューで画面端にチラ見せする配置（カメラ相対）。対象2区のみ */
+  peek: PeekSlot | null;
   /** 集結整列の開始をカードごとに僅かにずらす */
   gatherDelay: number;
 }
@@ -47,6 +49,22 @@ const camZAt = (t: number) => 24 + ((t - 0.15) / 0.65) * (-58 - 24);
 const camXAtZ = (z: number) => {
   const u = Math.min(1, Math.max(0, (24 - z) / 82));
   return 6.2 * Math.sin(u * Math.PI * 2) * Math.sin(u * Math.PI);
+};
+
+export interface PeekSlot {
+  side: -1 | 1;
+  /** ワールドy（カメラ初期y=0.5基準の上下ずらし） */
+  y: number;
+  /** カメラからの前方距離 */
+  dist: number;
+  rotZ: number;
+}
+
+/** t=0チラ見せの対象と配置。優先ロードされるクローズアップ区から選ぶ。
+ * static設定でrngを消費しない（既存の回廊配置を変えないため）。 */
+const PEEKS: Record<string, PeekSlot> = {
+  '13104': { side: -1, y: 1.15, dist: 4.6, rotZ: -0.05 }, // 新宿=左上
+  '13113': { side: 1, y: -0.35, dist: 5.2, rotZ: 0.06 }, // 渋谷=右下
 };
 
 /** クローズアップ対象（映えの異なる6区）と時刻 */
@@ -134,6 +152,7 @@ function buildManifest(): HeroCard[] {
       podium: podiumSlot(i),
       closeupAt: closeup ? closeup.at : null,
       closeupSide: closeup ? closeup.side : baseSide,
+      peek: PEEKS[ward.id] ?? null,
       gatherDelay: (i % 5) * 0.008,
     };
   });

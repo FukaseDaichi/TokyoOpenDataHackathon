@@ -37,6 +37,8 @@ export interface CardPose {
   sheen: number;
   /** 区名DOMラベルの不透明度 */
   labelOpacity: number;
+  /** t=0チラ見せの強さ 0..1（HeroCanvasの可視判定がバンドカットより優先する） */
+  peek: number;
 }
 
 const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
@@ -154,6 +156,34 @@ export function cardPose(card: HeroCard, tRaw: number, aspect = 16 / 9): CardPos
     }
   }
 
+  // t=0のチラ見せ: カメラ前方の画面端に浮かべ、スクロール開始で回廊の定位置へ返す
+  let peekW = 0;
+  if (card.peek) {
+    peekW = 1 - smoothstep(0.005, 0.075, t);
+    if (peekW > 1e-4) {
+      // HeroCanvasのカメラ(fov=50)と同じ画角で画面端のワールドxを求める。
+      // 縦長画面では遠く・小さくして、カードが画面を覆わないようにする
+      const HALF_FOV_TAN = 0.46631; // tan(25deg)
+      const portrait = aspect < 1;
+      const peekScale = portrait ? 0.8 : 1.15;
+      const dist = card.peek.dist + (portrait ? 1.6 : 0);
+      const halfW = HALF_FOV_TAN * dist * aspect;
+      const px = cam.pos[0] + card.peek.side * (halfW + 0.5 * peekScale);
+      const py = card.peek.y;
+      const pz = cam.pos[2] - dist;
+      x = lerp(x, px, peekW);
+      y = lerp(y, py, peekW);
+      z = lerp(z, pz, peekW);
+      scale = lerp(scale, peekScale, peekW);
+      // カメラへ緩く正対させ、内側へ視線を誘導する
+      rotY = lerp(rotY, Math.atan2(cam.pos[0] - px, cam.pos[2] - pz) * 0.55, peekW);
+      rotZ = lerp(rotZ, card.peek.rotZ, peekW);
+      sheen = Math.max(sheen, peekW * 0.75);
+    } else {
+      peekW = 0;
+    }
+  }
+
   // Scene4: 集結へ整列（カードごとに位相をずらして流れ込む）。
   // 横長は東京3Dマップの立ち位置、縦長は雛壇へ。
   const c = smoothstep(0.8 + card.gatherDelay, 0.94 + card.gatherDelay, t);
@@ -172,7 +202,7 @@ export function cardPose(card: HeroCard, tRaw: number, aspect = 16 / 9): CardPos
       : Math.max(labelOpacity, c * 0.9);
   }
 
-  return { pos: [x, y, z], rotY, rotZ, scale, sheen, labelOpacity };
+  return { pos: [x, y, z], rotY, rotZ, scale, sheen, labelOpacity, peek: peekW };
 }
 
 /**

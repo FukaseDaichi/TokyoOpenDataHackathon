@@ -173,7 +173,7 @@ export default function Hero2DFallback({ onSelectWard, onCtaClick }: Props) {
             boxShadow: '0 4px 20px rgba(150,110,40,0.4)',
           }}
         >
-          10問で、あなたに似ている区ちゃんを診断
+          いますぐ診断する（10問・約1分）
         </button>
       </div>
     </section>
