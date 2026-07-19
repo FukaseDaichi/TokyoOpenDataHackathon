@@ -70,7 +70,7 @@
 
 診断結果ページは `pickPolicyForAxes()` で一致軸とタグが交差する最初の政策を選び、交差がなければ先頭の政策を表示する。
 
-現在のJSONは23区分を収録しているが、未収録区・未収録フィールドを許容するローダー設計であり、`src/data/policies.ts` の `loadWardProfile()` は未知または未収録の区に `null` を返す。区章画像 `public/emblems/{slug}.svg` は手動配置された生成パイプライン対象外のアセットである。区詳細ページは画像読み込み失敗時に `onError` で非表示にする。SVGごとの取得URL・取得日・作者・ライセンス根拠はリポジトリ内に保持しておらず、ファイルだけから取得元を判定できないため、権利情報の再検証性は [07-risks-and-concerns.md](07-risks-and-concerns.md) の懸念事項とする。
+現在のJSONは23区分を収録しているが、未収録区・未収録フィールドを許容するローダー設計であり、`src/data/policies.ts` の `loadWardProfile()` は未知または未収録の区に `null` を返す。区章画像 `public/emblems/{slug}.svg` は手動配置された生成パイプライン対象外のアセットである。区詳細ページは画像読み込み失敗時に `onError` で非表示にする。SVGごとの取得URL・取得日・作者・ライセンス根拠は [08-asset-provenance.md](08-asset-provenance.md) の来歴台帳で追跡する。
 
 ## 3. ファイルと所有権
 
@@ -84,17 +84,17 @@
 | `data/processed/ward-details.json` | 詳細指標の生成物 | `build_details.py` で再生成 |
 | `data/build_geo.py` | ジオデータジェネレーター | 手編集するソース |
 | `data/processed/ward-geo.json` | ジオデータの生成物 | `build_geo.py` で再生成 |
-| `src/data/ward-metrics.json` | アプリ同梱スナップショット | processedから手動コピー |
-| `src/data/ward-details.json` | アプリ同梱スナップショット | processedから手動コピー |
-| `src/data/ward-geo.json` | アプリ同梱スナップショット | processedから手動コピー |
+| `src/data/ward-metrics.json` | アプリ同梱スナップショット | `npm run sync:data` でprocessedから同期 |
+| `src/data/ward-details.json` | アプリ同梱スナップショット | `npm run sync:data` でprocessedから同期 |
+| `src/data/ward-geo.json` | アプリ同梱スナップショット | `npm run sync:data` でprocessedから同期 |
 | `src/data/diagnosis-assignments.json` | アプリ同梱の診断割り当て | `npm run build:diagnosis` で再生成 |
 | `src/data/ward-policies.json` | アプリ同梱データ | `data/processed` に対応物はなく直接手編集する |
 | `src/data/rationale.ts` | アプリ同梱データ（AI執筆テキスト） | `docs/strategy/ward-character-profiles.md` を根拠に手編集する |
 | `src/data/ward-affinity.json` | アプリ同梱データ（AI執筆相性文） | 基本指標・順位・5軸方向との整合を確認して手編集する |
 | `src/data/ward-traits.json` | アプリ同梱データ（AI執筆タイプ特徴） | キャッチコピー・5軸方向との整合を確認して手編集する |
-| `public/emblems/*.svg` | アプリ同梱データ | 手動取得・配置（生成処理とファイル別の来歴台帳なし） |
+| `public/emblems/*.svg` | アプリ同梱データ | 手動取得・配置（来歴は [08-asset-provenance.md](08-asset-provenance.md) に記録） |
 
-`data/processed` と `src/data` の同期は現在自動化されていない。アプリ動作の正は `src/data`、集計結果の正は `data/processed` であるため、データ更新時は必ず同一内容にそろえる。
+`data/processed` の3つの集計JSONは `npm run sync:data` で対応する `src/data` へコピーする。アプリ動作の正は `src/data`、集計結果の正は `data/processed` であり、`src/data/parity.test.ts` が両者のバイト一致を検証する。
 
 ## 4. 生成フロー
 
@@ -106,9 +106,9 @@ flowchart LR
   WardsPy --> WardsProcessed["processed/wards.json + wards.csv"]
   DetailsPy --> DetailsProcessed["processed/ward-details.json"]
   GeoPy --> GeoProcessed["processed/ward-geo.json"]
-  WardsProcessed -->|手動コピー| WardsBundle["src/data/ward-metrics.json"]
-  DetailsProcessed -->|手動コピー| DetailsBundle["src/data/ward-details.json"]
-  GeoProcessed -->|手動コピー| GeoBundle["src/data/ward-geo.json"]
+  WardsProcessed -->|sync:data| WardsBundle["src/data/ward-metrics.json"]
+  DetailsProcessed -->|sync:data| DetailsBundle["src/data/ward-details.json"]
+  GeoProcessed -->|sync:data| GeoBundle["src/data/ward-geo.json"]
   PoliciesJson["src/data/ward-policies.json\n（手編集・生成処理なし）"]
   Normalize --> DiagnosisBuild["build:diagnosis\n全回答パターンの配分校正"]
   DiagnosisBuild --> DiagnosisBundle["src/data/diagnosis-assignments.json"]
@@ -139,9 +139,7 @@ flowchart LR
 /usr/bin/python3 data/build_details.py
 /usr/bin/python3 data/build_geo.py
 
-cp data/processed/wards.json src/data/ward-metrics.json
-cp data/processed/ward-details.json src/data/ward-details.json
-cp data/processed/ward-geo.json src/data/ward-geo.json
+npm run sync:data
 
 npm run build:diagnosis
 npm test
@@ -150,14 +148,11 @@ npm run build
 
 `build_geo.py` は `data/raw/N03-21_13_city.topojson` の更新が前提であり、基本5軸・区詳細のraw更新とは独立して再実行できる。`build:diagnosis` は質問、基本5軸、区順序のいずれかを変更した場合に必ず実行する。`src/data/ward-policies.json`、`rationale.ts`、`ward-affinity.json`、`ward-traits.json`、`public/emblems/*.svg` は生成コマンドを持たないため、この手順では再生成されない。変更条件と手動更新方法は本ページ末尾を参照する。
 
-更新後は次も確認する。
+`npm test` で実行されるparityテストが、次の3ペアをバイト単位で検証する。
 
-```bash
-cmp data/processed/wards.json src/data/ward-metrics.json
-cmp data/processed/ward-details.json src/data/ward-details.json
-cmp data/processed/ward-geo.json src/data/ward-geo.json
-git diff -- data/processed src/data
-```
+- `data/processed/wards.json` と `src/data/ward-metrics.json`
+- `data/processed/ward-details.json` と `src/data/ward-details.json`
+- `data/processed/ward-geo.json` と `src/data/ward-geo.json`
 
 ## 6. 検証ルール
 
@@ -169,7 +164,7 @@ git diff -- data/processed src/data
 - 区コードは `13101` から `13123`、並び順はJIS区コード順とする。
 - `build_geo.py` はWARD_IDS 23区分の欠損があればassertで停止し、生成物サイズが120KBを超えてもassertで停止する（簡略化率を上げて再生成する）。
 
-Vitestは、基本データと詳細データの23区件数、基本指標の存在、正規化範囲、代表値、slugの双方向対応、ジオデータ23区分の座標・面積の妥当性、診断割り当ての再生成一致・全区1〜10%・距離順位5位以内を検証する。`ward-policies.json` については、存在するキーが正しい区コードであること、政策の文字数上限・出典URL形式、軸タグが `AXIS_KEYS` の値のみで全区に1件以上あること、花・木・鳥の配列が空文字と重複を含まないことを検証するが、23区完備はテスト条件にしていない。AI執筆データは、`rationale.ts` の23区完備・最低文字数・代表的な根拠語、`ward-affinity.json` の23区×5軸完備・最低文字数、`ward-traits.json` の23区×3行完備・空文字なし・各30字以内を検証する。
+Vitestは、基本データと詳細データの23区件数、基本指標の存在、正規化範囲、代表値、slugの双方向対応、ジオデータ23区分の座標・面積の妥当性、`data/processed` と `src/data` の3ペアのバイト一致、診断割り当ての再生成一致・全区1〜10%・距離順位5位以内を検証する。`ward-policies.json` については、存在するキーが正しい区コードであること、政策の文字数上限・出典URL形式、軸タグが `AXIS_KEYS` の値のみで全区に1件以上あること、花・木・鳥の配列が空文字と重複を含まないことを検証するが、23区完備はテスト条件にしていない。AI執筆データは、`rationale.ts` の23区完備・最低文字数・代表的な根拠語、`ward-affinity.json` の23区×5軸完備・最低文字数、`ward-traits.json` の23区×3行完備・空文字なし・各30字以内を検証する。
 
 ## 7. 手動キュレーション・AI執筆データの更新運用
 

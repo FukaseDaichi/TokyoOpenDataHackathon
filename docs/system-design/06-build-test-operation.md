@@ -60,7 +60,7 @@ NEXT_PUBLIC_SITE_URL=https://<公開ホスト> npm run build
 
 データまたは画像を変更した場合は、追加で次を確認する。
 
-- `data/processed/*.json` と `src/data/*.json` が一致する（`ward-geo.json` を含む）。
+- `src/data/parity.test.ts` により、`data/processed/*.json` と対応する `src/data/*.json` がバイト単位で一致する（`ward-geo.json` を含む）。
 - 23区すべてにキャラクター原本PNG、512px・896pxのWebP、OGP原本PNG、配信用OGP JPEGが存在し、トップ用 `home.png` / `home.jpg` も存在する。
 - `?view=high`、`?view=low`、`?view=2d` で主要導線が動く。ヒーローに加え、区詳細ページの「東京のどこにいる？」地図も3D/2Dが切り替わることを確認する。
 - `/result/{slug}/` と `/ward/{slug}/` の代表ページを直接開ける。

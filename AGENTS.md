@@ -23,9 +23,7 @@ wrangler pages deploy out --project-name=uchinokuchan
 /usr/bin/python3 data/build_wards.py
 /usr/bin/python3 data/build_details.py
 /usr/bin/python3 data/build_geo.py
-cp data/processed/wards.json src/data/ward-metrics.json
-cp data/processed/ward-details.json src/data/ward-details.json
-cp data/processed/ward-geo.json src/data/ward-geo.json
+npm run sync:data
 npm run build:diagnosis
 
 # 画像再生成（OGP原本は生成しない。下記「重要な実装制約」を参照）
