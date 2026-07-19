@@ -15,6 +15,7 @@
 | [05-frontend-rendering-design.md](05-frontend-rendering-design.md) | 3Dヒーロー、フォールバック、アセット、アクセシビリティ |
 | [06-build-test-operation.md](06-build-test-operation.md) | ビルド、テスト、デプロイ、運用手順 |
 | [07-risks-and-concerns.md](07-risks-and-concerns.md) | 現行コードの懸念点と対応優先度 |
+| [08-asset-provenance.md](08-asset-provenance.md) | データ・画像アセットの出典、権利条件、加工内容 |
 
 ## 文書の境界
 
