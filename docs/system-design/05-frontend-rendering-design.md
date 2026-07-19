@@ -48,7 +48,7 @@ flowchart TD
 
 `prefers-reduced-motion` 時は `initialFlowState` が初期フェーズを `cover` でなく `asking` にし、`turning` フェーズと `finale` フェーズを経由しない（`stamping` 完了で直接次の `asking` または `done` へ進む）ため、全10問が実質即時に進行する。reduced判定はマウント時に一度だけ固定し、回答途中でフロー分岐が変わらないようにする。
 
-`done` 到達時に `onComplete(vector, answers)` で採点結果を確定し `App` が `/result/{slug}/` へ遷移させる。加えて、最終問（10問目）回答直後の `finale` 突入時に `onAnswersFixed(answers)` が呼ばれ、`App` はこれを使って結果ページを `router.prefetch()` し、結果OGP画像を `new Image().src` でpreloadする。フィナーレ演出の裏で結果ページと画像を先読みすることで、遷移直後のローディング待ちを隠す。
+`done` 到達時に `onComplete(vector, answers)` で採点結果を確定し `App` が `/result/{slug}/` へ遷移させる。加えて、最終問（10問目）回答直後の `finale` 突入時に `onAnswersFixed(answers)` が呼ばれ、`App` はこれを使って結果ページを `router.prefetch()` し、結果OGP画像を `new Image().src` でpreloadする。フィナーレ演出の裏で結果ページと画像を先読みすることで、遷移直後のローディング待ちを隠す（`prefers-reduced-motion` 時は前述のとおり `finale` を経由しないため `onAnswersFixed` は呼ばれず、この先読みは行われない）。
 
 ## 4. 品質ティアとフォールバック
 
