@@ -1,9 +1,11 @@
 import type { Metadata, Viewport } from 'next';
+import { GoogleAnalytics } from '@next/third-parties/google';
 import FirstLoad from '../src/ui/FirstLoad';
 import './globals.css';
 import './zukan.css';
 
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
+const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export const metadata: Metadata = {
   title: 'うちの区ちゃん | 東京23区 性格診断・擬人化図鑑',
@@ -79,6 +81,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         </div>
         <FirstLoad />
         {children}
+        {/* GA4。NEXT_PUBLIC_GA_ID未設定時はスクリプト自体を読み込まない */}
+        {GA_ID && <GoogleAnalytics gaId={GA_ID} />}
       </body>
     </html>
   );
