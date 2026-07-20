@@ -11,6 +11,7 @@ import { Diagnosis } from './ui/Diagnosis';
 import { bestDiagnosisMatch } from './lib/diagnosisMatching';
 import { saveDiagnosis } from './lib/diagnosisSession';
 import { CODE_TO_SLUG } from './data/slugs';
+import { trackDiagnosisResult } from './lib/analytics';
 
 const WARDS = loadWards();
 
@@ -61,8 +62,10 @@ export default function App() {
               }}
               onComplete={(userVector, answers) => {
                 const result = bestDiagnosisMatch(answers, WARDS);
+                const slug = CODE_TO_SLUG[result.code];
                 saveDiagnosis(userVector, result.code);
-                router.push(`/result/${CODE_TO_SLUG[result.code]}/`);
+                trackDiagnosisResult(slug);
+                router.push(`/result/${slug}/`);
               }}
             />
           )}
@@ -81,6 +84,14 @@ export default function App() {
           <Zukan onSelect={(w) => setSelectedCode(w.code)} />
         </div>
       </section>
+
+      {/* フッター: 外部送信規律に基づくアクセス解析の告知 */}
+      <footer className="site-footer">
+        <p className="site-footer-note">
+          本サイトはサービス改善のため Google Analytics を利用しています。
+          診断の回答・結果は個人を特定しない匿名の統計情報として Google に送信されます。
+        </p>
+      </footer>
 
       {/* 個別詳細モーダル */}
       {ward && (

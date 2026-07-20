@@ -160,3 +160,18 @@ html.uk-revisit #first-load {
     animation: none;
   }
 }
+
+/* ===== フッター（アクセス解析の告知） ===== */
+.site-footer {
+  padding: 2.5rem 1.5rem 3rem;
+  text-align: center;
+}
+
+.site-footer-note {
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  line-height: 1.9;
+  color: #9c8c66; /* 背景#17110cに対しコントラスト比約5.6:1 */
+  max-width: 34em;
+  margin: 0 auto;
+}
