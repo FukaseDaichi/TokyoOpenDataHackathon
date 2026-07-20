@@ -16,7 +16,7 @@ npm run dev
 npm test
 
 # 本番ビルドとデプロイ（Cloudflare Pages）
-NEXT_PUBLIC_SITE_URL=https://uchinokuchan.pages.dev npm run build
+NEXT_PUBLIC_SITE_URL=https://uchinokuchan.pages.dev NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX npm run build
 wrangler pages deploy out --project-name=uchinokuchan
 
 # データ再生成。build_wards.py / build_details.py は openpyxl が必要
@@ -53,10 +53,11 @@ node scripts/build-title.mjs
 - 5軸キーと順序は `src/domain/axes.ts` の `AXIS_KEYS` を正とする。値は `[-1, 1]`。
 - 賑わいは昼夜間人口比率のlog min-max、他軸は合成値のmin-max。式は `src/data/wards.ts` と [ドメイン設計](docs/system-design/03-domain-design.md) を参照する。
 - 純ロジックは副作用のないTypeScriptモジュールとして保ち、変更時はVitestを先に追加または更新する。
-- 診断の5軸ベクトルと結果区コードは `sessionStorage` だけに保存し、個別回答は保存・外部送信しない。
+- 診断の5軸ベクトルと結果区コードは `sessionStorage` だけに保存し、個別回答は端末に保存しない。計測のため質問ID・選択肢番号・結果区slugは匿名イベントとしてGA4へ送信する（`src/lib/analytics.ts`。`NEXT_PUBLIC_GA_ID` 未設定時はno-op）。個人を特定する情報は扱わない。
 - WebGL非対応、reduced motion、Canvas初期化失敗時の2D導線を維持する。
 - UIコピーは日本語。区の表現は中立・前向きにし、地域スティグマにつながる否定的ラベルを避ける。
 - `NEXT_PUBLIC_SITE_URL` 未設定でもビルドは通るがOGPが壊れるため、本番ビルドでは必須とする。
+- `NEXT_PUBLIC_GA_ID`（GA4測定ID）未設定でもビルド・動作するが計測されない。本番ビルドでは設定する。運用手順は [ビルド・テスト・運用](docs/system-design/06-build-test-operation.md) を参照する。
 - OGP画像はコード合成しない。生成AIに依頼して作成した原本を `assets/og/{slug}.png`（トップ用は `home.png`）に置き、`npm run build:og` で1200×630のJPEGへ加工して `public/og/{slug}.jpg` に配置する。プロンプトは [docs/strategy/og-image-prompts.md](docs/strategy/og-image-prompts.md) にある。
 
 ## データ更新時の不変条件

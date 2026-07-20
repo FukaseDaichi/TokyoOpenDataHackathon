@@ -126,3 +126,28 @@ npx wrangler pages deploy out --project-name=uchinokuchan --branch=main
 4. `?view=2d` でフォールバック導線が動くか確認する。
 5. `src/data` と `data/processed` の差分、23区件数、slug対応を確認する。
 6. 診断結果だけの問題なら `sessionStorage` の `kuchan.diagnosis` を消して再診断する。
+
+## アクセス解析（GA4）
+
+### 環境変数
+
+- `NEXT_PUBLIC_GA_ID`: GA4測定ID（`G-XXXXXXXXXX` 形式）。未設定でもビルド・動作するがGAスクリプトを読み込まず計測されない。本番ビルドでは必ず設定する。
+
+### 計測イベント
+
+| イベント名 | 送信タイミング | パラメータ |
+|---|---|---|
+| `page_view` | 全ページ・クライアント遷移含め自動 | GA4標準 |
+| `diagnosis_answer` | 診断で1問回答が確定するたび | `question_id`（q1〜q10）、`choice_index`（0始まり） |
+| `diagnosis_result` | 診断結果の確定時 | `ward_slug`（マッチした区のslug） |
+
+### GA4プロパティの作成手順
+
+1. https://analytics.google.com/ でアカウント（未作成なら）とプロパティを作成する。タイムゾーン: 日本、通貨: 日本円。
+2. データストリーム「ウェブ」を追加し、URL `https://uchinokuchan.pages.dev` を登録して測定ID（`G-XXXX`）を取得する。
+3. 管理 > データの表示 > カスタム定義 で、イベントスコープのカスタムディメンションを3つ登録する: `question_id`、`choice_index`、`ward_slug`。
+4. 探索レポートで `diagnosis_answer` を `question_id` × `choice_index` で分解すると質問別の回答分布、`diagnosis_result` を `ward_slug` で分解すると結果区の分布が見られる。イベント数の質問別減衰から離脱地点も読み取れる。
+
+### プライバシー
+
+個別回答は端末に保存しない。GA4へ送るのは質問ID・選択肢番号・結果区slugの匿名イベントのみで、個人を特定する情報は扱わない。トップページのフッターに利用者向けの告知を掲載している。

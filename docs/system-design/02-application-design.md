@@ -55,6 +55,8 @@ flowchart TD
   Save --> Result["/result/{slug}/"]
 ```
 
+計測イベントは2箇所から送る。回答確定（PICK）ごとに `Diagnosis.tsx` が `trackDiagnosisAnswer(questionId, choiceIndex)` を、結果確定時に `App.tsx` の `onComplete` が `trackDiagnosisResult(wardSlug)` を呼ぶ（いずれも `src/lib/analytics.ts`。GA未設定時はno-op）。
+
 診断は戻る・回答変更・中断復元を持たない。10問すべてに回答するとページめくり演出（表紙オープン→設問ごとの封蝋スタンプ→ページターン→最終問後のパラパラフィナーレ）を経て結果ページへ遷移する。演出のフェーズ状態機械は `src/lib/diagnosisFlow.ts` が純粋なreducerとして持ち、`Diagnosis` コンポーネントはそのフェーズとタイミング定数だけを頼りにアニメーションを組む（詳細は[フロントエンド・描画設計](05-frontend-rendering-design.md)を参照）。フィナーレはクリック・Enter・Spaceでスキップでき、`prefers-reduced-motion` 時は表紙・ページターン・フィナーレを経由せず全10問が実質即時に進行する。最終問回答直後（フィナーレ突入時）に `onAnswersFixed` が呼ばれ、`App` は演出の裏で結果ページ（`router.prefetch`）と結果OGP画像をあらかじめ読み込む（`prefers-reduced-motion` 時はフィナーレを経由しないため `onAnswersFixed` は呼ばれず、この先読みは行われない）。
 
 区モーダルは図鑑から区詳細へ進むための概要表示とする。ステータスバーはレーダー5軸の根拠となる基本7指標（昼夜間人口比率、高齢化率、年少人口率、一人当たり公立公園面積、単身世帯率、子育て世帯率、財政力指数）に限定する。地価、外国人人口比率、平均所得、人口千人当たり刑法犯認知件数、待機児童数はモーダルに出さず、区詳細ページでのみ表示する。

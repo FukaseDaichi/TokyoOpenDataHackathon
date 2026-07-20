@@ -44,7 +44,7 @@ trackDiagnosisAnswer(questionId: string, choiceIndex: number): void
 trackDiagnosisResult(wardSlug: string): void
 ```
 
-- 内部で `@next/third-parties/google` の `sendGAEvent` を呼ぶ。
+- `<GoogleAnalytics>` が定義する `window.gtag` を直接呼ぶ（`sendGAEvent` はGA未初期化時にconsole警告を出すため使わない）。
 - GA未設定（`window.gtag`/`dataLayer` 不在）、SSR実行、送信時例外のすべてで安全に no-op とし、例外を外へ漏らさない。計測は絶対に診断フローを止めない。
 
 ### イベント送信箇所
