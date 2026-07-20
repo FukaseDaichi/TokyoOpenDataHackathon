@@ -74,7 +74,7 @@ Cloudflare Pagesへ静的成果物を配信する。
 |---|---|
 | Build command | `npm run build` |
 | Build output directory | `out` |
-| Environment variable | `NEXT_PUBLIC_SITE_URL=https://<公開ホスト>` |
+| Environment variable | `NEXT_PUBLIC_SITE_URL=https://<公開ホスト>`、`NEXT_PUBLIC_GA_ID=<GA4測定ID>` |
 | Runtime API / Functions | 使用しない |
 
 公開URLは末尾パスを含まないサイトルートを設定する。現在の公開URLは `https://uchinokuchan.pages.dev` である。
@@ -94,12 +94,12 @@ Cloudflare Pagesへ静的成果物を配信する。
 | `CLOUDFLARE_ACCOUNT_ID` | Pagesプロジェクトを所有するCloudflareアカウントID |
 | `CLOUDFLARE_API_TOKEN` | Account / Cloudflare Pages / Edit権限を持つAPIトークン |
 
-Cloudflare Pagesプロジェクト名は `uchinokuchan`、production branchは `main` とする。workflowの `NEXT_PUBLIC_SITE_URL` は `https://uchinokuchan.pages.dev` に固定し、fork由来を含むPull RequestにはCloudflare secretを渡さない。
+Cloudflare Pagesプロジェクト名は `uchinokuchan`、production branchは `main` とする。ビルドはこのworkflow内で実行するため、`NEXT_PUBLIC_SITE_URL`（`https://uchinokuchan.pages.dev`）と `NEXT_PUBLIC_GA_ID`（`G-XJB4S2R07X`）はworkflowの `env:` ブロックに固定する。どちらも本番HTMLに現れる公開値でありSecretsにはしない。Cloudflare Pages側ではビルドしないため、Cloudflareの環境変数に設定しても反映されない。fork由来を含むPull RequestにはCloudflare secretを渡さない。
 
 Wrangler CLIから直接デプロイする場合は次を実行する。
 
 ```bash
-NEXT_PUBLIC_SITE_URL=https://uchinokuchan.pages.dev npm run build
+NEXT_PUBLIC_SITE_URL=https://uchinokuchan.pages.dev NEXT_PUBLIC_GA_ID=G-XJB4S2R07X npm run build
 npx wrangler pages deploy out --project-name=uchinokuchan --branch=main
 ```
 
@@ -131,7 +131,7 @@ npx wrangler pages deploy out --project-name=uchinokuchan --branch=main
 
 ### 環境変数
 
-- `NEXT_PUBLIC_GA_ID`: GA4測定ID（`G-XXXXXXXXXX` 形式）。未設定でもビルド・動作するがGAスクリプトを読み込まず計測されない。本番ビルドでは必ず設定する。
+- `NEXT_PUBLIC_GA_ID`: GA4測定ID（`G-XXXXXXXXXX` 形式）。現在の本番値は `G-XJB4S2R07X` で、`.github/workflows/deploy.yml` の `env:` に設定している。未設定でもビルド・動作するがGAスクリプトを読み込まず計測されない。本番ビルドでは必ず設定する。
 
 ### 計測イベント
 

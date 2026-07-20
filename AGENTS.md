@@ -16,7 +16,7 @@ npm run dev
 npm test
 
 # 本番ビルドとデプロイ（Cloudflare Pages）
-NEXT_PUBLIC_SITE_URL=https://uchinokuchan.pages.dev NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX npm run build
+NEXT_PUBLIC_SITE_URL=https://uchinokuchan.pages.dev NEXT_PUBLIC_GA_ID=G-XJB4S2R07X npm run build
 wrangler pages deploy out --project-name=uchinokuchan
 
 # データ再生成。build_wards.py / build_details.py は openpyxl が必要

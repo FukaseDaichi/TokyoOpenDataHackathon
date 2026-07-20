@@ -18,6 +18,8 @@ concurrency:
 
 env:
   NEXT_PUBLIC_SITE_URL: https://uchinokuchan.pages.dev
+  # GA4測定ID。本番HTMLに埋め込まれる公開値のためSecretsではなくenvに直書きする。
+  NEXT_PUBLIC_GA_ID: G-XJB4S2R07X
 
 jobs:
   test-build-deploy:
