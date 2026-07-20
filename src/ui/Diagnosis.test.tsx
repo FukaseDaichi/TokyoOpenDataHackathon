@@ -9,6 +9,14 @@ vi.mock('../hero/quality', () => ({
   prefersReducedMotion: () => reducedState.value,
 }));
 
+const { analyticsSpies } = vi.hoisted(() => ({
+  analyticsSpies: { trackDiagnosisAnswer: vi.fn() },
+}));
+vi.mock('../lib/analytics', () => ({
+  trackDiagnosisAnswer: analyticsSpies.trackDiagnosisAnswer,
+  trackDiagnosisResult: vi.fn(),
+}));
+
 // モック確定後に読み込む
 import { Diagnosis } from './Diagnosis';
 
@@ -19,6 +27,7 @@ describe('Diagnosis（絵本ページめくり）', () => {
   beforeEach(() => {
     vi.useFakeTimers();
     reducedState.value = false;
+    analyticsSpies.trackDiagnosisAnswer.mockClear();
   });
   afterEach(() => {
     vi.useRealTimers();
@@ -134,5 +143,27 @@ describe('Diagnosis（絵本ページめくり）', () => {
     expect(onComplete.mock.calls[0][1]).toEqual(new Array(10).fill(0));
     // reducedはフィナーレが無いのでonAnswersFixedは呼ばれない
     expect(onAnswersFixed).not.toHaveBeenCalled();
+  });
+
+  it('回答が確定するたびにtrackDiagnosisAnswerへ質問IDと選択肢番号を送る', () => {
+    reducedState.value = true; // 即askingで進行を簡潔に
+    render(<Diagnosis onComplete={() => {}} />);
+
+    fireEvent.click(screen.getAllByRole('button')[1]); // q1: 2番目の選択肢
+    advance(REDUCED_STAMP_MS);
+    fireEvent.click(screen.getAllByRole('button')[0]); // q2: 先頭の選択肢
+
+    expect(analyticsSpies.trackDiagnosisAnswer).toHaveBeenCalledTimes(2);
+    expect(analyticsSpies.trackDiagnosisAnswer).toHaveBeenNthCalledWith(1, 'q1', 1);
+    expect(analyticsSpies.trackDiagnosisAnswer).toHaveBeenNthCalledWith(2, 'q2', 0);
+  });
+
+  it('封蝋中（disabled）の連打では回答イベントを重複送信しない', () => {
+    reducedState.value = true;
+    render(<Diagnosis onComplete={() => {}} />);
+
+    fireEvent.click(screen.getAllByRole('button')[0]); // q1確定 → stamping
+    screen.getAllByRole('button').forEach((b) => fireEvent.click(b)); // disabled連打
+    expect(analyticsSpies.trackDiagnosisAnswer).toHaveBeenCalledTimes(1);
   });
 });

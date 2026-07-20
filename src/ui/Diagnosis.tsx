@@ -11,6 +11,7 @@ import {
   REDUCED_STAMP_MS,
   type FlowEvent,
 } from '../lib/diagnosisFlow';
+import { trackDiagnosisAnswer } from '../lib/analytics';
 
 interface DiagnosisProps {
   onComplete: (v: AxisVector, answers: number[]) => void;
@@ -150,7 +151,10 @@ export function Diagnosis({ onComplete, onAnswersFixed }: DiagnosisProps) {
                 picked={picked}
                 interactive={interactive}
                 headingRef={headingRef}
-                onPick={(i) => dispatch({ type: 'PICK', option: i })}
+                onPick={(i) => {
+                  trackDiagnosisAnswer(q.id, i);
+                  dispatch({ type: 'PICK', option: i });
+                }}
               />
             </div>
           </div>
