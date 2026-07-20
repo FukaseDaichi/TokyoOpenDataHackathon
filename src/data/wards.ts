@@ -39,6 +39,43 @@ function buildAxes(raw: RawWard[]): AxisVector[] {
   }));
 }
 
+/**
+ * 系統名は代表区コードをキーに割り当てる。
+ * k-meansの数値ラベルは入力順に依存して変わり得るため、番号へ直接名前を紐づけない。
+ */
+const GROUP_NAMES: ReadonlyArray<{ representative: string; name: string }> = [
+  { representative: '13101', name: 'ど真ん中シティ系' }, // 千代田区
+  { representative: '13102', name: 'ベイサイド新星系' }, // 中央区
+  { representative: '13103', name: 'きらめきセレブ系' }, // 港区
+  { representative: '13104', name: 'にぎやか繁華街系' }, // 新宿区
+  { representative: '13105', name: 'おだやか住宅街系' }, // 文京区
+  { representative: '13107', name: '下町あったか系' }, // 墨田区
+];
+
+/**
+ * クラスタラベル列を系統名列へ変換する。
+ * 代表区どうしが同一クラスタに落ちた場合は、データ更新で所属が変動した
+ * サインなので例外を投げ、命名の見直しを強制する。
+ */
+export function nameGroups(labels: number[], codes: string[]): string[] {
+  const labelByCode = new Map(codes.map((c, i) => [c, labels[i]]));
+  const nameByLabel = new Map<number, string>();
+  for (const { representative, name } of GROUP_NAMES) {
+    const label = labelByCode.get(representative);
+    if (label === undefined) throw new Error(`代表区 ${representative} がデータに存在しない`);
+    const taken = nameByLabel.get(label);
+    if (taken !== undefined) {
+      throw new Error(`代表区 ${representative} のクラスタは既に「${taken}」。系統の命名を見直すこと`);
+    }
+    nameByLabel.set(label, name);
+  }
+  return labels.map((l, i) => {
+    const name = nameByLabel.get(l);
+    if (name === undefined) throw new Error(`区 ${codes[i]} のクラスタに代表区がない。系統の命名を見直すこと`);
+    return name;
+  });
+}
+
 let cache: Ward[] | null = null;
 
 export function loadWards(): Ward[] {
@@ -52,6 +89,7 @@ export function loadWards(): Ward[] {
     metrics: w.metrics,
   }));
   const labels = kmeans(base, GROUP_COUNT);
-  cache = base.map((w, i) => ({ ...w, group: `系統${labels[i] + 1}` }));
+  const names = nameGroups(labels, base.map((w) => w.code));
+  cache = base.map((w, i) => ({ ...w, group: names[i] }));
   return cache;
 }

@@ -36,8 +36,8 @@ describe('WardPage', () => {
     expect(screen.getByText(/昼夜間人口比率1355%/)).toBeInTheDocument();
   });
   it('links to fellow wards of the same group', () => {
-    // 港区は実データのk-means分類で単独クラスタ（系統3）になるため、
-    // 複数区が同一系統になる新宿区（系統4）でなかまリンクを検証する
+    // 港区は実データのk-means分類で単独クラスタ（きらめきセレブ系）になるため、
+    // 複数区が同一系統になる新宿区（にぎやか繁華街系）でなかまリンクを検証する
     render(<WardPage slug="shinjuku" />);
     expect(screen.getByText(/おなじ系統のなかま/)).toBeInTheDocument();
   });
