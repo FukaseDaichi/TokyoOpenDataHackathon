@@ -11,6 +11,7 @@ import { loadWardProfile } from '../../data/policies';
 import { loadCharacterRationale } from '../../data/rationale';
 import { rankOf, ratioToMean } from '../../lib/rank';
 import { paletteVars, wardPalette } from '../../lib/wardPalette';
+import { BookHeader } from '../BookHeader';
 import { Radar } from '../Radar';
 import { StatBar } from '../StatBar';
 import { buildWardStats } from '../wardStats';
@@ -61,8 +62,8 @@ export function WardPage({ slug }: { slug: string }) {
 
   return (
     <main className="book-section" style={{ minHeight: '100vh', ['--ward-color' as string]: theme.color, ...paletteVars(palette) }}>
+      <BookHeader />
       <div className="book-section-inner">
-        <Link className="ward-page-back" href="/#zukan">← 図鑑にもどる</Link>
         <article className="ward-page">
           {/* 左: キャラクター（PCではsticky固定） */}
           <div className="ward-page-side">

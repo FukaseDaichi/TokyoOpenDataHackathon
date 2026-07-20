@@ -1,6 +1,6 @@
 import '@testing-library/jest-dom';
 import { afterEach, beforeEach, describe, it, expect, vi } from 'vitest';
-import { render, screen } from '@testing-library/react';
+import { render, screen, within } from '@testing-library/react';
 import { WardPage } from './WardPage';
 
 vi.mock('next/link', () => ({ default: ({ href, children, ...p }: any) => <a href={href} {...p}>{children}</a> }));
@@ -40,5 +40,13 @@ describe('WardPage', () => {
     // 複数区が同一系統になる新宿区（系統4）でなかまリンクを検証する
     render(<WardPage slug="shinjuku" />);
     expect(screen.getByText(/おなじ系統のなかま/)).toBeInTheDocument();
+  });
+  it('shows the book header nav and drops the old zukan back link', () => {
+    render(<WardPage slug="minato" />);
+    const nav = screen.getByRole('navigation', { name: 'サイトナビゲーション' });
+    expect(within(nav).getByRole('link', { name: 'トップページにもどる' })).toHaveAttribute('href', '/');
+    expect(within(nav).getByRole('link', { name: '診断' })).toHaveAttribute('href', '/#diagnosis');
+    expect(within(nav).getByRole('link', { name: '図鑑' })).toHaveAttribute('href', '/#zukan');
+    expect(screen.queryByText('← 図鑑にもどる')).not.toBeInTheDocument();
   });
 });

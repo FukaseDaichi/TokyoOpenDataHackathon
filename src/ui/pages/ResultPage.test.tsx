@@ -205,4 +205,20 @@ describe("ResultPage", () => {
     render(<ResultPage slug="minato" />);
     expect(screen.queryByTestId("result-confetti")).not.toBeInTheDocument();
   });
+
+  it("shows the book header nav with top/diagnosis/zukan links", () => {
+    render(<ResultPage slug="minato" />);
+    const nav = screen.getByRole("navigation", { name: "サイトナビゲーション" });
+    expect(
+      within(nav).getByRole("link", { name: "トップページにもどる" }),
+    ).toHaveAttribute("href", "/");
+    expect(within(nav).getByRole("link", { name: "診断" })).toHaveAttribute(
+      "href",
+      "/#diagnosis",
+    );
+    expect(within(nav).getByRole("link", { name: "図鑑" })).toHaveAttribute(
+      "href",
+      "/#zukan",
+    );
+  });
 });
