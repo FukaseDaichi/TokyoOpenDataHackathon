@@ -457,7 +457,7 @@ export default function HeroOverlay({ hud, onCtaClick }: Props) {
             textShadow: "0 1px 8px rgba(0,0,0,0.9)",
           }}
         >
-          23区が、データの地図になった。
+          23区が、キャラクターになった。
         </p>
         {/* 診断ボタンは直下の10問診断セクションが担うため、ここは誘導文だけにする */}
         <p
