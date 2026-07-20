@@ -4,7 +4,7 @@
 
 「うちの区ちゃん」は、東京23区のオープンデータを5軸の性格ベクトルへ変換し、10問の回答から最も相性のよい1区を提示する日本語のWebアプリケーションである。診断結果は、割り当て先を未校正距離の上位5区以内に保ちながら、全23区の回答パターン比率が1%以上10%以下になるようビルド時に校正する。診断、23区図鑑、区詳細、共有用の診断結果ページを提供する。
 
-本番成果物は静的サイトであり、実行時のサーバー、データベース、認証、外部データAPIを持たない。画面表示に必要なデータと画像はサイト内から配信する。外部サイトへの遷移は、利用者がX共有または区の政策出典リンクを明示的に開いた場合だけ発生する。
+本番成果物は静的サイトであり、実行時のサーバー、データベース、認証、外部データAPIを持たない。画面表示に必要なデータと画像はサイト内から配信する。外部サイトへの遷移は、利用者がX共有または区の政策出典リンクを明示的に開いた場合だけ発生する。一方、アクセス解析のためGoogle Analytics 4（GA4）へページビューと診断イベントを自動送信する（`NEXT_PUBLIC_GA_ID` 設定時のみ、利用者の操作を問わない自動送信。詳細は5節）。
 
 ```mermaid
 flowchart LR
@@ -32,6 +32,7 @@ flowchart LR
 | データ集計 | Python 3 / openpyxl | CSV・XLSXから区別スナップショットを生成 |
 | 画像生成 | Node.js / Sharp | キャラクター・タイトルのWebPを生成。OGPはAI作成の原本を加工して配置する |
 | 配信 | Next.js `output: 'export'` / Cloudflare Pages | `out/` の静的配信 |
+| アクセス解析 | Google Analytics 4 / `@next/third-parties` | ページビュー・診断イベント計測（`NEXT_PUBLIC_GA_ID` 設定時のみ） |
 
 依存バージョンの宣言は `package.json` と `package-lock.json`、TypeScript設定は `tsconfig.json`、テスト設定は `vitest.config.ts` を正とする。
 
@@ -48,6 +49,8 @@ flowchart TD
   Hero --> WardMaster["src/hero/wards.ts\n区表示マスター"]
   Data --> WardMaster
   AppUI --> Session["sessionStorage\n直前の診断ベクトル + 結果区コード"]
+  AppUI --> Analytics["src/lib/analytics.ts\n匿名イベント送信ラッパー"]
+  Analytics -. "NEXT_PUBLIC_GA_ID設定時のみ" .-> GA4["Google Analytics 4"]
 ```
 
 ## 4. ディレクトリ責務
