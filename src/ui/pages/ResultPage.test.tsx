@@ -155,7 +155,7 @@ describe("ResultPage", () => {
       const text = url.searchParams.get("text")!;
       expect(text).toContain("にてる度");
       expect(text).toContain("タイプは「華やか志向タイプ」");
-      expect(text).toContain("#うちの区ちゃん");
+      expect(text).toContain("#23区タイプ診断");
       expect(text).toContain("#都知事杯オープンデータハッカソン");
     }
   });

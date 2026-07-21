@@ -81,8 +81,8 @@ export default function Hero2DFallback({ onSelectWard, onCtaClick }: Props) {
           />
         </h1>
         <p style={{ color: '#b99c6b', margin: '14px 0 40px', letterSpacing: '0.16em', fontSize: 14 }}>
-          <span style={{ whiteSpace: 'nowrap' }}>オープンデータで出会う、</span>
-          <span style={{ whiteSpace: 'nowrap' }}>東京23区個性診断図鑑</span>
+          <span style={{ whiteSpace: 'nowrap' }}>10問でわかる、</span>
+          <span style={{ whiteSpace: 'nowrap' }}>東京23区タイプ診断</span>
         </p>
 
         <div

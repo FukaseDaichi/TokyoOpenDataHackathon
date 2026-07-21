@@ -17,7 +17,7 @@ describe('xShareText / xShareUrl', () => {
   it('診断済みは にてる度%とタイプ名入りの文面になる', () => {
     const text = xShareText(minato, { percent: 87, personaName: '華やか志向タイプ' });
     expect(text).toBe(
-      '診断したら港区ちゃんと にてる度87% だった！タイプは「華やか志向タイプ」らしい\n#うちの区ちゃん\n#都知事杯オープンデータハッカソン',
+      '診断したら港区ちゃんと にてる度87% だった！タイプは「華やか志向タイプ」らしい\n#23区タイプ診断\n#都知事杯オープンデータハッカソン',
     );
   });
 
@@ -25,7 +25,7 @@ describe('xShareText / xShareUrl', () => {
     const url = new URL(xShareUrl(minato, 'https://example.com/result/minato/'));
     expect(url.hostname).toMatch(/(?:x|twitter)\.com$/);
     expect(url.searchParams.get('text')).toBe(
-      '「港区ちゃん」っぽいらしい。財政力1.15の絶対王者、華やかセレブ\n#うちの区ちゃん\n#都知事杯オープンデータハッカソン',
+      '「港区ちゃん」っぽいらしい。財政力1.15の絶対王者、華やかセレブ\n#23区タイプ診断\n#都知事杯オープンデータハッカソン',
     );
     expect(url.searchParams.get('url')).toBe('https://example.com/result/minato/');
   });

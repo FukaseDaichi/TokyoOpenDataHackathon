@@ -14,7 +14,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const { slug } = await params;
   const ward = HERO_WARDS.find((w) => w.id === SLUG_TO_CODE[slug])!;
   return {
-    title: `${ward.name}ちゃんタイプ | うちの区ちゃん`,
+    title: `${ward.name}ちゃんタイプ｜23区タイプ診断`,
     description: `診断結果: あなたは${ward.name}ちゃんタイプ。${ward.catch}`,
     alternates: { canonical: `/result/${slug}/` },
     // layoutのopenGraphは継承されず丸ごと置き換わるため、siteName等もここで指定する
@@ -22,7 +22,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
       type: 'website',
       siteName: 'うちの区ちゃん',
       locale: 'ja_JP',
-      title: `あなたは${ward.name}ちゃんタイプ！`,
+      title: `【23区タイプ診断】あなたは${ward.name}ちゃんタイプ！`,
       description: `${ward.catch} — 10問診断であなたに一番似ている区ちゃんが見つかる`,
       images: [{ url: `/og/${slug}.jpg`, width: 1200, height: 630, alt: `${ward.name}ちゃん` }],
     },

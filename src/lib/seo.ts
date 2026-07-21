@@ -10,7 +10,7 @@ export interface BreadcrumbItem {
 
 export const SITE_NAME = 'うちの区ちゃん';
 export const SITE_DESCRIPTION =
-  '東京23区をオープンデータで性格分類し擬人化。10問の診断で、あなたに一番似ている区ちゃんに出会える図鑑。';
+  'オープンデータでつくった東京23区タイプ診断。10問・約1分で、あなたに一番似ている区ちゃんが見つかります。';
 
 // sitemap・JSON-LDは絶対URLが必須のため、NEXT_PUBLIC_SITE_URL 未設定時は本番URLへフォールバックする
 const PRODUCTION_ORIGIN = 'https://uchinokuchan.pages.dev';

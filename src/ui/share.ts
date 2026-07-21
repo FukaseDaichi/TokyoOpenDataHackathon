@@ -29,7 +29,7 @@ export function xShareText(ward: Ward, result?: ShareResult): string {
   const body = result
     ? `診断したら${ward.name}ちゃんと にてる度${result.percent}% だった！タイプは「${result.personaName}」らしい`
     : `「${ward.name}ちゃん」っぽいらしい。${wardTheme(ward.code).catch}`;
-  return `${body}\n#うちの区ちゃん\n#都知事杯オープンデータハッカソン`;
+  return `${body}\n#23区タイプ診断\n#都知事杯オープンデータハッカソン`;
 }
 
 /** X（Twitter）シェアリンク。ユーザー自身のクリックで投稿画面を開くだけ */

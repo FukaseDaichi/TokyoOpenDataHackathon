@@ -8,18 +8,18 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL;
 const GA_ID = process.env.NEXT_PUBLIC_GA_ID;
 
 export const metadata: Metadata = {
-  title: 'うちの区ちゃん | 東京23区 性格診断・擬人化図鑑',
+  title: 'うちの区ちゃん｜23区タイプ診断（東京23区を擬人化）',
   description:
-    '東京23区をオープンデータで性格分類し擬人化。10問の診断で、あなたに一番似ている区ちゃんに出会える図鑑。',
+    'オープンデータでつくった東京23区タイプ診断。10問・約1分で、あなたに一番似ている区ちゃんが見つかります。',
   applicationName: 'うちの区ちゃん',
   ...(SITE_URL && { metadataBase: new URL(SITE_URL) }),
   openGraph: {
     type: 'website',
     siteName: 'うちの区ちゃん',
     locale: 'ja_JP',
-    title: 'うちの区ちゃん',
+    title: 'うちの区ちゃん｜23区タイプ診断',
     description:
-      '東京23区をオープンデータで性格分類し擬人化。10問の診断で、あなたに一番似ている区ちゃんに出会える図鑑。',
+      'オープンデータでつくった東京23区タイプ診断。10問・約1分で、あなたに一番似ている区ちゃんが見つかります。',
     images: [{ url: '/og/home.jpg', width: 1200, height: 630, alt: 'うちの区ちゃん — 東京23区擬人化図鑑' }],
   },
   twitter: { card: 'summary_large_image' },

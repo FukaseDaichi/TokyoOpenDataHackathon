@@ -334,8 +334,8 @@ export default function HeroOverlay({ hud, onCtaClick }: Props) {
             letterSpacing: "0.16em",
           }}
         >
-          <span style={{ whiteSpace: "nowrap" }}>オープンデータで出会う、</span>
-          <span style={{ whiteSpace: "nowrap" }}>東京23区個性診断図鑑</span>
+          <span style={{ whiteSpace: "nowrap" }}>10問でわかる、</span>
+          <span style={{ whiteSpace: "nowrap" }}>東京23区タイプ診断</span>
         </p>
         {/* いきなり診断したい人のためのプライマリCTA。演出開始と共にtitleへ連動して消える */}
         <div className="hero-cta-wrap">

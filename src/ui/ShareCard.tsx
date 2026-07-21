@@ -19,7 +19,7 @@ export function ShareCard({ ward }: { ward: Ward }) {
           <Radar vector={ward.axes} color={theme.color} size={190} />
         </div>
       </div>
-      <p className="share-card-tag">#うちの区ちゃん</p>
+      <p className="share-card-tag">#23区タイプ診断</p>
     </div>
   );
 }
