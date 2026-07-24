@@ -482,18 +482,19 @@ Palette: vivid green, summer blue, sun white.
 
 ## 24. メインページ（home）
 
-サービス全体のキービジュアル。区別カードと違い**参照画像なし・キャラクター単体なし**で生成する。参照なしで23人を描かせるとキャラ崩れするため、キャラクターは「逆光シルエット＋色のオーラ」に抽象化し、色パレットで23区の多様性を表現する。タイトルがサービス名そのものなので、右下のブランドラベル合成は不要（セーフエリア指定も外している）。
+サービス全体のキービジュアル。区別カードと違い**参照画像なし・キャラクター単体なし**で生成する。参照なしで23人を描かせるとキャラ崩れするため、キャラクターは「逆光シルエット＋色のオーラ」に抽象化し、色パレットで23区の多様性を表現する。文字は診断内容を伝える「23区タイプ診断」を主見出し、サービス名「うちの区ちゃん」を副題とする。
 
-出力は1200x630へリサイズ/クロップ後、`assets/og/home.png` に原本を置き、`public/og/home.png` へ配置する。あわせて `app/layout.tsx` の `metadata.openGraph.images` に `/og/home.png` を設定する（現状は未設定）。
+生成原本を `assets/og/home.png` に置き、`npm run build:og` で1200x630へリサイズ・クロップした `public/og/home.jpg` を生成する。`app/layout.tsx` の `metadata.openGraph.images` は `/og/home.jpg` を参照する。
 
 ```text
 Create a polished anime-style OGP share card for X (Twitter), wide landscape composition designed for 1200x630. This is the hero key visual for a web service — there is NO character reference image and NO single main character.
-Render the exact Japanese title text 「うちの区ちゃん」 inside the image as very large integrated editorial typography, placed slightly left of center on two lines, bold and readable even at thumbnail size. Keep the spelling exactly as given and do not add any other text.
+Render the exact Japanese main headline 「23区タイプ診断」 inside the image as very large integrated editorial typography, placed in the left-center area across two strong lines: 「23区」 on line 1 and 「タイプ診断」 on line 2. Make it bold, high-contrast, and readable even at thumbnail size.
+Place the exact service name 「うちの区ちゃん」 directly beneath the main headline at roughly one third of its size, clearly treated as a refined subtitle. Keep both spellings exactly as given and do not add any other text.
 Concept: a giant enchanted picture-book encyclopedia lies open at a low dramatic three-quarter angle in the lower half of the frame, and from its glowing pages 23 trading-card-shaped panels burst upward in a fanned spiral arc; each card carries only an abstract backlit girl silhouette with its own distinct color aura — gold, aqua, champagne, neon purple, deep green, scarlet, indigo, emerald, ash pink, sunset orange and more, 23 clearly different hues — never a readable face, never a detailed character.
 Between the pages and the cards, a stylized map of Tokyo's 23 wards rises from the book as a hologram of glowing outlines, each ward district lit in the same color as its card, sparkling data particles streaming upward along the card arc.
 Background: a twilight Tokyo skyline silhouette wrapping the horizon behind the book, deep navy-to-violet gradient sky with soft bokeh city lights, dramatic rim lighting on the book edges and card frames.
 Style: high-quality anime gacha-game splash art, vivid saturated colors, dramatic rim lighting, glowing particle effects, bokeh lights, detailed painterly finish.
-Negative: no extra text, no logo, no watermark, no readable character faces, no realistic map labels, no plain white background, no empty gradient background, no wrong spelling.
+Negative: no extra text, no logo, no watermark, no readable character faces, no realistic map labels, no plain white background, no empty gradient background, no wrong spelling, no main headline smaller than the service name.
 Palette: deep navy, violet, prismatic 23-color card glow, warm book-light gold.
 ```
 
@@ -507,4 +508,4 @@ Palette: deep navy, violet, prismatic 23-color card glow, warm book-light gold.
 - 余計な文字・ロゴ・ウォーターマークがないか
 - 背景が白抜き・単純グラデでなく、設計された奥行きがあるか
 - 右下セーフエリアが空いているか（ラベル「うちの区ちゃん」はローカル合成）
-- 最終出力を1200x630に整え、`public/og/{slug}.png` へ配置する
+- 最終出力を1200x630に整え、`public/og/{slug}.jpg` へ配置する
