@@ -20,7 +20,7 @@ export const metadata: Metadata = {
     title: 'うちの区ちゃん｜23区タイプ診断',
     description:
       'オープンデータでつくった東京23区タイプ診断。10問・約1分で、あなたに一番似ている区ちゃんが見つかります。',
-    images: [{ url: '/og/home.jpg', width: 1200, height: 630, alt: 'うちの区ちゃん — 東京23区擬人化図鑑' }],
+    images: [{ url: '/og/home.jpg', width: 1200, height: 630, alt: '23区タイプ診断 — うちの区ちゃん' }],
   },
   twitter: { card: 'summary_large_image' },
   manifest: '/favicon/site.webmanifest',
