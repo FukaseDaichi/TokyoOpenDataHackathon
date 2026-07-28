@@ -75,5 +75,6 @@ node scripts/build-title.mjs
 
 - 現行システムの説明は `docs/system-design/` に置く。実装手順書や時系列の作業計画は置かない。
 - `docs/research/`、`docs/strategy/` は調査・作品検討の資料であり、システム設計書と混在させない。
+- `docs/knowledge/` は開発プロセスの振り返りナレッジを置く。現行システムの説明ではないため、システム設計書と混在させない。
 - ルート、データ形式、採点式、環境変数、生成手順、フォールバックを変更したら対応するシステム設計書も更新する。
 - 現在把握している技術的懸念は [docs/system-design/07-risks-and-concerns.md](docs/system-design/07-risks-and-concerns.md) に集約する。

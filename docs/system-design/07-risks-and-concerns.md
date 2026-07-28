@@ -23,7 +23,7 @@
 | P2 | 3D表示が全キャラクター画像を先行ロードする | `createTextureStore().startLoading()` はヒーロー表示時に進捗と無関係に23枚を順次すべて読む。現行の896px版は合計約7.0MB、512px版も約2.9MB | high/low対象端末で通信量、画像デコード、GPUメモリ消費が大きく、低速回線やメモリ制約下で体験が悪化しうる | 近景・クローズアップ・スクロール進捗に応じた段階ロード、画面外での遅延、性能予算と実ブラウザ計測を導入する |
 | P2 | アセット完備を一括検証しない | `manifest.test.ts` が確認する配信用画像は512px WebPだけで、896px WebP、キャラクター原本、OGP原本、配信用OGP、トップOGP、区章、タイトル、表紙は検査しない。画像生成コマンドも複数に分かれ、タイトルとモーダル画像はpackage scriptsへ統合されていない | 一部画像の再生成・配置漏れ、寸法・容量の逸脱、slugとの不一致をビルド成功だけでは検出できない | `build:assets` と検証スクリプトを用意し、slug集合に対する原本・全生成物の存在、寸法、形式、上限サイズを検査する |
 | P2 | 犯罪統計と地域表現に継続的な中立性レビューが必要 | `wardStats.ts` は罪種や重大性を重み付けしない認知件数合計を人口で割り、「街の安全データ」と表示する。昼間人口の注記はあるが、キャッチコピーにも「頑固一徹」等の評価表現が残る | 数値の単純比較や強いラベルが、実態以上の安全評価や地域スティグマとして受け取られうる | 「治安の良し悪し」と断定しない注記、煽る順位表示を避ける方針、データ更新時の全コピー中立性レビューを維持する |
-| P2 | production依存に未解消のmoderate advisoryがある | `npm audit --omit=dev` は `next@15.5.20` が同梱する `postcss@8.4.31` に対し `GHSA-qx2v-qp2m-jg93` を報告する。静的サイトで信頼できないCSSを実行時処理しないため攻撃面は限定的だが、監査はexit 1になる | 依存監査を品質ゲートにできず、将来CSS生成経路を追加した場合に影響範囲が広がる | Next.js側の更新を追跡し、互換性を検証したPostCSS更新・overrideを検討する。`npm audit fix --force` が提示する不適切なNext.jsダウングレードは使わない |
+| P2 | production依存に未解消のhigh advisoryが3件ある | `npm audit --omit=dev` は `next@15.5.20` 本体（DoS、SSRF、キャッシュ混同など8件）、同梱の `postcss@8.4.31`（XSS、sourceMappingURL経由のパストラバーサルなど3件）、`sharp@0.34.5`（libvips由来のCVE 4件）に対しhigh 3件を報告し、exit 1になる。静的エクスポートのためApp Router、Server Actions、Image Optimization APIを実行時に動かさず、信頼できないCSSも実行時処理しないため公開サイトの攻撃面は限定的だが、`sharp` は `scripts/build-*.mjs` がビルド時に実行する | 依存監査を品質ゲートにできず、将来サーバー実行やCSS生成経路を追加した場合に影響範囲が広がる | `next` と `postcss` は `npm audit fix` で解消できるため、互換性を検証して適用する。`sharp` は `npm audit fix --force` が `sharp@0.35.3` への破壊的更新を提示するため、画像再生成物のバイト一致を確認してから上げる |
 | P3 | jsdomテストがCanvas警告を出す | `detectQuality()` が `HTMLCanvasElement.getContext()` を呼び、`FirstLoad`、`WardPage`、`WardMapSection` のテストが未実装警告をstderrへ出しながら成功する | 本当の警告を見落としやすく、fallback/high/low判定のテスト境界も曖昧になる | テストセットアップでCanvas/WebGL判定を明示的にmockし、各ティアと初期化失敗を個別に検証する |
 | P3 | `npm run start` が静的配信方式と一致しない | package scriptは `next start`、本番成果物は `output: 'export'` の `out/` | ローカルで本番成果物を確認するコマンドとして誤解される | `out/` を配信する静的preview scriptへ置き換える |
 | P3 | 任意の詳細指標をローダーで全体整合検証しない | `build_details.py` は任意指標を原則「全23区あり / 指標全体なし」にするが、`src/data/details.ts` はJSON構造を検証しない。`buildWardStats()` は表示区に値があれば他22区にもあるものとしてnon-null assertionする | 手編集や不完全コピー時に順位・平均比が `NaN` になり得る | 各指標の全区完備または全区欠落をローダーかテストで検証し、中途半端なスナップショットをビルド失敗にする |
@@ -32,10 +32,10 @@
 
 ## 現在確認できている品質状態
 
-- `npm test`: 36ファイル・208テストが成功（`data/processed` と `src/data` のparityテストを含む）。ただしCanvas未実装警告がstderrへ出る。
+- `npm test`: 40ファイル・251テストが成功（`data/processed` と `src/data` のparityテストを含む）。ただしCanvas未実装警告がstderrへ出る。
 - `NEXT_PUBLIC_SITE_URL=https://uchinokuchan.pages.dev npm run build`: 52ページの静的生成・エクスポートに成功。
 - `NEXT_PUBLIC_SITE_URL` 未設定の `npm run build`: 成功するが、OGP URLは `http://localhost:3000`、sitemap・robots・JSON-LDは `https://uchinokuchan.pages.dev` となり、成果物内のoriginが一致しない。
-- `npm audit --omit=dev`: `next` → `postcss@8.4.31` 経由のmoderate 2件を報告し、exit 1となる。
+- `npm audit --omit=dev`: `next@15.5.20` 自体、同梱の `postcss@8.4.31`、`sharp@0.34.5` に対して計3件のhigh advisoryを報告し、exit 1となる。
 - 現在のrawデータと現行環境（Python 3.9.6 / openpyxl 3.1.5）を隔離ディレクトリへコピーして3つのPythonジェネレーターを実行した結果、`wards.json`、`ward-details.json`、`ward-geo.json` はコミット済み生成物とバイト単位で一致する。
 - `data/processed/wards.json` と `src/data/ward-metrics.json`、`ward-details.json` 同士、`ward-geo.json` 同士はバイト単位で一致する。診断割り当てもテスト内の決定的再生成と一致する。
 - 画像加工スクリプトを隔離ディレクトリで実行した結果、キャラクターWebP、OGP JPEG、タイトル、表紙、魔法陣は現行配信物とバイト単位で一致する。

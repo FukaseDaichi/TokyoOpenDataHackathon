@@ -1,0 +1,815 @@
+<!doctype html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AIと作った28日間 ―「うちの区ちゃん」開発記録</title>
+<style>
+  :root{
+    --ai:#1B2A4A;        /* 藍：表紙 */
+    --koiai:#101A30;     /* 濃藍：影 */
+    --kin:#C9A227;       /* 金：箔押し */
+    --kin-usu:#E3C868;   /* 淡い金：藍地の上 */
+    --kin-koi:#9A7B14;   /* 濃い金：紙の上（コントラスト確保） */
+    --kinari:#F7F2E7;    /* 生成り：本文の紙 */
+    --kinari-fuka:#EFE7D5;/* 少し濃い紙 */
+    --sumi:#23201C;      /* 墨：本文 */
+    --sumi-usu:#5E574C;  /* 薄墨：補足 */
+    --shu:#B84A2E;       /* 朱：直した話 */
+    --shu-usu:#F2E0D8;   /* 朱の下地 */
+    --keisen:#D6CBB2;    /* 罫線 */
+
+    --mincho:"Hiragino Mincho ProN","Yu Mincho","YuMincho","Noto Serif JP",serif;
+    --gothic:"Hiragino Sans","Yu Gothic","YuGothic","Noto Sans JP","Helvetica Neue",sans-serif;
+    --mono:ui-monospace,"SFMono-Regular",Menlo,Consolas,monospace;
+
+    --haba:34rem;        /* 本文の幅 */
+    --haba-hiro:64rem;   /* 図表の幅 */
+  }
+
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--kinari);
+    color:var(--sumi);
+    font-family:var(--gothic);
+    font-size:17px;
+    line-height:1.95;
+    letter-spacing:.01em;
+  }
+  @media (max-width:640px){ body{font-size:16px; line-height:1.9} }
+
+  /* ---------- 共通の器 ---------- */
+  .hon{max-width:var(--haba); margin:0 auto; padding:0 1.5rem}
+  .hiro{max-width:var(--haba-hiro); margin:0 auto; padding:0 1.5rem}
+  p{margin:0 0 1.3em}
+  a{color:var(--ai); text-decoration-thickness:1px; text-underline-offset:3px}
+  a:hover{color:var(--shu)}
+  :focus-visible{outline:2px solid var(--shu); outline-offset:3px; border-radius:2px}
+  strong{font-weight:700}
+  code,.hash{
+    font-family:var(--mono); font-size:.84em;
+    background:var(--kinari-fuka); padding:.1em .4em; border-radius:3px;
+    letter-spacing:0;
+  }
+
+  /* ---------- 表紙 ---------- */
+  .hyoshi{
+    background:
+      radial-gradient(120% 90% at 50% 0%, #2A3D63 0%, var(--ai) 45%, var(--koiai) 100%);
+    color:#EDE6D6;
+    padding:clamp(4rem,12vw,8rem) 0 clamp(3.5rem,8vw,5.5rem);
+    position:relative;
+    overflow:hidden;
+    border-bottom:3px solid var(--kin);
+  }
+  /* 表紙の空にちらす星＝23区のキャラクターが並ぶ演出への目くばせ */
+  .hyoshi::before{
+    content:""; position:absolute; inset:0;
+    background-image:
+      radial-gradient(1.5px 1.5px at 12% 22%, rgba(227,200,104,.55) 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 78% 14%, rgba(227,200,104,.4) 50%, transparent 51%),
+      radial-gradient(1px 1px at 44% 9%, rgba(255,255,255,.35) 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 88% 44%, rgba(227,200,104,.35) 50%, transparent 51%),
+      radial-gradient(1px 1px at 24% 62%, rgba(255,255,255,.28) 50%, transparent 51%),
+      radial-gradient(1.5px 1.5px at 62% 74%, rgba(227,200,104,.3) 50%, transparent 51%);
+    pointer-events:none;
+  }
+  .hyoshi > *{position:relative}
+  .maegaki{
+    font-family:var(--mono); font-size:.72rem; letter-spacing:.32em;
+    color:var(--kin-usu); text-transform:uppercase; margin:0 0 2.2rem;
+  }
+  .dai{
+    font-family:var(--mincho);
+    font-size:clamp(2.3rem,7.5vw,4.1rem);
+    line-height:1.28; font-weight:600; margin:0 0 1.4rem;
+    letter-spacing:.02em;
+  }
+  .dai .haku{
+    background:linear-gradient(100deg,#8E7423 0%,var(--kin) 26%,#FBEBB0 45%,var(--kin) 62%,#8E7423 100%);
+    -webkit-background-clip:text; background-clip:text;
+    -webkit-text-fill-color:transparent; color:transparent;
+    background-size:220% 100%;
+    animation:haku 9s ease-in-out infinite;
+  }
+  @keyframes haku{0%,100%{background-position:0% 50%}50%{background-position:100% 50%}}
+  .fukudai{
+    font-family:var(--mincho); font-size:clamp(1rem,2.6vw,1.2rem);
+    color:#C6BFAE; margin:0 0 2.6rem; line-height:1.9;
+  }
+  .teze{
+    border-left:2px solid var(--kin);
+    padding:.2rem 0 .2rem 1.3rem; margin:0;
+    font-size:clamp(1.02rem,2.7vw,1.22rem); line-height:1.85; color:#F2EBDA;
+  }
+  .teze b{color:var(--kin-usu); font-weight:600}
+
+  /* ---------- 節 ---------- */
+  .setsu{padding:clamp(3.2rem,8vw,5rem) 0}
+  .setsu + .setsu{border-top:1px solid var(--keisen)}
+  .midashi{
+    font-family:var(--mincho); font-weight:600;
+    font-size:clamp(1.55rem,4.4vw,2.15rem); line-height:1.45;
+    margin:0 0 .5rem; letter-spacing:.01em;
+  }
+  .komidashi{
+    font-family:var(--mincho); font-weight:600;
+    font-size:clamp(1.12rem,3vw,1.35rem); line-height:1.6;
+    margin:2.6rem 0 .7rem;
+  }
+  .tsumari{
+    font-family:var(--gothic); font-size:.92rem; color:var(--sumi-usu);
+    margin:0 0 2rem; padding:.55rem 0 0; border-top:1px solid var(--keisen);
+  }
+  .tsumari b{color:var(--ai)}
+
+  /* ---------- 用語のかみくだき ---------- */
+  .yougo{
+    background:#fff; border:1px solid var(--keisen);
+    border-radius:4px; padding:1.6rem 1.5rem .4rem;
+    box-shadow:0 1px 0 var(--kinari-fuka), 0 12px 28px -22px rgba(27,42,74,.45);
+  }
+  .yougo h3{
+    font-family:var(--mono); font-size:.7rem; letter-spacing:.24em;
+    color:var(--sumi-usu); text-transform:uppercase; margin:0 0 1.2rem;
+  }
+  .yougo dl{margin:0}
+  .yougo dt{
+    font-weight:700; font-size:.95rem; color:var(--ai);
+    margin:0 0 .1rem;
+  }
+  .yougo dd{
+    margin:0 0 1.15rem; font-size:.94rem; line-height:1.8; color:var(--sumi);
+  }
+  .yougo dd:last-of-type{margin-bottom:1.2rem}
+
+  /* 本文中の言い換え */
+  .kotoba{
+    font-weight:700; color:var(--ai);
+    border-bottom:1px dotted var(--kin);
+  }
+  .soete{color:var(--sumi-usu); font-size:.9em}
+
+  /* ---------- 本棚（日別コミット） ---------- */
+  .tana-waku{overflow-x:auto; padding-bottom:.5rem; -webkit-overflow-scrolling:touch}
+  .tana{
+    display:flex; align-items:flex-end; gap:.42rem;
+    min-width:640px; height:270px;
+    padding:0 .2rem; margin:0 0 .2rem;
+    border-bottom:3px solid var(--ai);
+  }
+  .se{
+    flex:1 1 0; min-width:22px;
+    display:flex; flex-direction:column; justify-content:flex-end; align-items:center;
+    height:100%;
+  }
+  .se .bou{
+    width:100%; border-radius:2px 2px 0 0;
+    background:linear-gradient(180deg,#31446B 0%,var(--ai) 60%,var(--koiai) 100%);
+    box-shadow:inset 0 0 0 1px rgba(227,200,104,.28);
+    color:var(--kin-usu);
+    font-family:var(--mono); font-size:.68rem; letter-spacing:0;
+    display:flex; align-items:flex-start; justify-content:center;
+    padding-top:.35rem;
+    transform-origin:bottom;
+    animation:tatsu .7s cubic-bezier(.2,.8,.2,1) both;
+  }
+  @keyframes tatsu{from{transform:scaleY(.04)}to{transform:scaleY(1)}}
+  /* 1件だけの日は棒が低すぎるので、件数を棒の上へ出す */
+  .se.chibi .bou{color:transparent; overflow:visible; position:relative}
+  .se.chibi .bou::after{
+    content:attr(data-n);
+    position:absolute; bottom:calc(100% + .2rem); left:50%; transform:translateX(-50%);
+    color:var(--ai); font-family:var(--mono); font-size:.68rem; line-height:1;
+  }
+  .se.yama .bou{
+    background:linear-gradient(180deg,var(--kin) 0%,#A8861D 70%,#7B6114 100%);
+    color:var(--koiai); font-weight:700;
+  }
+  .se .hi{
+    font-family:var(--mono); font-size:.6rem; color:var(--sumi-usu);
+    margin-top:.4rem; letter-spacing:0; white-space:nowrap;
+  }
+  .aida{
+    flex:0 0 74px; align-self:stretch;
+    display:flex; align-items:flex-end; justify-content:center;
+    border-left:1px dashed var(--keisen); border-right:1px dashed var(--keisen);
+    background:repeating-linear-gradient(45deg,transparent,transparent 6px,rgba(214,203,178,.35) 6px,rgba(214,203,178,.35) 7px);
+  }
+  .aida span{
+    font-size:.68rem; color:var(--sumi-usu); text-align:center;
+    line-height:1.5; padding:0 .3rem .5rem;
+  }
+  .tana-setsumei{
+    font-size:.86rem; color:var(--sumi-usu); margin:1rem 0 0;
+  }
+
+  /* ---------- 章（時系列） ---------- */
+  .sho{
+    border-top:1px solid var(--keisen);
+    padding:2.4rem 0 0; margin:0 0 2.4rem;
+  }
+  .sho-atama{display:flex; gap:1rem; align-items:baseline; flex-wrap:wrap; margin-bottom:.3rem}
+  .sho-ban{
+    font-family:var(--mincho); font-size:2.1rem; line-height:1;
+    color:var(--kin-koi); font-weight:600;
+  }
+  .sho-hi{
+    font-family:var(--mono); font-size:.74rem; letter-spacing:.14em;
+    color:var(--sumi-usu); margin-left:auto;
+  }
+  .sho-dai{
+    font-family:var(--mincho); font-weight:600;
+    font-size:clamp(1.3rem,3.6vw,1.7rem); line-height:1.5; margin:0;
+  }
+
+  /* ---------- あの朝の19分 ---------- */
+  .asa{
+    background:var(--ai); color:#EDE6D6;
+    border-radius:4px; padding:2rem 1.4rem 1.6rem;
+    margin:0;
+  }
+  .asa h3{
+    font-family:var(--mincho); font-size:1.2rem; font-weight:600;
+    margin:0 0 .3rem; color:#F2EBDA;
+  }
+  .asa .asa-soete{font-size:.86rem; color:#A9B4CA; margin:0 0 1.6rem}
+  .asa ol{list-style:none; margin:0; padding:0}
+  .asa li{
+    display:grid; grid-template-columns:3.6rem 1fr; gap:.9rem;
+    padding:.42rem 0; align-items:baseline;
+    border-top:1px solid rgba(227,200,104,.16);
+  }
+  .asa li:first-child{border-top:0}
+  .asa .toki{font-family:var(--mono); font-size:.8rem; color:var(--kin-usu)}
+  .asa .naka{font-size:.94rem; line-height:1.65}
+  .asa .fuda{
+    display:inline-block; font-size:.68rem; letter-spacing:.08em;
+    padding:.05em .5em; border-radius:2px; margin-left:.5em;
+    vertical-align:.12em; white-space:nowrap;
+  }
+  .asa .keisan{background:rgba(227,200,104,.9); color:var(--koiai); font-weight:700}
+  .asa .gamen{background:rgba(237,230,214,.2); color:#DCD4C2}
+  .asa .shime{
+    margin:1.5rem 0 0; padding-top:1.1rem;
+    border-top:1px solid rgba(227,200,104,.3);
+    font-size:.94rem; line-height:1.8; color:#E4DCCA;
+  }
+  .asa .shime b{color:var(--kin-usu)}
+
+  /* ---------- 手順（真似する） ---------- */
+  .tejun{counter-reset:te; margin:0; padding:0; list-style:none}
+  .tejun > li{
+    counter-increment:te;
+    border-top:1px solid var(--keisen);
+    padding:1.5rem 0 .3rem 3.2rem; position:relative;
+  }
+  .tejun > li::before{
+    content:counter(te);
+    position:absolute; left:0; top:1.35rem;
+    font-family:var(--mincho); font-size:1.5rem; font-weight:600;
+    color:var(--kin-koi); line-height:1;
+  }
+  .tejun h3{
+    font-family:var(--gothic); font-size:1.05rem; font-weight:700;
+    margin:0 0 .5rem; line-height:1.65; color:var(--ai);
+  }
+  .tejun p{font-size:.96rem; margin:0 0 1.1em}
+
+  /* ---------- 朱入れ（失敗と教訓） ---------- */
+  .shuire{background:var(--shu-usu); border-top:3px solid var(--shu)}
+  .shuire .midashi{color:#8C3520}
+  .shuire .tsumari{border-top-color:#DCBFB4}
+  .shuire .tsumari b{color:var(--shu)}
+  .shippai{
+    background:#fff; border:1px solid #E0C6BB;
+    border-left:4px solid var(--shu);
+    border-radius:0 4px 4px 0;
+    padding:1.5rem 1.4rem .4rem;
+    margin:0 0 1.5rem;
+  }
+  .shippai h3{
+    font-family:var(--gothic); font-size:1.04rem; font-weight:700;
+    color:#8C3520; margin:0 0 .9rem; line-height:1.6;
+  }
+  .shippai p{font-size:.95rem; margin:0 0 1.05em}
+  .shippai .rabel{
+    font-family:var(--mono); font-size:.66rem; letter-spacing:.2em;
+    color:var(--shu); display:block; margin:0 0 .45rem;
+  }
+  .oshie{
+    background:var(--kinari); border-top:1px dashed #DCBFB4;
+    margin:1.2rem -1.4rem 0; padding:1rem 1.4rem;
+    font-size:.94rem; line-height:1.8;
+  }
+  .oshie b{color:#8C3520}
+
+  /* ---------- 表 ---------- */
+  .hyo-waku{overflow-x:auto; margin:0 0 1.5rem; -webkit-overflow-scrolling:touch}
+  table{border-collapse:collapse; width:100%; min-width:480px; font-size:.9rem}
+  caption{
+    text-align:left; font-size:.82rem; color:var(--sumi-usu);
+    padding:0 0 .6rem; line-height:1.7;
+  }
+  th,td{
+    text-align:left; padding:.62rem .8rem;
+    border-bottom:1px solid var(--keisen); vertical-align:top; line-height:1.7;
+  }
+  thead th{
+    font-size:.76rem; letter-spacing:.06em; color:var(--sumi-usu);
+    font-weight:700; border-bottom:2px solid var(--ai); white-space:nowrap;
+  }
+  tbody th{font-weight:700; white-space:nowrap}
+  td.suji{font-family:var(--mono); font-size:.86rem; white-space:nowrap; letter-spacing:0}
+  tr:last-child th, tr:last-child td{border-bottom:0}
+
+  /* ---------- 数字の並び ---------- */
+  .suji-nami{
+    display:grid; gap:1px; background:var(--keisen);
+    grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+    border:1px solid var(--keisen); border-radius:4px; overflow:hidden;
+  }
+  .suji-nami div{background:#fff; padding:1.1rem 1rem}
+  .suji-nami dt{
+    font-size:.76rem; color:var(--sumi-usu); margin:0 0 .35rem; line-height:1.6;
+  }
+  .suji-nami dd{
+    margin:0; font-family:var(--mincho); font-size:1.7rem; font-weight:600;
+    color:var(--ai); line-height:1.2;
+  }
+  .suji-nami dd small{
+    font-family:var(--gothic); font-size:.78rem; font-weight:400;
+    color:var(--sumi-usu); margin-left:.3em;
+  }
+
+  /* ---------- 覚え書き（チェックリスト） ---------- */
+  .oboe{
+    background:#fff; border:1px solid var(--keisen); border-radius:4px;
+    padding:1.6rem 1.5rem; margin:0;
+  }
+  .oboe h3{
+    font-family:var(--mincho); font-size:1.15rem; font-weight:600;
+    margin:0 0 1.1rem;
+  }
+  .oboe ul{list-style:none; margin:0; padding:0}
+  .oboe li{
+    position:relative; padding:0 0 .85rem 1.9rem;
+    font-size:.95rem; line-height:1.75;
+  }
+  .oboe li::before{
+    content:"□"; position:absolute; left:0; top:0;
+    color:var(--kin-koi); font-size:1.1rem; line-height:1.6;
+  }
+
+  /* ---------- 奥付 ---------- */
+  .okuzuke{
+    background:var(--ai); color:#C6BFAE;
+    padding:clamp(3rem,7vw,4.5rem) 0 clamp(2.5rem,6vw,3.5rem);
+    border-top:3px solid var(--kin);
+  }
+  .okuzuke h2{
+    font-family:var(--mincho); font-size:1.35rem; font-weight:600;
+    color:#F2EBDA; margin:0 0 1.6rem;
+  }
+  .okuzuke p{font-size:.92rem; line-height:1.85}
+  .okuzuke a{color:var(--kin-usu)}
+  .okuzuke a:hover{color:#FBEBB0}
+  .okuzuke dl{
+    margin:0 0 2rem; display:grid; grid-template-columns:auto 1fr;
+    gap:.5rem 1.4rem; font-size:.9rem;
+  }
+  .okuzuke dt{color:#8E9AB4}
+  .okuzuke dd{margin:0; color:#E4DCCA}
+  .okuzuke pre{
+    background:var(--koiai); border:1px solid #2C3E63; border-radius:4px;
+    padding:1rem 1.1rem; overflow-x:auto; margin:0 0 1.5rem;
+    font-family:var(--mono); font-size:.78rem; line-height:1.9;
+    color:#C9D3E6; letter-spacing:0;
+  }
+  .okuzuke pre .kome{color:#7E8CA8}
+
+  @media (max-width:520px){
+    .okuzuke dl{grid-template-columns:1fr; gap:.15rem 0}
+    .okuzuke dt{margin-top:.9rem}
+    .okuzuke dt:first-of-type{margin-top:0}
+  }
+
+  @media (prefers-reduced-motion:reduce){
+    *,*::before,*::after{animation:none !important; transition:none !important}
+    .se .bou{transform:none}
+  }
+</style>
+</head>
+<body>
+
+<header class="hyoshi">
+  <div class="hon">
+    <p class="maegaki">Development Record / 2026</p>
+    <h1 class="dai">AIと作った<br><span class="haku">28日間</span></h1>
+    <p class="fukudai">東京23区を擬人化した診断アプリ「うちの区ちゃん」を、ひとりの開発者とAIで作りきるまで。<br>作業の記録181件をぜんぶ読み返して、何が効いて何を間違えたかを書き出したものです。</p>
+    <p class="teze">速さを生んだのは、AIにコードを書かせたことではありません。<b>作る前に判断のものさしを文書にさせたこと</b>と、<b>作ったあとにAIの提案を実測で却下したこと</b>でした。</p>
+  </div>
+</header>
+
+<main>
+
+<!-- ============ これは何か ============ -->
+<section class="setsu">
+  <div class="hon">
+    <h2 class="midashi">これは何の記録か</h2>
+    <p class="tsumari"><b>つまり</b>：AIと一緒に開発するとき、実際に何をどの順番でやったのか。うまくいった型と、しくじった話の両方を残します。</p>
+
+    <p>2026年6月24日から7月21日までの28日間で、東京23区をオープンデータで分類して擬人化した診断アプリを1本作りました。作ったのはひとり、相棒はAIです。</p>
+
+    <p>この記録は自慢話ではありません。同じやり方を別のプロジェクトでも使えるようにするための、社内向けの手引きです。そのため<strong>失敗を隠していません</strong>。AIの提案を信じて入れた「改善」が実は遅くなっていた話、統計データの読み間違いをAIも人間も見落とした話、大事な検討記録をうっかり消してしまった話が入っています。</p>
+
+    <p>書いてある事実はすべて、開発の履歴と、いま残っているファイルから確認したものです。確認できなかったことは書いていません。</p>
+
+    <div class="yougo">
+      <h3>用語のかみくだき</h3>
+      <dl>
+        <dt>開発の履歴（Git）</dt>
+        <dd>ファイルの変更を全部記録しておく道具です。「いつ・どこを・なぜ変えたか」が後から全部たどれます。この記録が読めるのは、この道具があるからです。</dd>
+
+        <dt>コミット</dt>
+        <dd>作業の区切りごとに押す「保存はんこ」のようなものです。1件ごとに短い説明文が付きます。今回は28日で181件。多いほど偉いわけではなく、<em>区切り方に考えが出ます</em>。</dd>
+
+        <dt>ブランチとマージ</dt>
+        <dd>本線とは別に作業用の枝を作って（ブランチ）、できたら本線に合流させる（マージ）やり方です。試作が失敗しても本線が壊れません。</dd>
+
+        <dt>テスト</dt>
+        <dd>プログラムが正しく動くかを、機械に自動で確かめさせる仕組みです。人が毎回目で見なくてよくなります。今回は251個の確認が自動で走ります。</dd>
+
+        <dt>設計メモと手順書</dt>
+        <dd>この記録では、作る前に「何をどう作るか」を書いた文書を<span class="kotoba">設計メモ</span>、その次に「どの順で手を動かすか」を書いた文書を<span class="kotoba">手順書</span>と呼びます。今回は22本作って、終わったら全部捨てました。理由は本文で説明します。</dd>
+
+        <dt>計算部分と画面部分</dt>
+        <dd>アプリは大きく2つに分かれます。点数を出したり近いものを探したりする<span class="kotoba">計算部分</span>と、それを見せる<span class="kotoba">画面部分</span>です。この2つを分けたことが、今回いちばん効きました。</dd>
+
+        <dt>元に戻す（リバート）</dt>
+        <dd>入れた変更をまるごと取り消すことです。今回1回だけ使いました。そこがこの記録の山場です。</dd>
+      </dl>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 本棚 ============ -->
+<section class="setsu">
+  <div class="hiro">
+    <h2 class="midashi">28日間のかたち</h2>
+    <p class="tsumari"><b>つまり</b>：毎日コツコツではありませんでした。1日だけ極端に多い日があり、2週間まるごと手が止まった時期もあります。</p>
+  </div>
+
+  <div class="hiro">
+    <div class="tana-waku">
+      <div class="tana" role="img" aria-label="日別の作業件数。6月24日1件、6月25日3件。ここから14日間の中断。7月10日3件、7月11日46件、7月12日21件、7月13日7件、7月14日13件、7月15日4件、7月17日27件、7月18日8件、7月19日22件、7月20日25件、7月21日1件。">
+        <div class="se chibi"><div class="bou" data-n="1" style="height:2%;animation-delay:.02s">1</div><div class="hi">6/24</div></div>
+        <div class="se"><div class="bou" style="height:7%;animation-delay:.06s">3</div><div class="hi">6/25</div></div>
+        <div class="aida"><span>14日間<br>中断</span></div>
+        <div class="se"><div class="bou" style="height:7%;animation-delay:.1s">3</div><div class="hi">7/10</div></div>
+        <div class="se yama"><div class="bou" style="height:100%;animation-delay:.14s">46</div><div class="hi">7/11</div></div>
+        <div class="se"><div class="bou" style="height:46%;animation-delay:.18s">21</div><div class="hi">7/12</div></div>
+        <div class="se"><div class="bou" style="height:15%;animation-delay:.22s">7</div><div class="hi">7/13</div></div>
+        <div class="se"><div class="bou" style="height:28%;animation-delay:.26s">13</div><div class="hi">7/14</div></div>
+        <div class="se"><div class="bou" style="height:9%;animation-delay:.3s">4</div><div class="hi">7/15</div></div>
+        <div class="se"><div class="bou" style="height:59%;animation-delay:.34s">27</div><div class="hi">7/17</div></div>
+        <div class="se"><div class="bou" style="height:17%;animation-delay:.38s">8</div><div class="hi">7/18</div></div>
+        <div class="se"><div class="bou" style="height:48%;animation-delay:.42s">22</div><div class="hi">7/19</div></div>
+        <div class="se"><div class="bou" style="height:54%;animation-delay:.46s">25</div><div class="hi">7/20</div></div>
+        <div class="se chibi"><div class="bou" data-n="1" style="height:2%;animation-delay:.5s">1</div><div class="hi">7/21</div></div>
+      </div>
+      <p class="tana-setsumei">棒の高さは、その日の作業件数（コミット数）です。金色の1本が7月11日の46件。アプリの骨格をこの1日で立てました。</p>
+    </div>
+  </div>
+
+  <div class="hon">
+    <p style="margin-top:2.4rem">最初の2日（6/24〜25）は<strong>コードを1行も書いていません</strong>。調査だけです。そこから14日空いて、7月10日に再開。翌11日にアプリの骨格が立ち上がり、以降は改善の繰り返しです。</p>
+    <p>この形は偶然ではありません。調査で「何を作らないか」を決め切ったから、11日に迷わず手が動いた、という順序になっています。</p>
+  </div>
+</section>
+
+<!-- ============ 5つの章 ============ -->
+<section class="setsu">
+  <div class="hon">
+    <h2 class="midashi">何が起きたか</h2>
+    <p class="tsumari"><b>つまり</b>：調査 → 方針転換 → 1日で骨格 → 作り直しの繰り返し → 正しさの作り込み、の5段階でした。</p>
+
+    <!-- 章1 -->
+    <article class="sho">
+      <div class="sho-atama">
+        <span class="sho-ban">一</span>
+        <span class="sho-hi">6/24 – 6/25 ／ 4件</span>
+      </div>
+      <h3 class="sho-dai">調査で「作らないもの」を決める</h3>
+      <p>最初にやったのは、大会のルール、過去の受賞作、使えるデータ、審査員の関心、技術的な制約を、AIに調べさせて8本の文書にまとめることでした。</p>
+      <p>ここで効いたのは、調べた結果ではなく<strong>捨てる基準を先に文章にしたこと</strong>です。たとえばデータを選ぶときのふるいとして、こう決めました。</p>
+      <div class="hyo-waku">
+        <table>
+          <caption>調査の段階で決めた「データを捨てる基準」</caption>
+          <thead><tr><th>ふるい</th><th>中身</th></tr></thead>
+          <tbody>
+            <tr><th>新しい問いがあるか</th><td>すでにある公式のグラフで答えが出るなら使わない</td></tr>
+            <tr><th>2時間で見切る</th><td>2時間さわって、中身が読めない・地図に出せない・欠けが多い・古い、のどれかなら即やめる</td></tr>
+            <tr><th>失礼にならないか</th><td>特定の地域を悪く見せる表現につながらないか</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>3つめは最後まで生き残り、アプリ全体の決まりごと（「区の紹介は中立・前向きに書く」）になりました。基準が先にあると、あとの判断でAIに毎回説明し直さなくて済みます。</p>
+
+      <h4 class="komidashi">効いたこと：結論を別のAIに叩かせた</h4>
+      <p>調査結論をまとめたあと、<strong>別の系統のAIに読ませて容赦なく批判させました</strong>。指摘は深刻度で分けて、そのまま1本の文書に残しました。</p>
+      <p>最も痛い指摘はこれです。「<em>地図に見えることを、サービスとして成立していることと取り違えている</em>」。ここから方針が「複数のデータで地図を作る」から「<strong>誰かの判断をひとつ速く正確にする</strong>」に変わりました。まだ何も作っていない段階で方針の誤りが見つかったので、捨てたコードはゼロです。</p>
+    </article>
+
+    <!-- 章2 -->
+    <article class="sho">
+      <div class="sho-atama">
+        <span class="sho-ban">二</span>
+        <span class="sho-hi">7/10 ／ 3件</span>
+      </div>
+      <h3 class="sho-dai">2週間空けて、作らずに調べ直す</h3>
+      <p>14日間の中断のあと、実装から再開せず<strong>もう一度調査から入りました</strong>。これが正解でした。前提が崩れていたからです。</p>
+      <p>使う予定だった国のデータ提供サービスが1年前に終了していました。企画書に書いていたら、それだけで評価が下がる内容です。一方で暑さ対策のデータがこの1年で充実していたことも分かりました。</p>
+      <p>結果、当初案（区長になって10年分の予算を配るシミュレーション）から、<strong>「うちの区ちゃん」</strong>（23区を性格で分類して擬人化し、10問の診断で近い区に出会える）へ大きく方針転換しました。</p>
+      <p>もうひとつ分かったのは、主催がAIを全参加者に無償提供していたことです。つまり<span class="soete">――「AIを使いました」は差別化にならない。</span>使い方の質でしか差が出ない、という前提がここで確定しました。</p>
+    </article>
+
+    <!-- 章3 -->
+    <article class="sho">
+      <div class="sho-atama">
+        <span class="sho-ban">三</span>
+        <span class="sho-hi">7/11 ／ 46件</span>
+      </div>
+      <h3 class="sho-dai">1日でアプリの骨格を立てる</h3>
+      <p>この日だけで46件。深夜2時台に土台を作り、午前中に中身の計算を全部そろえ、午後に画面を増やし、夜にデザインへ手を入れています。作業用の枝を2本、この日のうちに本線へ合流させました。</p>
+      <p>順番に意味があります。深夜に最初に作ったのは、<strong>いちばん失敗しそうな部分</strong>――スクロールで動く3Dの演出でした。ここが無理なら企画ごと変える必要があったからです。同時に「3Dが動かない端末向けの代わりの画面」も入れています。危ないところを先に、逃げ道も同時に。</p>
+      <p>そして午前10時48分から、この記録でいちばん真似する価値のある19分間が始まります。</p>
+    </article>
+  </div>
+
+  <!-- 19分 -->
+  <div class="hiro" style="margin-top:2.6rem">
+    <div class="asa">
+      <h3>あの朝の19分</h3>
+      <p class="asa-soete">7月11日 10:48 – 11:04。11件の保存で、診断アプリの中身が完成しています。</p>
+      <ol>
+        <li><span class="toki">10:48</span><span class="naka">性格の5つの軸を、型として定義<span class="fuda keisan">計算</span></span></li>
+        <li><span class="toki">10:49</span><span class="naka">数値を「−1〜+1」の目盛りにそろえる処理<span class="fuda keisan">計算</span></span></li>
+        <li><span class="toki">10:50</span><span class="naka">10問の質問と、答えの採点<span class="fuda keisan">計算</span></span></li>
+        <li><span class="toki">10:50</span><span class="naka">いちばん近い区を探す処理<span class="fuda keisan">計算</span></span></li>
+        <li><span class="toki">10:51</span><span class="naka">似た区どうしをグループに分ける処理<span class="fuda keisan">計算</span></span></li>
+        <li><span class="toki">10:53</span><span class="naka">本物のオープンデータを流し込む<span class="fuda keisan">計算</span></span></li>
+        <li><span class="toki">10:56</span><span class="naka">図鑑の一覧と、区の詳細画面<span class="fuda gamen">画面</span></span></li>
+        <li><span class="toki">10:57</span><span class="naka">診断の流れと、結果の画面<span class="fuda gamen">画面</span></span></li>
+        <li><span class="toki">11:00</span><span class="naka">3つをつなげて動かす<span class="fuda gamen">画面</span></span></li>
+        <li><span class="toki">11:03</span><span class="naka">使い方とデータの出どころを書く</span></li>
+        <li><span class="toki">11:04</span><span class="naka">本線へ合流</span></li>
+      </ol>
+      <p class="shime"><b>読み取れること</b>：<b>計算部分を6件ぶん先に作り、画面はそのあと</b>です。しかも計算部分にはすべて自動テストが付いています。<br>だから画面部分は「もう正しいと分かっている答えを並べるだけ」になり、迷いなく8分で組めました。逆に画面から作ると、正しさの判断が人間の目視だけになり、そこが渋滞します。</p>
+    </div>
+  </div>
+
+  <div class="hon">
+    <!-- 章4 -->
+    <article class="sho" style="margin-top:2.6rem">
+      <div class="sho-atama">
+        <span class="sho-ban">四</span>
+        <span class="sho-hi">7/12 – 7/20 ／ 約120件</span>
+      </div>
+      <h3 class="sho-dai">作り直しを22回、正面から回す</h3>
+      <p>ここからの9日間は、新機能よりも<strong>作り直し</strong>が主役です。設計メモ13本と手順書9本、合わせて22本を作って回しました。</p>
+      <p>毎回この形です。<span class="kotoba">設計メモを書く</span> → <span class="kotoba">手順書を書く</span> → 小さな保存を10件前後 → 説明文書を直す → <span class="kotoba">レビュー指摘だけを直す保存</span> → 本線へ合流。</p>
+      <div class="hyo-waku">
+        <table>
+          <caption>主な作り直し。結果画面だけで3回やり直しています</caption>
+          <thead><tr><th>日</th><th>やったこと</th><th>結果</th></tr></thead>
+          <tbody>
+            <tr><th>7/12</th><td>区の詳細ページを全面リデザイン</td><td>3Dの東京都地図と、動かない端末用の紙地図</td></tr>
+            <tr><th>7/15</th><td>診断結果の納得感を上げる<span class="soete">（1回目）</span></td><td>タイプ名、選ばれた理由、街の実感</td></tr>
+            <tr><th>7/17</th><td>結果をカードにして共有しやすく<span class="soete">（2回目）</span></td><td>「にてる度」入りの共有文、文字数上限をテストで固定</td></tr>
+            <tr><th>7/17–18</th><td>結果ページの構成を組み直す<span class="soete">（3回目）</span></td><td>相性を相対表示に、23区ごとの配色</td></tr>
+            <tr><th>7/19</th><td>診断を絵本のページめくりにする</td><td>先に「進行の状態管理」だけを部品として切り出してから着手</td></tr>
+            <tr><th>7/20</th><td>トップに戻る導線</td><td><strong>設計を書いた後、実装せず設計ごと差し替え</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h4 class="komidashi">効いたこと：手戻りを設計の段階で起こす</h4>
+      <p>7月20日の「トップに戻る導線」では、いったん凝った案（本の蔵書票と奥付を使う案）で設計を書き、実装に入る前に<strong>設計そのものを差し替えました</strong>。シンプルな小さいヘッダー案に変え、それから手順書を書いて実装しています。</p>
+      <p>捨てたコードは0行、失った作業は保存2件ぶんです。手戻りは避けられませんが、<strong>起こす場所を選べます</strong>。</p>
+    </article>
+
+    <!-- 章5 -->
+    <article class="sho">
+      <div class="sho-atama">
+        <span class="sho-ban">五</span>
+        <span class="sho-hi">7/19 – 7/21 ／ 約25件</span>
+      </div>
+      <h3 class="sho-dai">「正しさ」を仕組みで守る</h3>
+      <p>機能がそろってから、公開して恥ずかしくない状態にする作業に入ります。ここが提出物としては一番効いた部分です。</p>
+      <p><strong>手作業のコピーをやめました。</strong>元データから作った2か所のファイルを同じに保つ、という決まりは、それまで文章で書いてあるだけでした。人もAIも片方だけ直します。そこでコマンド1つでコピーする形にし、<strong>2つが違っていたらテストが落ちる</strong>ようにしました。もう間違えられません。</p>
+      <p><strong>素材の出どころを1枚の台帳にしました。</strong>区章の画像23点、データ、生成した画像を、出どころ・作者・使用条件・加工内容までファイル単位で記録しました。大事なのは<strong>「分からない欄は推測せず『要確認』と書く」と決めたこと</strong>です。AIは空欄を埋めたがるので、埋めてはいけない欄を先に決めておく必要があります。</p>
+      <p>そしてこの期間に、1回だけ「元に戻す」が起きます。次の章の主役です。</p>
+    </article>
+  </div>
+</section>
+
+<!-- ============ 真似する手順 ============ -->
+<section class="setsu">
+  <div class="hon">
+    <h2 class="midashi">真似するなら、この7つ</h2>
+    <p class="tsumari"><b>つまり</b>：やり方を1行でいうと「作る前に文書、作る順番は計算から、作った後に実測」です。</p>
+
+    <ol class="tejun">
+      <li>
+        <h3>調べさせるときは「捨てる基準」もセットで書かせる</h3>
+        <p>調査結果だけをもらっても、あとの判断に使えません。「これに当てはまったらやめる」という条件まで文章にさせます。基準がないと、以降ずっとAIに前提を説明し直すことになります。</p>
+      </li>
+      <li>
+        <h3>結論は別のAIに批判させる</h3>
+        <p>同じAIに自己採点させても甘くなります。別の系統のAIに、書き換え権限なしで結論を渡し、遠慮なく穴を指摘させます。指摘は深刻度で並べ替えて文書に残します。今回はこれで方針レベルの誤りが実装前に見つかりました。</p>
+      </li>
+      <li>
+        <h3>いきなり作らせない。設計メモ、次に手順書</h3>
+        <p>「何を作るか」と「どの順で手を動かすか」を別々の文書にします。手順書を書く作業が、設計メモの穴を暴いてくれます。そして<strong>方針転換は必ず実装前に済ませます</strong>。</p>
+      </li>
+      <li>
+        <h3>計算部分を先に、テスト付きで。画面は最後</h3>
+        <p>この記録でいちばん効いた型です。画面と切り離した計算だけを先に作り、自動テストを付けて正しさを確定させます。演出が派手な画面でも、<strong>「どう動くかを決める判定部分」だけは部品として先に切り出せます</strong>。今回は診断の進行管理とヘッダーの表示判定がそれです。</p>
+      </li>
+      <li>
+        <h3>ランダムな演出は、最初から「毎回同じ」にする</h3>
+        <p>アニメーションや自動配置に乱数を使うと、テストで確かめられません。乱数の種を固定して毎回同じ結果が出るようにしておくと、演出込みで自動チェックできます。今回は3Dの演出とグループ分けの両方でこれをやっています。</p>
+      </li>
+      <li>
+        <h3>合流の前に「指摘を直すだけ」の保存を1件作る</h3>
+        <p>実装が終わったら、レビューで見つかった指摘だけをまとめて直す保存を作ります。今回のAIの実装で繰り返し出た指摘は<strong>この4つ</strong>でした。使われていないコードが残る、使われていない見た目の指定が残る、読み上げ用の説明が付いていない、動き続ける処理を止め忘れる。レビューの視点をこの4点に固定すると効率がいいです。</p>
+      </li>
+      <li>
+        <h3>説明文書は同じ保存で直し、終わった手順書は捨てる</h3>
+        <p>実装と説明文書の更新を1件の保存にまとめます。そして<strong>終わった設計メモと手順書は削除します</strong>。残しておくと、次にAIが古い計画を「今の仕様」として読んでしまいます。今回は22本すべて捨てて、今は0本です。</p>
+      </li>
+    </ol>
+
+    <div class="oboe" style="margin-top:2.6rem">
+      <h3>次のプロジェクトで見る覚え書き</h3>
+      <ul>
+        <li>調査の文書に「やめる条件」が書いてあるか</li>
+        <li>結論を別のAIに批判させたか。指摘を文書で残したか</li>
+        <li>AI向けの作業ガイドに「絶対に崩してはいけない条件」を並べたか</li>
+        <li>設計メモ・手順書・実装が、それぞれ別の保存になっているか</li>
+        <li>計算部分が画面部分より先に、テスト付きで存在しているか</li>
+        <li>ランダムな要素が「毎回同じ」に固定されているか</li>
+        <li>手でコピーしている場所を、テストで見張るようにしたか</li>
+        <li>AIの「速くなります」提案を、入れる前に実測したか</li>
+        <li>外部から借りた素材の出どころを台帳にしたか。「要確認」と書ける形か</li>
+        <li>合流の前に、指摘を直すだけの保存を作ったか</li>
+        <li>終わった設計メモと手順書を消したか</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 朱入れ ============ -->
+<section class="setsu shuire">
+  <div class="hon">
+    <h2 class="midashi">朱入れ ― 6つのしくじり</h2>
+    <p class="tsumari"><b>つまり</b>：AIは自信たっぷりに間違えます。間違いの<b>型</b>が分かっていれば、次は防げます。</p>
+
+    <div class="shippai">
+      <span class="rabel">01</span>
+      <h3>AIの「速くなります」を信じて、実際は遅くなった</h3>
+      <p>3Dを動かす部品が2つのページに二重に入っていたので、共通化してひとつにまとめました。理屈は完全に正しい改善です。ところが速さを実測したら、悪化していました。</p>
+      <div class="hyo-waku">
+        <table>
+          <caption>Googleの速度採点ツールでの実測（100点満点、高いほど速い）</caption>
+          <thead><tr><th>ページ</th><th>共通化する前</th><th>共通化した後</th></tr></thead>
+          <tbody>
+            <tr><th>トップ</th><td class="suji">94</td><td class="suji">89</td></tr>
+            <tr><th>区の詳細</th><td class="suji">73</td><td class="suji">63</td></tr>
+            <tr><th>通信量</th><td class="suji">―</td><td class="suji">+359KB</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>理由は単純でした。共通化すると<strong>2ページ分をまとめた大きなかたまり</strong>になり、1ページだけ見る人にも要らない分まで届いてしまうのです。変更は取り消しました。</p>
+      <div class="oshie"><b>教訓</b>：「重複は無駄」は一般論としては正しくても、この使われ方では成立しませんでした。AIは一般論を自信たっぷりに勧めてきます。<b>採用の条件を「理屈が通ること」ではなく「実測で良くなること」に置きます。</b>そして<b>却下した理由を数字付きで残します</b>。残さないと、半年後に別のAIが同じ提案をして、同じ作業をやり直すことになります。</div>
+    </div>
+
+    <div class="shippai">
+      <span class="rabel">02</span>
+      <h3>統計データの列を読み間違え、人もAIも気づかなかった</h3>
+      <p>区ごとの「平均所得」を追加したとき、<strong>各種控除を引いたあとの金額</strong>を、控除前の所得として使っていました。11分後に気づいて、国の統計の正しい表・正しい列に差し替えています。</p>
+      <p>怖いのは、間違った数字も<strong>それらしい金額に見える</strong>ことです。だからレビューでも通ってしまいます。</p>
+      <div class="oshie"><b>教訓</b>：統計の表には、名前がよく似た列が並んでいます。AIは字面が近い列を取ってきて、意味の違い（控除の前か後か）までは確かめません。数字が妥当かを見るのではなく、<b>「どの表・どの列・何で割ったか」を設計メモに書かせて、そこを確認します</b>。</div>
+    </div>
+
+    <div class="shippai">
+      <span class="rabel">03</span>
+      <h3>紹介文の中の数字が、データと合わなくなった</h3>
+      <p>キャラクターの紹介文や区の説明に書いた数字や順位が、実際のデータとずれていました。あとから全部直しています。</p>
+      <div class="oshie"><b>教訓</b>：AIが書く文章の中の数字は、ただの文字として固定されます。データを新しくしても文章は追いつきません。<b>数字はできるだけデータから自動で作ります。</b>どうしても手書きになる部分は、データ更新時に文章も見直す作業を運用に含めます。</div>
+    </div>
+
+    <div class="shippai">
+      <span class="rabel">04</span>
+      <h3>「2か所を同じに保つ」は、文章で書いても守られない</h3>
+      <p>元データから作ったファイルと、アプリに入れるファイルを同一に保つ決まりが、ガイドの文章としてだけ存在していました。人もAIも片方しか直しません。</p>
+      <div class="oshie"><b>教訓</b>：<b>ガイドに書いてあるだけの決まりは守られません。</b>コピーはコマンド1つにまとめ、2つが違っていたらテストが落ちるようにします。仕組みにした瞬間、間違えられなくなります。</div>
+    </div>
+
+    <div class="shippai">
+      <span class="rabel">05</span>
+      <h3>AIは「動くけれど重い」ものを作る</h3>
+      <p>ブラウザのタブに出る小さなアイコンに、2.5MBもある画像が入っていました。ほかにも、3Dで使い終わったデータを片付けず、メモリを食い続ける作りになっていた箇所があります。表示前に23枚の画像をまとめて読み込む作りも、今も課題として残っています。</p>
+      <div class="oshie"><b>教訓</b>：AIは「動く実装」は作りますが、<b>使い終わったものの片付け・ファイルの容量の上限・読み込む順番</b>は、指示しないと考えません。3Dや画像やアニメーションを含む実装では特に出ます。レビューの見る場所に、この3つを固定で入れます。</div>
+    </div>
+
+    <div class="shippai">
+      <span class="rabel">06</span>
+      <h3>大事な検討記録を、整理のときに消した</h3>
+      <p>方針を変えるきっかけになった「別のAIによる批判」の記録は、7月10日に文書を8本から4本へ整理したときに<strong>消されました</strong>。結論は要約として残りましたが、<strong>なぜその結論に至ったかは、開発の履歴の中にしか残っていません</strong>。</p>
+      <p>説明文書の更新は52件やっています。それでもずれます。この記録を書く途中で、設計文書の2か所が実際と合っていないことが分かりました。テストの件数（36→実際は40ファイル251個）と、外部から報告されている脆弱性の等級（中くらい2件→実際は高い3件）です。どちらもこの機会に直しました。</p>
+      <p>面白いのは、<strong>古くなっていたのは外の事情で動く数字だけ</strong>だったことです。「52ページ作られる」「2つのファイルが一致している」といった、自分たちの成果物の形を書いた部分は正しいままでした。</p>
+      <div class="oshie"><b>教訓</b>：見通しをよくするための整理は、<b>判断の根拠を削ります</b>。批判の記録や却下した理由は、要約せず原文で残す価値があります。<br>もうひとつ。<b>説明文書に「実行結果の件数」を書くと、その数字が最初に古くなります。</b>構造の説明は長持ちしますが、件数は持ちません。数字ではなく「確かめるコマンド」を書くほうが長生きします。</div>
+    </div>
+
+    <h3 class="komidashi" style="margin-top:3rem">早見表</h3>
+    <div class="hyo-waku">
+      <table>
+        <caption>この6つは、たいてい前ぶれがあります</caption>
+        <thead><tr><th>しくじりの型</th><th>前ぶれ</th><th>封じ方</th></tr></thead>
+        <tbody>
+          <tr><th>一般論の最適化</th><td>「重複の解消」「共通化」を理屈で勧めてくる</td><td>入れる前に実測。却下理由を数字で残す</td></tr>
+          <tr><th>統計の列の誤用</th><td>数字がそれらしい範囲に収まっている</td><td>表・列・分母を書かせて確認する</td></tr>
+          <tr><th>文章の中の数字が古い</th><td>データを更新しても文章が変わらない</td><td>自動で作る。無理なら更新手順に入れる</td></tr>
+          <tr><th>2か所の同期</th><td>「2つを同じに保つ」がガイドにある</td><td>コマンド化＋違ったら落ちるテスト</td></tr>
+          <tr><th>重い実装</th><td>動くが片付け・容量の上限がない</td><td>レビュー項目に固定で入れる</td></tr>
+          <tr><th>根拠の消失</th><td>見通しのために文書を統合する</td><td>批判と却下理由は原文で残す</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 数字 ============ -->
+<section class="setsu">
+  <div class="hiro">
+    <h2 class="midashi">数字で見る28日間</h2>
+    <p class="tsumari"><b>つまり</b>：機能を作る作業96件に対して、説明文書を書く作業が52件。この比率が実態です。</p>
+    <dl class="suji-nami">
+      <div><dt>期間</dt><dd>28<small>日</small></dd></div>
+      <div><dt>保存（コミット）</dt><dd>181<small>件</small></dd></div>
+      <div><dt>書き足した行</dt><dd>33,747<small>行</small></dd></div>
+      <div><dt>自動テスト</dt><dd>251<small>個</small></dd></div>
+      <div><dt>設計メモ・手順書</dt><dd>22<small>本（現在0本）</small></dd></div>
+      <div><dt>AIと共著した保存</dt><dd>119<small>／181件</small></dd></div>
+      <div><dt>機能を作る作業</dt><dd>96<small>件</small></dd></div>
+      <div><dt>説明文書を書く作業</dt><dd>52<small>件</small></dd></div>
+      <div><dt>不具合を直した作業</dt><dd>12<small>件</small></dd></div>
+      <div><dt>元に戻した回数</dt><dd>1<small>回</small></dd></div>
+    </dl>
+    <p class="tana-setsumei" style="margin-top:1.4rem">テストの数はこの記録を書いた時点で実際に走らせて確認した値です。ほかの数字は開発の履歴から数えています。</p>
+  </div>
+</section>
+
+</main>
+
+<!-- ============ 奥付 ============ -->
+<footer class="okuzuke">
+  <div class="hon">
+    <h2>奥付</h2>
+    <dl>
+      <dt>作品</dt><dd>うちの区ちゃん（都知事杯オープンデータ・ハッカソン2026 提出作品）</dd>
+      <dt>記録の対象</dt><dd>2026年6月24日 – 7月21日／181件の作業履歴</dd>
+      <dt>この記録の用途</dt><dd>社内で同じ進め方を再現するための手引き</dd>
+    </dl>
+
+    <p>この文書の詳しい版（コミット番号つき）は <a href="ai-driven-development-story.md">ai-driven-development-story.md</a> にあります。数字は次のコマンドで、いつでも数え直せます。この記録の範囲は 7月21日までなので、そこで区切って数えます。区切らないと、この記録より後の作業まで混ざります。</p>
+
+    <pre><span class="kome"># この記録の最後の保存を、目印として置く</span>
+SUE=73b3b84
+
+<span class="kome"># 作業の保存が何件あるか</span>
+git log --oneline $SUE | wc -l
+
+<span class="kome"># 日ごとの件数</span>
+git log --pretty=format:'%ad' --date=short $SUE | sort | uniq -c
+
+<span class="kome"># 作業の種類の内訳</span>
+git log --pretty=format:'%s' $SUE | grep -oE '^[a-z]+' | sort | uniq -c | sort -rn
+
+<span class="kome"># 設計メモと手順書の履歴（すべて削除済みなので履歴から追う）</span>
+git log --diff-filter=A --name-only --pretty=format:'%h %ad %s' \
+  --date=short $SUE -- 'docs/superpowers/*'
+
+<span class="kome"># テストの数（今のコードに対して走らせる。記録時点は251個）</span>
+npm test</pre>
+
+    <p style="margin-bottom:0">関連：<a href="../system-design/README.md">システム設計書</a>／<a href="../system-design/07-risks-and-concerns.md">残っている技術的な課題</a>／<a href="../system-design/08-asset-provenance.md">素材の出どころ台帳</a>／<a href="../../AGENTS.md">AI向けの作業ガイド</a></p>
+  </div>
+</footer>
+
+</body>
+</html>
