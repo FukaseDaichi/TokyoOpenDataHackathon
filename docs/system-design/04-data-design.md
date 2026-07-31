@@ -70,7 +70,7 @@
 
 診断結果ページは `pickPolicyForAxes()` で一致軸とタグが交差する最初の政策を選び、交差がなければ先頭の政策を表示する。
 
-現在のJSONは23区分を収録しているが、未収録区・未収録フィールドを許容するローダー設計であり、`src/data/policies.ts` の `loadWardProfile()` は未知または未収録の区に `null` を返す。区章画像 `public/emblems/{slug}.svg` は手動配置された生成パイプライン対象外のアセットである。区詳細ページは画像読み込み失敗時に `onError` で非表示にする。SVGごとの取得URL・取得日・作者・ライセンス根拠は [08-asset-provenance.md](08-asset-provenance.md) の来歴台帳で追跡する。
+現在のJSONは23区分を収録しているが、未収録区・未収録フィールドを許容するローダー設計であり、`src/data/policies.ts` の `loadWardProfile()` は未知または未収録の区に `null` を返す。区のプロフィールに添えるキャラクターアイコン `public/icons/{slug}.webp` は、AI生成原本 `assets/icons/{slug}.png` から `npm run build:icons` で生成する。区詳細ページは読み込めた画像だけを表示し、未生成のslugでは枠ごと非表示にする。原本の来歴は [08-asset-provenance.md](08-asset-provenance.md) の3.3で追跡する。
 
 ## 3. ファイルと所有権
 
@@ -146,7 +146,7 @@ npm test
 npm run build
 ```
 
-`build_geo.py` は `data/raw/N03-21_13_city.topojson` の更新が前提であり、基本5軸・区詳細のraw更新とは独立して再実行できる。`build:diagnosis` は質問、基本5軸、区順序のいずれかを変更した場合に必ず実行する。`src/data/ward-policies.json`、`rationale.ts`、`ward-affinity.json`、`ward-traits.json`、`public/emblems/*.svg` は生成コマンドを持たないため、この手順では再生成されない。変更条件と手動更新方法は本ページ末尾を参照する。
+`build_geo.py` は `data/raw/N03-21_13_city.topojson` の更新が前提であり、基本5軸・区詳細のraw更新とは独立して再実行できる。`build:diagnosis` は質問、基本5軸、区順序のいずれかを変更した場合に必ず実行する。`src/data/ward-policies.json`、`rationale.ts`、`ward-affinity.json`、`ward-traits.json` は生成コマンドを持たないため、この手順では再生成されない。`public/icons/*.webp` は `npm run build:icons` で別途生成する。変更条件と手動更新方法は本ページ末尾を参照する。
 
 `npm test` で実行されるparityテストが、次の3ペアをバイト単位で検証する。
 
@@ -174,7 +174,7 @@ Vitestは、基本データと詳細データの23区件数、基本指標の存
 - AI執筆文: 基本指標・23区順位・5軸・キャッチコピーを変更した場合は、該当区の設定理由、5軸別相性文、タイプ特徴を同じ変更で見直す。数値や方向が旧スナップショットのまま残らないことを確認する。
 - 出典: `policies[].source` / `url` は必ず一次情報（区公式サイト等）を指し、`https://` のURLを持つ。花・木・鳥も区公式サイトで照合し、調査記録を `docs/research/` に残す。
 - 中立性: `title` ≤30字・`summary` ≤120字の制約は、キュレーション文を簡潔かつ主観の混入しにくい長さに収めるためのガード。区の表現は中立・前向きにする全体方針（AGENTS.md）に従う。
-- 区章: 採用時に配布元ページと自治体章の扱いを確認する。取得URL、取得日、作者、ライセンス根拠を別途記録し、根拠が不明な画像は使わない。画像取得に失敗しても区詳細ページの他の内容に影響しないよう、`<img onError>` で非表示にする実装（`src/ui/pages/WardPage.tsx`）を維持する。
+- 区アイコン: 区章（各区の紋章）は使用しない。理由は [08-asset-provenance.md](08-asset-provenance.md) の2章に記録している。代替のキャラクターアイコンは生成日と利用条件を来歴台帳3.3に記録し、根拠が不明な画像は使わない。アイコンが未生成でも区詳細ページの他の内容に影響しないよう、読み込めた画像だけを表示する実装（`src/ui/pages/WardPage.tsx`、`app/zukan.css` の `.ward-profile-icon.is-loaded`）を維持する。
 - 現在は23区分を収録済みだが、ローダー上の必須条件ではない。`loadWardProfile()` は未収録区に `null` を返し、対応するUIセクション（区のこころざし・区の花木鳥）はその区だけ非表示になる。
 
 ## 8. 表示用マスター
