@@ -161,10 +161,20 @@ html.uk-revisit #first-load {
   }
 }
 
-/* ===== フッター（アクセス解析の告知） ===== */
+/* ===== フッター（非公式表示・アクセス解析の告知） ===== */
 .site-footer {
   padding: 2.5rem 1.5rem 3rem;
   text-align: center;
+}
+
+/* 非公式である旨。誤認防止が目的なのでGA告知より一段強いコントラストにする */
+.site-footer-disclaimer {
+  font-size: 0.78rem;
+  letter-spacing: 0.04em;
+  line-height: 1.9;
+  color: #bfae8b; /* 背景#17110cに対しコントラスト比約8.0:1 */
+  max-width: 40em;
+  margin: 0 auto 1.1rem;
 }
 
 .site-footer-note {

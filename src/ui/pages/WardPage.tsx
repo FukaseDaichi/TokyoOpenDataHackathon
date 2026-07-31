@@ -94,9 +94,18 @@ export function WardPage({ slug }: { slug: string }) {
 
             <Section icon="scroll" title="区のプロフィール">
               <div className="ward-profile-card">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img className="ward-profile-emblem" src={`/emblems/${theme.slug}.svg`} alt={`${ward.name}の区章`}
-                  onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }} />
+                {/* 区章は各区の紋章使用要綱（新宿・練馬・荒川ほか）に抵触しうるため使用せず、
+                    キャラクターの円形アイコンに置き換えた。未生成のslugでは非表示にする */}
+                {theme.slug && (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img className="ward-profile-icon" src={`/icons/${theme.slug}.webp`} alt={`${ward.name}ちゃんのアイコン`}
+                    width={72} height={72}
+                    // 既定は非表示。読み込めたものだけ表示するので、未生成slugでも枠だけが残らない。
+                    // SSG配信ではハイドレーション前に読み込みが完了しonLoadを取り逃すため、refでも判定する。
+                    // lazyにすると display:none の間ビューポート判定が働かないので付けない。
+                    ref={(el) => { if (el?.complete && el.naturalWidth > 0) el.classList.add('is-loaded'); }}
+                    onLoad={(e) => { e.currentTarget.classList.add('is-loaded'); }} />
+                )}
                 <dl>
                   <div><dt>人口</dt><dd>{detail.population.toLocaleString()}人</dd></div>
                   <div><dt>面積</dt><dd>{geo.areaKm2.toFixed(1)}km²</dd></div>

@@ -116,7 +116,7 @@ npx wrangler pages deploy out --project-name=uchinokuchan --branch=main
 | `income_per_taxpayer`（課税対象所得） | 総務省「市町村税課税状況等の調」、年次 |
 | `population`（住民基本台帳人口） | 東京都「住民基本台帳による世帯と人口」、年次（他の基本5軸の年齢別人口とも同じ取得元） |
 
-境界ジオメトリ（`data/raw/N03-21_13_city.topojson` → `build_geo.py`）と手動キュレーション（`src/data/ward-policies.json`、`public/emblems/*.svg`）は行政区域や区の基本構想が変わらない限り再取得の必要が薄く、上記の年次更新とは別に見直す（更新運用は [04-data-design.md](04-data-design.md) 末尾を参照）。
+境界ジオメトリ（`data/raw/N03-21_13_city.topojson` → `build_geo.py`）と手動キュレーション（`src/data/ward-policies.json`）は行政区域や区の基本構想が変わらない限り再取得の必要が薄く、上記の年次更新とは別に見直す（更新運用は [04-data-design.md](04-data-design.md) 末尾を参照）。
 
 ## 7. 障害時の確認順
 

@@ -29,6 +29,7 @@ npm run build:diagnosis
 # 画像再生成（OGP原本は生成しない。下記「重要な実装制約」を参照）
 npm run build:images
 npm run build:og
+npm run build:icons
 node scripts/build-title.mjs
 ```
 
@@ -42,7 +43,7 @@ node scripts/build-title.mjs
 - `src/hero/` — スクロール連動3Dヒーロー、品質判定、2Dフォールバック
 - `data/raw/` — 取得した公式データ
 - `data/processed/` — Pythonジェネレーターの生成物。手編集しない
-- `assets/` — キャラクター・タイトル・OGPの原本（`assets/og/` はAI作成のOGP原本）
+- `assets/` — キャラクター・タイトル・OGP・区アイコンの原本（`assets/og/` はAI作成のOGP原本、`assets/icons/` はAI作成の区アイコン原本）
 - `public/` — 配信用WebPとOGP
 - `out/` — `npm run build` の静的成果物。手編集しない
 
@@ -59,6 +60,8 @@ node scripts/build-title.mjs
 - `NEXT_PUBLIC_SITE_URL` 未設定でもビルドは通るがOGPが壊れるため、本番ビルドでは必須とする。
 - `NEXT_PUBLIC_GA_ID`（GA4測定ID）未設定でもビルド・動作するが計測されない。本番ビルドでは設定する。運用手順は [ビルド・テスト・運用](docs/system-design/06-build-test-operation.md) を参照する。
 - OGP画像はコード合成しない。生成AIに依頼して作成した原本を `assets/og/{slug}.png`（トップ用は `home.png`）に置き、`npm run build:og` で1200×630のJPEGへ加工して `public/og/{slug}.jpg` に配置する。プロンプトは [docs/strategy/og-image-prompts.md](docs/strategy/og-image-prompts.md) にある。
+- 区章（各区の紋章）は使用しない。著作権はPublic domainだが、新宿区・練馬区は紋章の使用承認要綱、荒川区は届出要綱を持ち、23区一律に適法と確認できないため取りやめた。経緯は [来歴台帳](docs/system-design/08-asset-provenance.md) の2章。代替の区アイコンは生成AIで作成した原本を `assets/icons/{slug}.png` に置き、`npm run build:icons` で `public/icons/{slug}.webp` へ加工する。プロンプトは [docs/strategy/ward-icon-prompts.md](docs/strategy/ward-icon-prompts.md) にある。
+- 全ページ共通フッター（`src/ui/SiteFooter.tsx`）の「本サイトは非公式であり、東京都および東京23区の各区とは関係ありません」という表示は削除しない。公式発信との誤認を防ぐための記載である。
 
 ## データ更新時の不変条件
 

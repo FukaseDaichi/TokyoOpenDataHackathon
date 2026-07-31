@@ -21,9 +21,9 @@
 | P2 | 3D表示の同等な操作・代替情報がない | `HeroCanvas` の区選択はThree.jsのpointer/clickイベントだけで、`HeroOverlay` の区名ラベルは非操作要素。`WardMap3D` のCanvasにも、2D SVG版が持つ `role="img"` と区名入り代替ラベルに相当する情報がない | high/lowティアのキーボード利用者はヒーロー内で区を選べず、支援技術では3D地図の対象区を把握できない | Canvasと同期するDOMリンク・ボタン層を設け、3D地図にも常時読める説明を付ける。2D導線が後段にあることだけを代替としない |
 | P2 | 実ブラウザの配信品質ゲートがない | `.github/workflows/deploy.yml` はunit testと静的build後に本番配信するが、E2E、リンク検査、アクセシビリティ自動監査、WebGL実描画、公開後の疎通確認を行わない | レスポンシブ、フォーカス、3D/2D切替、チャンク読込、OGP、外部出典リンクの不具合を単体テストでは見逃す | 代表ルートと `?view=high|low|2d` のブラウザE2E、アクセシビリティ、内部リンク・OGP検査をCIへ追加し、デプロイ後に主要URLを確認する |
 | P2 | 3D表示が全キャラクター画像を先行ロードする | `createTextureStore().startLoading()` はヒーロー表示時に進捗と無関係に23枚を順次すべて読む。現行の896px版は合計約7.0MB、512px版も約2.9MB | high/low対象端末で通信量、画像デコード、GPUメモリ消費が大きく、低速回線やメモリ制約下で体験が悪化しうる | 近景・クローズアップ・スクロール進捗に応じた段階ロード、画面外での遅延、性能予算と実ブラウザ計測を導入する |
-| P2 | アセット完備を一括検証しない | `manifest.test.ts` が確認する配信用画像は512px WebPだけで、896px WebP、キャラクター原本、OGP原本、配信用OGP、トップOGP、区章、タイトル、表紙は検査しない。画像生成コマンドも複数に分かれ、タイトルとモーダル画像はpackage scriptsへ統合されていない | 一部画像の再生成・配置漏れ、寸法・容量の逸脱、slugとの不一致をビルド成功だけでは検出できない | `build:assets` と検証スクリプトを用意し、slug集合に対する原本・全生成物の存在、寸法、形式、上限サイズを検査する |
+| P2 | アセット完備を一括検証しない | `manifest.test.ts` が確認する配信用画像は512px WebPだけで、896px WebP、キャラクター原本、OGP原本、配信用OGP、トップOGP、区アイコン、タイトル、表紙は検査しない。画像生成コマンドも複数に分かれ、タイトルとモーダル画像はpackage scriptsへ統合されていない | 一部画像の再生成・配置漏れ、寸法・容量の逸脱、slugとの不一致をビルド成功だけでは検出できない | `build:assets` と検証スクリプトを用意し、slug集合に対する原本・全生成物の存在、寸法、形式、上限サイズを検査する |
 | P2 | 犯罪統計と地域表現に継続的な中立性レビューが必要 | `wardStats.ts` は罪種や重大性を重み付けしない認知件数合計を人口で割り、「街の安全データ」と表示する。昼間人口の注記はあるが、キャッチコピーにも「頑固一徹」等の評価表現が残る | 数値の単純比較や強いラベルが、実態以上の安全評価や地域スティグマとして受け取られうる | 「治安の良し悪し」と断定しない注記、煽る順位表示を避ける方針、データ更新時の全コピー中立性レビューを維持する |
-| P2 | production依存に未解消のhigh advisoryが3件ある | `npm audit --omit=dev` は `next@15.5.20` 本体（DoS、SSRF、キャッシュ混同など8件）、同梱の `postcss@8.4.31`（XSS、sourceMappingURL経由のパストラバーサルなど3件）、`sharp@0.34.5`（libvips由来のCVE 4件）に対しhigh 3件を報告し、exit 1になる。静的エクスポートのためApp Router、Server Actions、Image Optimization APIを実行時に動かさず、信頼できないCSSも実行時処理しないため公開サイトの攻撃面は限定的だが、`sharp` は `scripts/build-*.mjs` がビルド時に実行する | 依存監査を品質ゲートにできず、将来サーバー実行やCSS生成経路を追加した場合に影響範囲が広がる | `next` と `postcss` は `npm audit fix` で解消できるため、互換性を検証して適用する。`sharp` は `npm audit fix --force` が `sharp@0.35.3` への破壊的更新を提示するため、画像再生成物のバイト一致を確認してから上げる |
+| P3 | 依存の脆弱性解消を `overrides` に依存している | `package.json` の `overrides` が `postcss@^8.5.25` と `sharp@^0.35.3` を強制する。`next@15.5.22` は `postcss` を `8.4.31` 固定、`sharp` を `^0.34.3` で宣言しており、上流の宣言より新しい版へ引き上げている。静的エクスポートでNext.jsの画像最適化を使わないため `sharp` の上書きは配信物に影響しないが、上流が想定していない組み合わせである | `next` を上げたときに `overrides` が不要または不整合になり、意図せず旧版へ固定し続ける、あるいは上流の互換範囲から外れる | `next` の更新時に `overrides` の要否を再確認し、上流が修正版を取り込んだら削除する。`sharp` 更新時は画像再生成物の差分を確認する |
 | P3 | jsdomテストがCanvas警告を出す | `detectQuality()` が `HTMLCanvasElement.getContext()` を呼び、`FirstLoad`、`WardPage`、`WardMapSection` のテストが未実装警告をstderrへ出しながら成功する | 本当の警告を見落としやすく、fallback/high/low判定のテスト境界も曖昧になる | テストセットアップでCanvas/WebGL判定を明示的にmockし、各ティアと初期化失敗を個別に検証する |
 | P3 | `npm run start` が静的配信方式と一致しない | package scriptは `next start`、本番成果物は `output: 'export'` の `out/` | ローカルで本番成果物を確認するコマンドとして誤解される | `out/` を配信する静的preview scriptへ置き換える |
 | P3 | 任意の詳細指標をローダーで全体整合検証しない | `build_details.py` は任意指標を原則「全23区あり / 指標全体なし」にするが、`src/data/details.ts` はJSON構造を検証しない。`buildWardStats()` は表示区に値があれば他22区にもあるものとしてnon-null assertionする | 手編集や不完全コピー時に順位・平均比が `NaN` になり得る | 各指標の全区完備または全区欠落をローダーかテストで検証し、中途半端なスナップショットをビルド失敗にする |
@@ -35,11 +35,13 @@
 - `npm test`: 40ファイル・251テストが成功（`data/processed` と `src/data` のparityテストを含む）。ただしCanvas未実装警告がstderrへ出る。
 - `NEXT_PUBLIC_SITE_URL=https://uchinokuchan.pages.dev npm run build`: 52ページの静的生成・エクスポートに成功。
 - `NEXT_PUBLIC_SITE_URL` 未設定の `npm run build`: 成功するが、OGP URLは `http://localhost:3000`、sitemap・robots・JSON-LDは `https://uchinokuchan.pages.dev` となり、成果物内のoriginが一致しない。
-- `npm audit --omit=dev`: `next@15.5.20` 自体、同梱の `postcss@8.4.31`、`sharp@0.34.5` に対して計3件のhigh advisoryを報告し、exit 1となる。
+- `npm audit` および `npm audit --omit=dev`: 脆弱性0件、exit 0。`next@15.5.22`、`postcss@8.5.25`（`overrides` で `next` の固定を上書き）、`sharp@0.35.3`（devDependencyと `next` の任意依存の双方を `overrides` で統一）。
 - 現在のrawデータと現行環境（Python 3.9.6 / openpyxl 3.1.5）を隔離ディレクトリへコピーして3つのPythonジェネレーターを実行した結果、`wards.json`、`ward-details.json`、`ward-geo.json` はコミット済み生成物とバイト単位で一致する。
 - `data/processed/wards.json` と `src/data/ward-metrics.json`、`ward-details.json` 同士、`ward-geo.json` 同士はバイト単位で一致する。診断割り当てもテスト内の決定的再生成と一致する。
 - 画像加工スクリプトを隔離ディレクトリで実行した結果、キャラクターWebP、OGP JPEG、タイトル、表紙、魔法陣は現行配信物とバイト単位で一致する。
-- キャラクター原本23枚、512px / 896px WebP各23枚、OGP原本・配信用OGP各24枚、区章SVG 23枚が存在する。配信用画像の寸法は想定どおりで、OGPは全24枚が300KB未満である。
+- `sharp@0.34.5` から `0.35.3` への更新でWebP出力（キャラクター、タイトル、表紙）はバイト一致を保ったが、mozjpeg経由のOGP JPEGは24枚中19枚が数バイト単位で変化したため再生成物をコミットした。デコード後の画素差は最大でも1チャンネルあたり20/255、平均0.0007/255で、寸法1200×630と300KB未満は全24枚で維持している。
+- キャラクター原本23枚、512px / 896px WebP各23枚、OGP原本・配信用OGP各24枚が存在する。配信用画像の寸法は想定どおりで、OGPは全24枚が300KB未満である。
+- 区章SVG 23枚は2026-07-31に削除した。著作権はPublic domainだったが、新宿区・練馬区の紋章使用承認要綱、荒川区の届出要綱などにより23区一律に適法と確認できないためである（[来歴台帳](08-asset-provenance.md) 2章）。代替の区アイコンは未生成で、`assets/icons/{slug}.png` が23区分そろうまで区詳細ページのプロフィール欄にアイコンは表示されない。
 
 ## 受容している制約
 

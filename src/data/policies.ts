@@ -13,7 +13,6 @@ export interface WardProfile {
   flowers?: string[];
   trees?: string[];
   birds?: string[];
-  emblemNote?: string;
   policies: WardPolicy[];
 }
 

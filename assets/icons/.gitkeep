@@ -1,0 +1,3 @@
+# 23区キャラクターの円形アイコン原本（{slug}.png）を置く。
+# 生成プロンプトは docs/strategy/ward-icon-prompts.md。
+# 配置後に `npm run build:icons` で public/icons/{slug}.webp を生成する。

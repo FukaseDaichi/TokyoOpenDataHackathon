@@ -92,7 +92,7 @@
 | `src/data/rationale.ts` | アプリ同梱データ（AI執筆テキスト） | `docs/strategy/ward-character-profiles.md` を根拠に手編集する |
 | `src/data/ward-affinity.json` | アプリ同梱データ（AI執筆相性文） | 基本指標・順位・5軸方向との整合を確認して手編集する |
 | `src/data/ward-traits.json` | アプリ同梱データ（AI執筆タイプ特徴） | キャッチコピー・5軸方向との整合を確認して手編集する |
-| `public/emblems/*.svg` | アプリ同梱データ | 手動取得・配置（来歴は [08-asset-provenance.md](08-asset-provenance.md) に記録） |
+| `public/icons/*.webp` | アプリ同梱アセット | `assets/icons/{slug}.png`（AI生成原本）から `npm run build:icons` で生成（来歴は [08-asset-provenance.md](08-asset-provenance.md) に記録） |
 
 `data/processed` の3つの集計JSONは `npm run sync:data` で対応する `src/data` へコピーする。アプリ動作の正は `src/data`、集計結果の正は `data/processed` であり、`src/data/parity.test.ts` が両者のバイト一致を検証する。
 
@@ -168,9 +168,9 @@ Vitestは、基本データと詳細データの23区件数、基本指標の存
 
 ## 7. 手動キュレーション・AI執筆データの更新運用
 
-`src/data/ward-policies.json`（区の花・木・鳥、政策）と `public/emblems/*.svg`（区章）は集計パイプラインを持たない手編集データである。`src/data/rationale.ts`、`ward-affinity.json`、`ward-traits.json` も生成コマンドを持たないAI執筆済みの同梱データであり、次を目安に見直す。
+`src/data/ward-policies.json`（区の花・木・鳥、政策）は集計パイプラインを持たない手編集データである。`src/data/rationale.ts`、`ward-affinity.json`、`ward-traits.json` も生成コマンドを持たないAI執筆済みの同梱データであり、次を目安に見直す。
 
-- 政策・区章の更新頻度: 区の基本構想・総合計画の改定は数年単位のため、年1回程度を目安に棚卸しする。
+- 政策の更新頻度: 区の基本構想・総合計画の改定は数年単位のため、年1回程度を目安に棚卸しする。
 - AI執筆文: 基本指標・23区順位・5軸・キャッチコピーを変更した場合は、該当区の設定理由、5軸別相性文、タイプ特徴を同じ変更で見直す。数値や方向が旧スナップショットのまま残らないことを確認する。
 - 出典: `policies[].source` / `url` は必ず一次情報（区公式サイト等）を指し、`https://` のURLを持つ。花・木・鳥も区公式サイトで照合し、調査記録を `docs/research/` に残す。
 - 中立性: `title` ≤30字・`summary` ≤120字の制約は、キュレーション文を簡潔かつ主観の混入しにくい長さに収めるためのガード。区の表現は中立・前向きにする全体方針（AGENTS.md）に従う。

@@ -2081,7 +2081,20 @@ html.uk-js .zukan-card-img.is-loaded {
   border-radius: 8px;
   background: rgba(247, 236, 212, 0.6);
 }
-.ward-profile-emblem { width: 72px; height: 72px; filter: sepia(0.35) saturate(0.8); }
+/* 読み込めたアイコンだけ表示する（is-loaded は WardPage が付与）。
+   未生成のslugで空の丸枠が残るのを避けるため、既定は display:none にしている */
+.ward-profile-icon { display: none; }
+
+.ward-profile-icon.is-loaded {
+  display: block;
+  width: 72px;
+  height: 72px;
+  flex: none;
+  border-radius: 50%;
+  object-fit: cover;
+  background: rgba(255, 252, 245, 0.9);
+  box-shadow: 0 0 0 2px rgba(184, 146, 63, 0.45), 0 2px 6px rgba(74, 52, 24, 0.18);
+}
 .ward-profile-card dl { display: flex; flex-wrap: wrap; gap: 6px 22px; margin: 0; }
 .ward-profile-card dt { font-size: 11px; color: #7a5c2e; }
 .ward-profile-card dd { margin: 0; font-size: 14px; font-weight: 600; color: #4a3418; }

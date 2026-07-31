@@ -85,13 +85,7 @@ export default function App() {
         </div>
       </section>
 
-      {/* フッター: 外部送信規律に基づくアクセス解析の告知 */}
-      <footer className="site-footer">
-        <p className="site-footer-note">
-          本サイトはサービス改善のため Google Analytics を利用しています。
-          診断の回答・結果は個人を特定しない匿名の統計情報として Google に送信されます。
-        </p>
-      </footer>
+      {/* フッター（非公式表示・アクセス解析の告知）は app/layout.tsx の SiteFooter に集約した */}
 
       {/* 個別詳細モーダル */}
       {ward && (

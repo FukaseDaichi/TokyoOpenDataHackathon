@@ -6,37 +6,23 @@
 
 アセットを追加または差し替える場合は、同じ変更で本台帳の対応行を追加または更新する。出典URL、作者または生成ツール、ライセンス・利用条件、加工内容を確認できない場合は推測せず `要確認` とする。取得日・生成日欄の日付は、`git log --follow --format=%ad --date=short -- <path> | tail -1` で確認した初回コミット日であり、実際の取得日・生成日ではなくリポジトリへの初回取込日を示す。
 
-## 2. 区章
+## 2. 区章（使用を取りやめた経緯）
 
-Commonsのファイルページ、ライセンス、作者・最新版アップロード者は2026-07-19に照合した。
+23区の区章SVG（Wikimedia Commons由来、著作権はいずれもPublic domain）を区詳細ページに表示していたが、2026-07-31に取りやめ、`public/emblems/` を削除した。キャラクターの円形アイコン（3.3）に置き換えている。
 
-| ファイルパス | 出典/生成手段 | 出典URLまたはプロンプト参照 | 作者/ツール | ライセンス・利用条件 | 取得日/生成日 | 加工内容 |
-|---|---|---|---|---|---|---|
-| `public/emblems/chiyoda.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Chiyoda,_Tokyo.svg | データは投稿者が作成 / Ykon | PD (PD-Japan-organization) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/chuo.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Chuo,_Tokyo.svg | データは投稿者が作成 / Ykon | PD (PD-Japan-organization) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/minato.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Minato,_Tokyo.svg | データは投稿者が作成 / Ykon | PD (PD-Japan-organization) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/shinjuku.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Shinjuku,_Tokyo.svg | Ch1902, Nardog, Mike Rohsopht / Mike Rohsopht | PD (PD-Japan-exempt〈logos and emblems〉) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/bunkyo.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Bunkyo,_Tokyo.svg | データは投稿者が作成 / Mike Rohsopht | PD (PD-Japan-organization) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/taito.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Taito,_Tokyo.svg | Nameneko(原SVG)→Wrightbus, Mike Rohsopht / Mike Rohsopht | PD (PD-Japan-organization) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/sumida.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Sumida,_Tokyo.svg | データは投稿者が作成 / Mike Rohsopht | PD (PD-Japan-organization) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/koto.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Koto,_Tokyo.svg | SVG reproduction by Nameneko / SpinnerLaserzthe2nd | PD (PD-Japan-organization)。Commonsには「使用には江東区の承認を得るべき」との個別注記あり | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/shinagawa.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Shinagawa,_Tokyo.svg | データは投稿者が作成 / Mliu92 | PD (PD-Japan-organization) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/meguro.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Meguro,_Tokyo.svg | Life of Riley, Mike Rohsopht / Mike Rohsopht | PD (PD-Japan-organization) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/ota.svg` | Wikimedia Commonsから手動取得・配置。Commons上のファイル名のみマクロン付きの「Ōta」 | https://commons.wikimedia.org/wiki/File:Emblem_of_%C5%8Cta,_Tokyo.svg | データは投稿者が作成 / Mike Rohsopht | PD (PD-Japan-organization) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/setagaya.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Setagaya,_Tokyo.svg | データは投稿者が作成 / Ykon | PD (PD-Japan-organization) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/shibuya.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Shibuya,_Tokyo.svg | 投稿者作成(SVGコード: Wrightbus) / Mike Rohsopht | PD (PD-Japan-organization) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/nakano.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Nakano,_Tokyo.svg | Kzaral(原ラスター), Ch1902, Jkr2255 / Jkr2255 | PD (PD-Japan-organization) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/suginami.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Suginami,_Tokyo.svg | データは投稿者が作成 / Ykon | PD (PD-Japan-organization) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/toshima.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Toshima,_Tokyo.svg | Ch1902, Nardog / Nardog | PD (PD-Japan-exempt〈logos and emblems〉) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/kita.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Kita,_Tokyo.svg | Nameneko(SVG再現), Mike Rohsopht / Mike Rohsopht | PD (PD-Japan-organization + PD-textlogo) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/arakawa.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Arakawa,_Tokyo.svg | Nameneko(SVG再現), Mike Rohsopht / Mike Rohsopht | PD (PD-Japan-organization) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/itabashi.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Itabashi,_Tokyo.svg | データは投稿者が作成 / Ykon | PD (PD-Japan-organization) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/nerima.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Nerima,_Tokyo.svg | Wrightbus (SVG code) / Wright.one | PD (PD-textlogo) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/adachi.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Adachi,_Tokyo.svg | Kzaral(原ラスター), Ch1902, Jkr2255 / Jkr2255 | PD (PD-Japan-organization) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/katsushika.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Katsushika,_Tokyo.svg | Nameneko(初版), Wrightbus(改良版) / Wright.one | PD (PD-Japan-organization) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
-| `public/emblems/edogawa.svg` | Wikimedia Commonsから手動取得・配置 | https://commons.wikimedia.org/wiki/File:Emblem_of_Edogawa,_Tokyo.svg | 原: Kzaral、ベクター: Ch1902, Jkr2255, Xeror / SpinnerLaserzthe2nd | PD (PD-Japan-exempt〈logos and emblems〉) | 2026-07-12（リポジトリ初回取込日） | SVGを配信用パスへ手動配置。追加の生成処理なし |
+著作権上の問題はなかった。取りやめの理由は、著作権とは別に各区が紋章の使用手続を定めている場合があり、23区一律に適法と確認できなかったことである。調査時点（2026-07-31）で確認できた事実は次のとおり。
 
-著作権上は全23件がPublic domainである。一方で、公的記章としての使用は、Commonsのinsignia注記が示すとおり、商標法、不正競争防止法その他の著作権法とは別の法規で制限される場合がある。特に江東区のCommonsページには「使用には江東区の承認を得るべき」という個別注記がある。大田区だけはCommons上のファイル名がマクロン付きの `Ōta` である。
+| 区 | 紋章の第三者使用 | 根拠 |
+|---|---|---|
+| 新宿区 | 承認制。「無断で使用することはできません」と明示。承認は区の施策推進に寄与する場合に限り、私的な利益を目的とする使用は不承認。使用後の報告書提出も必要 | [新宿区紋章の使用手続について](https://www.city.shinjuku.lg.jp/kusei/soumu01_002070.html) |
+| 練馬区 | 承認制。区長の承認が必要で、承認できる場合を限定列挙 | [練馬区紋章使用承認基準](https://www1.g-reiki.net/nerima/reiki_honbun/a100RG00001097.html) |
+| 荒川区 | 届出制。要綱が対象を「シンボルマーク及び紋章」と規定。報道・区内学校の教育目的等は免除 | [荒川区シンボルマーク等の使用に関する取扱要綱](https://www.city.arakawa.tokyo.jp/reiki_int/reiki_honbun/p800RG00000660.html) |
+| 千代田区 | 規則ではないが、区サイトで紋章画像の二次利用を明示的に否定 | [千代田区 区の紋章](https://www.city.chiyoda.lg.jp/koho/kuse/gaiyo/yokoso/monsho.html) |
+| 江東区 | 紋章は区の公式行事・儀式で使用と位置づけ。第三者使用の承認手続はシンボルマークとロゴマークにのみ存在し、紋章の申請ルートは公開されていない | [取扱方針](https://www.city.koto.lg.jp/reiki-koho/reiki_honbun/g109RG00000616.html) / [シンボルマーク使用承認事務取扱要綱](https://www.city.koto.lg.jp/reiki-koho/reiki_honbun/g109RG00000615.html) |
+| 渋谷・杉並・豊島・北・板橋・江戸川・足立 | **未確認**。例規集がJavaScript検索UIまたはログイン必須で条文本文に到達できなかった。「規定なし」の確認ではない | — |
+| 上記以外 | 制定告示（図案と作図法）のみを確認。第三者使用の定めは確認できず | 各区例規集 |
+
+Commonsの江東区ファイルページには「使用には江東区の承認を得るべき」という個別注記があるが、上記のとおり江東区に紋章の申請ルートはなく、この注記はシンボルマークの要綱を紋章に当てはめたものと考えられる。またCommonsのinsignia警告テンプレートは国際的な汎用文であり、日本の不正競争防止法16条は「外国の」国旗・紋章等を対象とするため、国内の区章には直接適用されない。商標法4条1項6号は登録拒絶事由であって表示禁止ではない。
 
 ## 3. AI生成画像
 
@@ -97,7 +83,17 @@ Commonsのファイルページ、ライセンス、作者・最新版アップ�
 | `assets/og/edogawa.png` | 対応するキャラクター原本を参照画像として生成AIで作成 | `docs/strategy/og-image-prompts.md:461` | ChatGPT | 生成時点のOpenAI利用規約と、入力したキャラクター原本の利用条件に従う。生成時プランは要確認 | 2026-07-14（リポジトリ初回取込日） | `scripts/build-og-images.mjs`で1200×630、JPEG品質85の`public/og/edogawa.jpg`へ変換 |
 | `assets/og/home.png` | 23区キャラクター原本を参照画像として生成AIで作成 | `docs/strategy/og-image-prompts.md:483` | ChatGPT | 生成時点のOpenAI利用規約と、入力したキャラクター原本の利用条件に従う。生成時プランは要確認 | 2026-07-14（リポジトリ初回取込日） | `scripts/build-og-images.mjs`で1200×630、JPEG品質85の`public/og/home.jpg`へ変換 |
 
-### 3.3 その他の生成画像原本
+### 3.3 区アイコン原本
+
+区章の代替として区詳細ページ「区のプロフィール」に表示する円形アイコン。23区分を `assets/icons/{slug}.png` に置き、`npm run build:icons` で `public/icons/{slug}.webp`（256×256、WebP品質88）へ変換する。丸抜きはCSSの `border-radius` で行うため、原本・出力とも正方形である。
+
+生成は各区のキャラクター原本（3.1）を参照画像として添付し、[docs/strategy/ward-icon-prompts.md](../strategy/ward-icon-prompts.md) のプロンプトで行う。生成後は同ファイル末尾のチェックリストで確認する。
+
+| ファイルパス | 出典/生成手段 | 出典URLまたはプロンプト参照 | 作者/ツール | ライセンス・利用条件 | 取得日/生成日 | 加工内容 |
+|---|---|---|---|---|---|---|
+| `assets/icons/{slug}.png`（23区分） | 対応するキャラクター原本を参照画像としてAI生成 | `docs/strategy/ward-icon-prompts.md` | ChatGPT | 生成時点のOpenAI利用規約と、入力したキャラクター原本の利用条件に従う。生成時プランは要確認 | 未生成（生成後に日付を記入する） | `scripts/build-icons.mjs`で256×256、WebP品質88の`public/icons/{slug}.webp`へ変換 |
+
+### 3.4 その他の生成画像原本
 
 | ファイルパス | 出典/生成手段 | 出典URLまたはプロンプト参照 | 作者/ツール | ライセンス・利用条件 | 取得日/生成日 | 加工内容 |
 |---|---|---|---|---|---|---|
