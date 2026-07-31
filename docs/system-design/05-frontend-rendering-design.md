@@ -106,12 +106,11 @@ X共有は `src/ui/share.ts` の `xShareText` / `xShareUrl` / `xWeightedLength` 
 | 同上 | `public/characters/ssr/{slug}-w896.webp` | 同上 |
 | `assets/title.png` | `public/title-w720.webp`, `title-w1440.webp` | `scripts/build-title.mjs` |
 | `assets/book-cover.png` | `public/book-cover.webp` | `scripts/build-modal-images.mjs` |
-| `assets/magic-circle.png` | `public/magic-circle.png` | `scripts/build-modal-images.mjs` |
 | `assets/og/{slug}.png`（AI作成OGP原本、トップ用は `home.png`） | `public/og/{slug}.jpg` | `scripts/build-og-images.mjs` で1200×630のJPEG品質85へ加工（原本のスクリプト合成はしない） |
 
 キャラクターは2:3のカードとして扱う。512px版は一覧・低品質3D、896px版は詳細・高品質3Dで使う。Next.jsの画像最適化は静的エクスポートとの整合のため無効で、UIは生成済み画像を直接参照する。
 
-`book-cover.webp` はモーダル表紙のCSS背景として使う。`magic-circle.png` は生成されるが現行UIからは参照されない。
+`book-cover.webp` はモーダル表紙のCSS背景として使う。
 
 OGPは1200×630pxのJPEG（品質85）を23区分＋トップ用 `home.jpg` の24枚そろえる。SNSクローラーの取得失敗を避けるため1枚300KB以下を目安とし、PNGではなくJPEGで配信する。原本は生成AIに依頼して作成し、`assets/og/{slug}.png` に置いてから `npm run build:og` で `public/og/{slug}.jpg` へ加工する。区ごとの生成プロンプトは [docs/strategy/og-image-prompts.md](../strategy/og-image-prompts.md) にまとめている。OGP原本をコードで合成生成する仕組みは持たない。
 

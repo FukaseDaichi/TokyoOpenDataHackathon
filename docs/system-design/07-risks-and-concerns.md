@@ -27,7 +27,7 @@
 | P3 | jsdomテストがCanvas警告を出す | `detectQuality()` が `HTMLCanvasElement.getContext()` を呼び、`FirstLoad`、`WardPage`、`WardMapSection` のテストが未実装警告をstderrへ出しながら成功する | 本当の警告を見落としやすく、fallback/high/low判定のテスト境界も曖昧になる | テストセットアップでCanvas/WebGL判定を明示的にmockし、各ティアと初期化失敗を個別に検証する |
 | P3 | `npm run start` が静的配信方式と一致しない | package scriptは `next start`、本番成果物は `output: 'export'` の `out/` | ローカルで本番成果物を確認するコマンドとして誤解される | `out/` を配信する静的preview scriptへ置き換える |
 | P3 | 任意の詳細指標をローダーで全体整合検証しない | `build_details.py` は任意指標を原則「全23区あり / 指標全体なし」にするが、`src/data/details.ts` はJSON構造を検証しない。`buildWardStats()` は表示区に値があれば他22区にもあるものとしてnon-null assertionする | 手編集や不完全コピー時に順位・平均比が `NaN` になり得る | 各指標の全区完備または全区欠落をローダーかテストで検証し、中途半端なスナップショットをビルド失敗にする |
-| P3 | 現行ルートで使わない実装・生成物が残る | `src/ui/WardDetail.tsx` と `ShareCard` はルートから未参照、`top_stations()` は常に空、`public/magic-circle.png` は生成されるがUIから未参照 | 現役機能との境界が分かりにくく、更新・テスト・生成手順が増える | 利用予定がなければコード、型、テスト、生成処理、生成物を削除し、残す場合は用途と検証経路を明示する |
+| P3 | 現行ルートで使わない実装・生成物が残る | `src/ui/WardDetail.tsx` と `ShareCard` はルートから未参照、`top_stations()` は常に空 | 現役機能との境界が分かりにくく、更新・テスト・生成手順が増える | 利用予定がなければコード、型、テスト、生成処理、生成物を削除し、残す場合は用途と検証経路を明示する |
 | P3 | 診断セッションの値域を検証しない | `loadDiagnosisSession()` は5軸が `number` かだけを確認し、有限値、`[-1, 1]`、有効な結果区コードかを検証しない | 壊れた同一オリジンの `sessionStorage` により、レーダーや類似度が想定外の値になる | `Number.isFinite`、軸範囲、23区コード集合を検証し、不正時はセッションなしとして扱う |
 
 ## 現在確認できている品質状態
