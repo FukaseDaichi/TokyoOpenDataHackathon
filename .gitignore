@@ -29,3 +29,8 @@ ds-bundle/
 .design-sync/.cache/
 .design-sync/learnings/
 .design-sync/node_modules
+
+# デモ動画（サイズが大きいため原本・生成物はコミットしない）
+docs/submission/presentation/*.mp4
+tools/demo-video/renders/
+tools/demo-video/assets/
