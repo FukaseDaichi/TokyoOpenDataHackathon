@@ -116,8 +116,11 @@ export function WardPage({ slug }: { slug: string }) {
               </div>
             </Section>
 
+            {/* 見出しと要約は各区の基本構想・基本計画を読んで当方で分類・要約したもので、
+                公式の表現をそのまま転載していない。区サイトの多くが二次利用を禁じているため、
+                逐語見出しは使わない。経緯は docs/system-design/08-asset-provenance.md の5章 */}
             {profile && profile.policies.length > 0 && (
-              <Section icon="flame" title={`${ward.name}のこころざし`}>
+              <Section icon="flame" title={`${ward.name}のこころざし`} badge="各区の基本構想をもとに編集">
                 <ol className="ward-policy-list">
                   {profile.policies.map((p) => (
                     <li key={p.title} className="ward-policy-item">
@@ -173,7 +176,7 @@ export function WardPage({ slug }: { slug: string }) {
             <Section icon="book" title="出典">
               <p className="ward-detail-sources">
                 {[...Object.values(DATA_SOURCES), ...Object.values(DETAIL_SOURCES), GEO_SOURCE].join(' / ')}
-                （数値は取得時点のスナップショット）
+                （数値は取得時点のスナップショット）。上記データを各提供元の利用規約に基づき加工して作成。
               </p>
             </Section>
           </div>

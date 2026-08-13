@@ -108,7 +108,11 @@ describe("ResultPage", () => {
     // 中身（閉じていてもDOMには存在する）
     expect(screen.getByText("昼夜間人口比率")).toBeInTheDocument();
     expect(screen.getByText("23区1位")).toBeInTheDocument();
-    expect(screen.getByText(/はぐくむまち/)).toBeInTheDocument();
+    expect(
+      container.querySelector(".result-town-policy-title"),
+    ).toHaveTextContent("福祉・保健・教育");
+    // 政策の見出し・要約は当方の編集物であることを示すバッジ（区詳細ページと対）
+    expect(screen.getByText("各区の基本構想をもとに編集")).toBeInTheDocument();
     expect(
       screen.getAllByText(/1を超えるほど自前の税収/).length,
     ).toBeGreaterThan(0);

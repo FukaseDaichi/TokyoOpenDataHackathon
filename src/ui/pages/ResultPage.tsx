@@ -357,10 +357,15 @@ export function ResultPage({ slug }: { slug: string }) {
                   </div>
                 )}
                 {policy && (
+                  /* 見出し・要約は各区の基本構想を当方で分類・要約したもの。公式の表現を
+                     転載していないことを示すため、区詳細ページと同じ趣旨のバッジを出す */
                   <div className="result-town-policy">
                     <p className="result-town-policy-kicker">
                       {ward.name}ちゃんはこんなことを頑張ってる
                     </p>
+                    <span className="result-town-policy-badge">
+                      各区の基本構想をもとに編集
+                    </span>
                     <p className="result-town-policy-title">{policy.title}</p>
                     <p className="result-town-policy-summary">
                       {policy.summary}
