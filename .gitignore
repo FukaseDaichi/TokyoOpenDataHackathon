@@ -34,3 +34,6 @@ ds-bundle/
 docs/submission/presentation/*.mp4
 tools/demo-video/renders/
 tools/demo-video/assets/
+
+# プレゼンデッキ（1ファイル数十MBあり、更新のたびに履歴が膨らむためコミットしない）
+docs/submission/presentation/*.pptx

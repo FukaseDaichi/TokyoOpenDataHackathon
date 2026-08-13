@@ -1,6 +1,6 @@
 # プレゼン資料用 生成AIプロンプト集（First Stage 2分プレゼン）
 
-[2分プレゼン構成案.md](../submission/2分プレゼン構成案.md) のドラフトデッキ（`docs/submission/presentation/uchinokuchan-first-stage-draft.pptx`）の装飾画像をChatGPTで生成するためのプロンプト。[og-image-prompts.md](og-image-prompts.md) と同じ運用原則に従う。
+[2分プレゼン構成案.md](../submission/2分プレゼン構成案.md) のデッキ（`docs/submission/presentation/uchinokuchan-first-stage.pptx`。サイズが大きいため `.gitignore` で除外しておりGit管理外）の装飾画像をChatGPTで生成するためのプロンプト。[og-image-prompts.md](og-image-prompts.md) と同じ運用原則に従う。
 
 ## 共通原則
 
