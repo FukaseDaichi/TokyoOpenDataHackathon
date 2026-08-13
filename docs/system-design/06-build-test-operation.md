@@ -111,7 +111,7 @@ npx wrangler pages deploy out --project-name=uchinokuchan --branch=main
 
 | 指標 | 取得元・公表周期 |
 |---|---|
-| `waiting_children`（待機児童数） | 東京都福祉局「保育サービスの状況」、例年8月頃に4月1日現在分を公表 |
+| `waiting_children`（待機児童数） | こども家庭庁「保育所等関連状況取りまとめ」、例年8月頃に4月1日現在分を公表 |
 | `crime_per_1000`（犯罪統計） | 警視庁の区市町村別犯罪認知件数、年次 |
 | `income_per_taxpayer`（課税対象所得） | 総務省「市町村税課税状況等の調」、年次 |
 | `population`（住民基本台帳人口） | 東京都「住民基本台帳による世帯と人口」、年次（他の基本5軸の年齢別人口とも同じ取得元） |

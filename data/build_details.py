@@ -165,33 +165,65 @@ def crime(population):
 def waiting_children():
     """待機児童数（人）。
 
-    東京都福祉局「保育サービスの状況」（2025年8月公表分, 令和7年4月1日現在）
-    表4「区市町村別の状況」（data/raw/tocho_hoiku_r7_hyou4.xlsx）シート「表４」から、
-    区名列（B列）と、直近年（2025年4月1日現在）の「待機児童数」列（F列）を読む。
+    こども家庭庁「保育所等関連状況取りまとめ（令和7年4月1日）」の
+    （参考）資料1～6（data/raw/cfa_hoiku_r7_shiryo.xlsx）から、
+    資料6-1「待機児童数が減少した市区町村の状況」と
+    資料6-2「待機児童数が増加（変化なしを含む）した市区町村の状況」の
+    東京都行を読み、「R7.4」列（令和7年4月1日現在）の値を採用する。
+    両シートとも1行に2組の表（都道府県・市区町村・R7.4・R6.4）が並ぶため、
+    列オフセット2起点と8起点の両方を走査する。
 
-    出典URL: https://www.metro.tokyo.lg.jp/documents/d/tosei/20250829_17_04
-    （東京都報道発表 2025/08/29「保育サービスの状況（令和7年4月1日現在）について」
-      https://www.metro.tokyo.lg.jp/information/press/2025/08/2025082917 の表4）
+    資料6は「待機児童数が令和6年及び令和7年ともにゼロの市区町村は除く」
+    仕様であり、23区のうち未掲載の区は待機児童数ゼロとして扱う。この
+    「未掲載＝ゼロ」の解釈が崩れると全区が無言でゼロになるため、資料4
+    「全国待機児童マップ（市区町村別）」の東京都計と、資料6から拾った
+    東京都全市区町村の合計が一致することを検証してから区へ割り当てる。
+
+    出典: こども家庭庁「保育所等関連状況取りまとめ（令和7年4月1日）」
+    https://www.cfa.go.jp/policies/hoiku/torimatome/r7
+    利用条件: 公共データ利用規約（PDL1.0）。出典と加工の明示を条件に
+    商用・非商用を問わず二次利用できる（こども家庭庁コピーライトポリシー
+    https://www.cfa.go.jp/copyright-policy ）。
     区名から区コードへは Task 7 と同じく data/processed/wards.json の names を逆引きする。
     """
-    src = RAW / 'tocho_hoiku_r7_hyou4.xlsx'
+    src = RAW / 'cfa_hoiku_r7_shiryo.xlsx'
     if not src.exists():
         return {}
     names = {}
     with open(Path(__file__).parent / 'processed' / 'wards.json', encoding='utf-8') as f:
         for w in json.load(f)['wards']:
             names[w['name']] = w['id']
-    wb = openpyxl.load_workbook(src, read_only=True, data_only=True)
-    ws = wb['表４']
-    result = {}
-    for row in ws.iter_rows(values_only=True):
-        name = row[1].strip() if isinstance(row[1], str) else None
-        if name not in names:
-            continue
-        val = row[5]
-        if isinstance(val, (int, float)):
-            result[names[name]] = {'waiting_children': int(val)}
-    return result
+    wb = openpyxl.load_workbook(src, data_only=True)
+
+    # 資料6の東京都行（区部・市部・町村部すべて）を拾う
+    tokyo = {}
+    for sheet in ('資料６－１', '資料６－２'):
+        for row in wb[sheet].iter_rows(values_only=True):
+            for pref_i, city_i, r7_i in ((2, 3, 4), (8, 9, 10)):
+                if len(row) <= r7_i:
+                    continue
+                if row[pref_i] != '東京都' or not isinstance(row[city_i], str):
+                    continue
+                if isinstance(row[r7_i], (int, float)):
+                    tokyo[row[city_i].strip()] = int(row[r7_i])
+    if not tokyo:
+        return {}
+
+    # 資料4の東京都計と突合し、「未掲載＝ゼロ」の前提を検証する
+    expected = None
+    for row in wb['資料4'].iter_rows(values_only=True):
+        if len(row) > 16 and row[15] == '東京都' and isinstance(row[16], (int, float)):
+            expected = int(row[16])
+            break
+    actual = sum(tokyo.values())
+    assert expected is not None, 'waiting_children: 資料4に東京都の待機児童数計が見つからない'
+    assert actual == expected, (
+        f'waiting_children: 資料6の東京都合計 {actual} が資料4の東京都計 {expected} と一致しない。'
+        '資料の様式変更が疑われるため、未掲載区をゼロとみなす前提を再確認すること'
+    )
+
+    # 資料6に載らない区は待機児童ゼロ
+    return {code: {'waiting_children': tokyo.get(name, 0)} for name, code in names.items()}
 
 
 def top_stations():
@@ -235,7 +267,7 @@ def main():
     wc = waiting_children()
     wc_missing = [w for w in WARD_IDS if w not in wc]
     assert not wc_missing, f'waiting_children missing wards: {wc_missing}'  # kill test: 23区揃うこと
-    sources['waiting_children'] = '東京都福祉局「保育サービスの状況」（令和7年4月1日現在）・人'
+    sources['waiting_children'] = 'こども家庭庁「保育所等関連状況取りまとめ」（令和7年4月1日現在）資料6・人'
 
     inc = income()
     inc_missing = [w for w in WARD_IDS if w not in inc]
