@@ -47,28 +47,49 @@
         position: absolute;
         inset: 0;
       }
+      /* ポップ字幕: 配色はデッキ準拠（金×クリーム）のまま、バッジ＋傾き＋弾む登場で「重要ポイント！」感を出す */
       .telop {
         position: absolute;
         left: 0;
         right: 0;
-        bottom: 64px;
+        bottom: 60px;
         display: flex;
         justify-content: center;
         pointer-events: none;
       }
+      .telop-pop {
+        position: relative;
+        transform: rotate(-1.5deg);
+      }
       .telop-inner {
-        background: rgba(23, 17, 12, 0.82);
-        border: 2px solid #b8923f;
-        border-radius: 14px;
-        padding: 14px 48px;
+        background: rgba(23, 17, 12, 0.86);
+        border: 3px solid #b8923f;
+        border-radius: 18px;
+        padding: 18px 56px 16px;
         color: #f4e8d0;
         font-family: "Yu Mincho", serif;
         font-weight: 700;
-        font-size: 46px;
-        letter-spacing: 0.12em;
+        font-size: 50px;
+        letter-spacing: 0.1em;
+        box-shadow: 0 6px 24px rgba(0, 0, 0, 0.45);
       }
       .telop-inner .accent {
-        color: #e8d5a8;
+        color: #e8c56a;
+      }
+      .telop-badge {
+        position: absolute;
+        top: -26px;
+        left: -18px;
+        background: #b8923f;
+        color: #17110c;
+        font-family: "Yu Gothic", sans-serif;
+        font-weight: 800;
+        font-size: 26px;
+        letter-spacing: 0.18em;
+        padding: 6px 22px;
+        border-radius: 999px;
+        transform: rotate(-6deg);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
       }
     </style>
   </head>
@@ -77,114 +98,126 @@
       id="root"
       data-composition-id="main"
       data-start="0"
-      data-duration="40"
+      data-duration="35"
       data-width="1920"
       data-height="1080"
     >
-      <!-- 場面1a (0-4s): 3D絵本ヒーロー（タイトル） -->
+      <!-- 場面1 (0-5s): 3D絵本ヒーロー（タイトル→カード群フライスルー） -->
       <video
-        id="scene1a-hero"
+        id="scene1-hero"
         class="clip"
-        src="assets/raw.mp4"
+        src="assets/raw2.mp4"
         data-start="0"
-        data-duration="4"
-        data-media-start="3"
+        data-duration="5"
+        data-media-start="0.5"
         data-track-index="0"
         muted
         playsinline
       ></video>
 
-      <!-- 場面1b (4-10s): 3D絵本ヒーロー（絵本スクロール） -->
-      <video
-        id="scene1b-hero"
-        class="clip"
-        src="assets/raw.mp4"
-        data-start="4"
-        data-duration="6"
-        data-media-start="31"
-        data-track-index="0"
-        muted
-        playsinline
-      ></video>
-
-      <!-- 場面2 (10-15s): 診断1問（お金の使い方→回答→ページ捲り） -->
+      <!-- 場面2 (5-12s): 診断（休日の過ごし方→回答→ページ捲り→次の質問） -->
       <video
         id="scene2-question"
         class="clip"
-        src="assets/raw.mp4"
-        data-start="10"
-        data-duration="5"
-        data-media-start="60"
+        src="assets/raw2.mp4"
+        data-start="5"
+        data-duration="7"
+        data-media-start="19.5"
         data-track-index="0"
         muted
         playsinline
       ></video>
 
-      <!-- 場面3 (15-26s): 本が閉じて結果リビール（港区ちゃん・にてる度カウントアップ→特徴） -->
+      <!-- 場面3 (12-21s): 最終問回答→本が閉じて結果リビール（渋谷区ちゃん・にてる度81%） -->
       <video
         id="scene3-result"
         class="clip"
-        src="assets/raw.mp4"
-        data-start="15"
-        data-duration="11"
-        data-media-start="79.5"
+        src="assets/raw2.mp4"
+        data-start="12"
+        data-duration="9"
+        data-media-start="39.3"
         data-track-index="0"
         muted
         playsinline
       ></video>
 
-      <!-- 場面4 (26-40s): 区詳細の実数値スクロール→出典で静止（26-33sにズーム） -->
+      <!-- 場面4 (21-35s): 区詳細スクロール（地図→レーダー→実数値→なかま）→出典ズームで静止 -->
       <div class="zoomwrap" id="scene4-zoom">
         <video
           id="scene4-detail"
           class="clip"
-          src="assets/raw.mp4"
-          data-start="26"
+          src="assets/raw2.mp4"
+          data-start="21"
           data-duration="14"
-          data-media-start="130"
+          data-media-start="59.5"
           data-track-index="0"
           muted
           playsinline
         ></video>
       </div>
 
-      <!-- テロップ -->
-      <div class="clip telop" id="telop1-clip" data-start="10.4" data-duration="4.2" data-track-index="1">
-        <div class="telop-inner" id="telop1">10問に答える</div>
+      <!-- ポップ字幕（4つの重要ポイント） -->
+      <div class="clip telop" id="telop1-clip" data-start="0.6" data-duration="4.2" data-track-index="1">
+        <div class="telop-pop" id="telop1">
+          <div class="telop-badge" data-layout-allow-overlap>POINT 1</div>
+          <div class="telop-inner">あなたは、<span class="accent">何区タイプ</span>？</div>
+        </div>
       </div>
-      <div class="clip telop" id="telop2-clip" data-start="15.8" data-duration="9.7" data-track-index="1">
-        <div class="telop-inner" id="telop2">あなたに<span class="accent">一番似ている区</span>と出会う</div>
+      <div class="clip telop" id="telop2-clip" data-start="5.6" data-duration="6.0" data-track-index="1">
+        <div class="telop-pop" id="telop2">
+          <div class="telop-badge" data-layout-allow-overlap>POINT 2</div>
+          <div class="telop-inner">かんたん<span class="accent">10問</span>に答えるだけ</div>
+        </div>
       </div>
-      <div class="clip telop" id="telop3-clip" data-start="26.4" data-duration="9.1" data-track-index="1">
-        <div class="telop-inner" id="telop3">オープンデータの<span class="accent">実数値と出典</span></div>
+      <div class="clip telop" id="telop3-clip" data-start="15.9" data-duration="4.9" data-track-index="1">
+        <div class="telop-pop" id="telop3">
+          <div class="telop-badge" data-layout-allow-overlap>POINT 3</div>
+          <div class="telop-inner"><span class="accent">一番似ている区</span>と出会える</div>
+        </div>
+      </div>
+      <div class="clip telop" id="telop4-clip" data-start="21.8" data-duration="13.2" data-track-index="1">
+        <div class="telop-pop" id="telop4">
+          <div class="telop-badge" data-layout-allow-overlap>POINT 4</div>
+          <div class="telop-inner">気になったら一次情報へ——ぜんぶ<span class="accent">出典つき</span></div>
+        </div>
       </div>
     </div>
 
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      // テロップの出入り（クリップ内側の要素を動かす）
-      tl.fromTo("#telop1", { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out" }, 10.4);
-      tl.to("#telop1", { autoAlpha: 0, duration: 0.4 }, 14.1);
-      tl.fromTo("#telop2", { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out" }, 15.8);
-      tl.to("#telop2", { autoAlpha: 0, duration: 0.4 }, 25.0);
-      tl.fromTo("#telop3", { autoAlpha: 0, y: 40 }, { autoAlpha: 1, y: 0, duration: 0.5, ease: "power2.out" }, 26.4);
-      tl.to("#telop3", { autoAlpha: 0, duration: 0.4 }, 35.0);
-      // 場面4-1: 実数値バーへ寄る（26.8-29s、1.55倍）→ スクロールを見せるため戻す（32.5-34.5s）
+      // ポップ字幕の出入り: back.outで弾んで登場（クリップ内側の要素を動かす）
+      const popIn = (id, at) => {
+        tl.fromTo(
+          id,
+          { autoAlpha: 0, y: 60, scale: 0.7 },
+          { autoAlpha: 1, y: 0, scale: 1, duration: 0.55, ease: "back.out(1.9)" },
+          at
+        );
+      };
+      popIn("#telop1", 0.6);
+      tl.to("#telop1", { autoAlpha: 0, duration: 0.35 }, 4.4);
+      popIn("#telop2", 5.6);
+      tl.to("#telop2", { autoAlpha: 0, duration: 0.35 }, 11.2);
+      popIn("#telop3", 15.9);
+      tl.to("#telop3", { autoAlpha: 0, duration: 0.35 }, 20.4);
+      popIn("#telop4", 21.8);
+      tl.to("#telop4", { autoAlpha: 0, duration: 0.4 }, 34.5);
+      // 場面4-1: 実数値バーへ寄る（25.3-27.3s、1.5倍）→ スクロールを見せるため戻す（29.8-31.4s）
+      // 原点は o = (2cs - 1) / (2s - 2)。バー領域中心 c ≒ (0.615, 0.45)、s = 1.5 → o ≒ (0.845, 0.35)
       tl.fromTo(
         "#scene4-zoom",
-        { scale: 1, transformOrigin: "62% 45%" },
-        { scale: 1.55, duration: 2.2, ease: "power2.inOut" },
-        26.8
+        { scale: 1, transformOrigin: "84.5% 35%" },
+        { scale: 1.5, duration: 2.0, ease: "power2.inOut" },
+        25.3
       );
-      tl.to("#scene4-zoom", { scale: 1, duration: 2, ease: "power2.inOut" }, 32.5);
-      // 場面4-2: 最重要の「出典」へ大きく寄って終わる（37-39.2s、2.1倍で40sまで保持）
+      tl.to("#scene4-zoom", { scale: 1, duration: 1.6, ease: "power2.inOut" }, 29.8);
+      // 場面4-2: 最重要の「出典」へ大きく寄って終わる（32.2-34.4s、2.2倍で35sまで保持）
       // scale=1の時点で原点を出典ブロックへ移す（見た目の変化なし）
-      // 原点は「可視窓の中心が出典カード中心に来る」よう逆算した値。
-      // 可視窓 = [o - o/s, o + (1-o)/s] なので、中心を合わせるには o = (2*c*s - 1) / (2*s - 2)。
-      // 出典カード中心 c ≒ (0.617, 0.723)、s = 2.1 → o ≒ (0.71, 0.91)
-      tl.set("#scene4-zoom", { transformOrigin: "71% 91%" }, 35.2);
-      tl.to("#scene4-zoom", { scale: 2.1, duration: 2.2, ease: "power2.inOut" }, 37);
+      // 出典カード中心 c ≒ (0.615, 0.452)（raw2.mp4の73.5s静止フレームを実測・16:9クロップ換算）、
+      // s = 2.2 → o ≒ (0.71, 0.41)
+      tl.set("#scene4-zoom", { transformOrigin: "71% 41%" }, 31.7);
+      tl.to("#scene4-zoom", { scale: 2.2, duration: 2.2, ease: "power2.inOut" }, 32.2);
       window.__timelines["main"] = tl;
     </script>
   </body>
